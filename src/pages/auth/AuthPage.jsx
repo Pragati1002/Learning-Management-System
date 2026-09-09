@@ -77,14 +77,14 @@ export const AuthPage = () => {
   const isAdmin = portal === 'admin';
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-blue-50/40 to-indigo-50/40 flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-gradient-to-br from-slate-50 via-purple-50/40 to-purple-50/40 flex flex-col justify-center py-8 sm:py-12 px-4 sm:px-6 lg:px-8 font-['Plus_Jakarta_Sans',sans-serif]">
       
       {/* Brand Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-2 mb-4">
-        <div className="inline-flex items-center space-x-2 p-3 bg-gradient-to-tr from-blue-600 via-indigo-600 to-purple-600 text-white rounded-3xl shadow-xl shadow-blue-500/25">
+        <div className="inline-flex items-center space-x-2 p-3 bg-gradient-to-tr from-purple-600 via-purple-600 to-purple-600 text-white rounded-3xl shadow-xl shadow-purple-500/25">
           <GraduationCap className="w-8 h-8" />
         </div>
-        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-blue-800 via-indigo-800 to-purple-800 bg-clip-text text-transparent">
+        <h1 className="text-3xl font-extrabold tracking-tight bg-gradient-to-r from-purple-800 via-purple-800 to-purple-800 bg-clip-text text-transparent">
           RSR LMS
         </h1>
         <p className="text-xs sm:text-sm text-slate-600 max-w-sm mx-auto font-medium">
@@ -102,7 +102,7 @@ export const AuthPage = () => {
             onClick={() => handleSwitchPortal('student')}
             className={`flex-1 py-2.5 rounded-xl text-xs sm:text-sm font-bold transition-all flex items-center justify-center space-x-2 ${
               !isAdmin 
-                ? 'bg-white text-blue-700 shadow-md shadow-slate-200' 
+                ? 'bg-white text-purple-700 shadow-md shadow-slate-200' 
                 : 'text-slate-600 hover:text-slate-900'
             }`}
           >
@@ -125,13 +125,13 @@ export const AuthPage = () => {
 
         {/* Auth Card */}
         <div className={`bg-white py-8 px-6 sm:px-8 shadow-2xl rounded-3xl border transition-all ${
-          isAdmin ? 'border-purple-200 shadow-purple-500/5' : 'border-blue-200 shadow-blue-500/5'
+          isAdmin ? 'border-purple-200 shadow-purple-500/5' : 'border-purple-200 shadow-purple-500/5'
         }`}>
           
           {/* Header Banner */}
           <div className="flex items-center justify-between pb-4 border-b border-slate-100 mb-5">
             <div className="flex items-center space-x-2.5">
-              <div className={`p-2 rounded-xl text-white ${isAdmin ? 'bg-purple-600' : 'bg-blue-600'}`}>
+              <div className={`p-2 rounded-xl text-white ${isAdmin ? 'bg-purple-600' : 'bg-purple-600'}`}>
                 {isAdmin ? <Shield className="w-5 h-5" /> : <BookOpen className="w-5 h-5" />}
               </div>
               <div>
@@ -179,7 +179,7 @@ export const AuthPage = () => {
                 type="button"
                 onClick={handle1ClickFill}
                 className={`px-3 py-1.5 text-xs font-bold text-white rounded-lg shadow-sm transition-all ${
-                  isAdmin ? 'bg-purple-700 hover:bg-purple-800' : 'bg-blue-600 hover:bg-blue-700'
+                  isAdmin ? 'bg-purple-700 hover:bg-purple-800' : 'bg-purple-600 hover:bg-purple-700'
                 }`}
               >
                 Auto Fill
@@ -208,7 +208,7 @@ export const AuthPage = () => {
                       value={name}
                       onChange={e => setName(e.target.value)}
                       placeholder={isAdmin ? 'e.g. Dr. Rajesh Sharma' : 'e.g. Aarav Patel'}
-                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -239,7 +239,7 @@ export const AuthPage = () => {
                       value={mobile}
                       onChange={e => setMobile(e.target.value)}
                       placeholder="9876543210"
-                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                      className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                     />
                   </div>
                 </div>
@@ -253,7 +253,7 @@ export const AuthPage = () => {
                         required
                         value={chosenCourse}
                         onChange={e => setChosenCourse(e.target.value)}
-                        className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none appearance-none bg-white"
+                        className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none appearance-none bg-white"
                       >
                         <option value="" disabled>Select a course</option>
                         {courses?.map(c => (
@@ -278,7 +278,7 @@ export const AuthPage = () => {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder={isAdmin ? 'admin@lms.com' : 'student@lms.com'}
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -293,7 +293,7 @@ export const AuthPage = () => {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -304,7 +304,7 @@ export const AuthPage = () => {
                   type="checkbox"
                   checked={agreedToTerms}
                   onChange={e => setAgreedToTerms(e.target.checked)}
-                  className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-blue-600 focus:ring-blue-500"
+                  className="mt-0.5 w-3.5 h-3.5 rounded border-slate-300 text-purple-600 focus:ring-purple-500"
                 />
                 <span>I agree to the <span className="font-semibold text-slate-800">Terms & Conditions</span> and Privacy Policy</span>
               </label>
@@ -315,7 +315,7 @@ export const AuthPage = () => {
               className={`w-full py-3 text-white font-bold text-xs sm:text-sm rounded-xl shadow-lg transition-all flex items-center justify-center space-x-2 ${
                 isAdmin 
                   ? 'bg-slate-900 hover:bg-slate-800 shadow-slate-900/20' 
-                  : 'bg-blue-600 hover:bg-blue-700 shadow-blue-500/20'
+                  : 'bg-purple-600 hover:bg-purple-700 shadow-purple-500/20'
               }`}
             >
               <span>
@@ -336,7 +336,7 @@ export const AuthPage = () => {
                 setMode(mode === 'login' ? 'register' : 'login');
                 setError('');
               }}
-              className="text-xs text-blue-600 hover:underline font-semibold"
+              className="text-xs text-purple-600 hover:underline font-semibold"
             >
               {mode === 'login'
                 ? (isAdmin ? "Don't have an admin account? Register as Admin" : "New to RSR LMS? Create a free Student Account")

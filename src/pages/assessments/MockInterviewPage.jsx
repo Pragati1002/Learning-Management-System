@@ -93,14 +93,14 @@ export const MockInterviewPage = () => {
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
           {interviewTracks?.map(t => (
             <div key={t.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-              <div className="p-2.5 bg-indigo-50 rounded-xl w-fit">
-                <User className="w-5 h-5 text-indigo-600" />
+              <div className="p-2.5 bg-purple-50 rounded-xl w-fit">
+                <User className="w-5 h-5 text-purple-600" />
               </div>
               <h3 className="font-bold text-slate-900 text-sm">{t.role}</h3>
               <p className="text-xs text-slate-500">{t.questions.length} Questions • ~{t.questions.length * 3} min</p>
               <button
                 onClick={() => startInterview(t)}
-                className="w-full py-2 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition-all"
+                className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition-all"
               >
                 Start Mock Interview
               </button>
@@ -120,7 +120,7 @@ export const MockInterviewPage = () => {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <p className="text-[10px] font-bold uppercase text-indigo-600">Mock Interview</p>
+            <p className="text-[10px] font-bold uppercase text-purple-600">Mock Interview</p>
             <h2 className="font-bold text-slate-900 text-sm">{activeTrack.role}</h2>
           </div>
         </div>
@@ -131,8 +131,8 @@ export const MockInterviewPage = () => {
       </div>
 
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4 text-center">
-        <div className="w-16 h-16 mx-auto rounded-full bg-indigo-100 flex items-center justify-center">
-          <Sparkles className="w-8 h-8 text-indigo-600" />
+        <div className="w-16 h-16 mx-auto rounded-full bg-purple-100 flex items-center justify-center">
+          <Sparkles className="w-8 h-8 text-purple-600" />
         </div>
         <p className="text-xs font-bold text-slate-400">{activeTrack.interviewerName || 'AI Interviewer'} • Question {qIndex + 1} of {activeTrack.questions.length}</p>
         <h3 className="text-lg font-bold text-slate-900">{question.question}</h3>
@@ -140,7 +140,7 @@ export const MockInterviewPage = () => {
 
       <div className="bg-white p-5 rounded-3xl border border-slate-200 shadow-sm space-y-3">
         <div className="flex items-center space-x-2 text-xs font-bold text-slate-500 uppercase">
-          <Mic className="w-4 h-4 text-indigo-500" />
+          <Mic className="w-4 h-4 text-purple-500" />
           <span>Your Answer</span>
         </div>
         <textarea
@@ -148,7 +148,7 @@ export const MockInterviewPage = () => {
           onChange={e => setCurrentAnswer(e.target.value)}
           rows={5}
           placeholder="Type your answer here (in a real interview you'd speak it aloud)..."
-          className="w-full p-3.5 border border-slate-200 rounded-2xl text-sm focus:ring-2 focus:ring-indigo-500 focus:outline-none resize-none"
+          className="w-full p-3.5 border border-slate-200 rounded-2xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none"
         />
       </div>
 
@@ -162,7 +162,7 @@ export const MockInterviewPage = () => {
         </button>
         <button
           onClick={saveAndNext}
-          className="flex-1 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-sm rounded-xl transition-all"
+          className="flex-1 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm rounded-xl transition-all"
         >
           {qIndex < activeTrack.questions.length - 1 ? 'Next Question' : 'Finish Interview'}
         </button>

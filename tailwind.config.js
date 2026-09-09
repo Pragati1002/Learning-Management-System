@@ -8,15 +8,15 @@ export default {
     extend: {
       colors: {
         brand: {
-          50: '#f0fdf4',
-          100: '#dcfce7',
-          500: '#16a34a',
-          600: '#15803d',
-          700: '#166534',
-          blue: '#1e40af',
-          indigo: '#4f46e5',
-          navy: '#0f172a',
-          dark: '#1e293b'
+          50: '#faf5ff',
+          100: '#f3e8ff',
+          500: '#9333ea',
+          600: '#7e22ce',
+          700: '#6b21a8',
+          blue: '#7c3aed',
+          indigo: '#8b5cf6',
+          navy: '#0a0a0a',
+          dark: '#1a1a1a'
         }
       }
     },

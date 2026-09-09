@@ -80,7 +80,7 @@ export const MockTestPage = () => {
         <p className="text-sm text-slate-600">
           You scored <span className="font-bold text-slate-900">{correctCount}/{totalQuestions}</span> ({Math.round((correctCount / totalQuestions) * 100)}%)
         </p>
-        <button onClick={() => setActiveTest(null)} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl">
+        <button onClick={() => setActiveTest(null)} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl">
           Back to Mock Tests
         </button>
       </div>

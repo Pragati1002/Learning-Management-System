@@ -29,7 +29,7 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
             <span className="font-bold text-sm">Official RSR LMS Certificate of Completion</span>
           </div>
           <div className="flex items-center space-x-2">
-            <button onClick={handlePrint} className="flex items-center space-x-1 px-3.5 py-1.5 bg-blue-600 hover:bg-blue-700 text-xs font-semibold rounded-xl transition-colors shadow">
+            <button onClick={handlePrint} className="flex items-center space-x-1 px-3.5 py-1.5 bg-purple-600 hover:bg-purple-700 text-xs font-semibold rounded-xl transition-colors shadow">
               <Download className="w-3.5 h-3.5" />
               <span>Print / Download PDF</span>
             </button>
@@ -39,9 +39,9 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
           </div>
         </div>
 
-        <div className="p-8 bg-gradient-to-br from-amber-50/50 via-white to-sky-50/50 border-8 border-amber-500/30 m-4 rounded-2xl relative shadow-inner">
+        <div className="p-8 bg-gradient-to-br from-amber-50/50 via-white to-purple-50/50 border-8 border-amber-500/30 m-4 rounded-2xl relative shadow-inner">
           <div className="text-center space-y-6 relative z-10">
-            <div className="flex items-center justify-center space-x-2 text-blue-900 font-extrabold text-2xl tracking-widest uppercase font-serif">
+            <div className="flex items-center justify-center space-x-2 text-purple-900 font-extrabold text-2xl tracking-widest uppercase font-serif">
               <span>RSR ACADEMY OF EXCELLENCE</span>
             </div>
             <p className="text-xs text-slate-500 uppercase tracking-widest font-semibold">Certificate of Specialization & Mastery</p>
@@ -57,8 +57,8 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
               for successfully completing all curriculum modules, lesson videos, and standardized assessments in
             </p>
 
-            <div className="inline-block px-6 py-2.5 bg-blue-50 border border-blue-200 rounded-2xl">
-              <h3 className="text-lg sm:text-xl font-extrabold text-blue-950">{certificate.courseName}</h3>
+            <div className="inline-block px-6 py-2.5 bg-purple-50 border border-purple-200 rounded-2xl">
+              <h3 className="text-lg sm:text-xl font-extrabold text-purple-950">{certificate.courseName}</h3>
             </div>
 
             <div className="grid grid-cols-3 gap-4 pt-6 border-t border-slate-200/80 text-left text-xs">
@@ -69,7 +69,7 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
                 <p className="font-bold text-emerald-700">{certificate.grade} ({certificate.score})</p>
               </div>
               <div className="text-center">
-                <div className="w-14 h-14 mx-auto bg-gradient-to-tr from-blue-900 to-indigo-900 text-white rounded-full flex items-center justify-center border-2 border-yellow-400 shadow-md">
+                <div className="w-14 h-14 mx-auto bg-gradient-to-tr from-purple-900 to-purple-900 text-white rounded-full flex items-center justify-center border-2 border-yellow-400 shadow-md">
                   <Award className="w-7 h-7 text-yellow-400" />
                 </div>
                 <p className="text-[10px] text-slate-500 font-bold uppercase tracking-wider mt-1.5">Verified</p>
@@ -78,7 +78,7 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
                 <p className="text-slate-400 font-medium">Issuing Authority</p>
                 <p className="font-bold text-slate-800">{certificate.instructor || 'Administrator'}</p>
                 <p className="text-slate-400 font-medium mt-2">Certificate ID</p>
-                <p className="font-mono font-bold text-blue-700">{certificate.certificateId}</p>
+                <p className="font-mono font-bold text-purple-700">{certificate.certificateId}</p>
               </div>
             </div>
           </div>

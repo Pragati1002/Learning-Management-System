@@ -7,7 +7,7 @@ export const PlacementDashboard = () => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-rose-900 via-slate-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-rose-900 via-slate-900 to-purple-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <span className="px-2.5 py-0.5 bg-rose-500/20 border border-rose-400/40 text-rose-300 text-xs font-bold rounded-full">
             CORPORATE RELATIONS & PLACEMENTS
@@ -30,14 +30,14 @@ export const PlacementDashboard = () => {
                   <p className="text-xs text-slate-500">{job.location}</p>
                 </div>
               </div>
-              <h3 className="font-extrabold text-blue-700 text-sm mt-3">{job.role}</h3>
+              <h3 className="font-extrabold text-purple-700 text-sm mt-3">{job.role}</h3>
               <p className="text-xs font-bold text-emerald-700 mt-1">Package: {job.package}</p>
               <p className="text-xs text-slate-500 mt-2">{job.eligibility}</p>
             </div>
 
             <div className="pt-3 border-t border-slate-100 flex items-center justify-between text-xs">
               <span className="text-slate-500">{job.applicants.length} Applicants</span>
-              <button onClick={() => setActiveTab('placements')} className="font-bold text-blue-600 hover:underline">
+              <button onClick={() => setActiveTab('placements')} className="font-bold text-purple-600 hover:underline">
                 View Drive →
               </button>
             </div>

@@ -39,7 +39,7 @@ export const StudyMaterialsPage = () => {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <span className="text-[10px] uppercase font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
+            <span className="text-[10px] uppercase font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
               {course.category}
             </span>
             <h2 className="text-base sm:text-lg font-bold text-slate-900 line-clamp-1">{lesson.title}</h2>
@@ -65,7 +65,7 @@ export const StudyMaterialsPage = () => {
             key={id}
             onClick={() => setTab(id)}
             className={`flex items-center space-x-1.5 px-4 py-2 rounded-xl text-xs font-bold transition-all ${
-              tab === id ? 'bg-blue-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'
+              tab === id ? 'bg-purple-600 text-white shadow-sm' : 'text-slate-600 hover:bg-slate-50'
             }`}
           >
             <Icon className="w-4 h-4" />
@@ -93,7 +93,7 @@ export const StudyMaterialsPage = () => {
           <p className="text-sm text-slate-600 leading-relaxed">
             {lesson.notes || `Key notes and reference material for "${lesson.title}" will appear here — covering the core concepts, syntax, and examples discussed in the video.`}
           </p>
-          <button className="text-xs font-bold text-blue-700 hover:underline flex items-center space-x-1.5 pt-2">
+          <button className="text-xs font-bold text-purple-700 hover:underline flex items-center space-x-1.5 pt-2">
             <Download className="w-3.5 h-3.5" />
             <span>Download Notes (PDF)</span>
           </button>
@@ -102,13 +102,13 @@ export const StudyMaterialsPage = () => {
 
       {tab === 'pdf' && (
         <div className="bg-white p-8 rounded-3xl border border-slate-200 shadow-sm text-center space-y-3">
-          <FileText className="w-10 h-10 text-blue-500 mx-auto" />
+          <FileText className="w-10 h-10 text-purple-500 mx-auto" />
           <h3 className="font-bold text-slate-900 text-sm">Lesson Resources</h3>
           {lesson.resources?.length > 0 ? (
             <div className="flex flex-wrap justify-center gap-2 pt-2">
               {lesson.resources.map((res, i) => (
                 <button key={i} className="flex items-center space-x-1.5 px-3.5 py-2 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl border border-slate-200 transition-colors">
-                  <Download className="w-3.5 h-3.5 text-blue-600" />
+                  <Download className="w-3.5 h-3.5 text-purple-600" />
                   <span>{res}</span>
                 </button>
               ))}

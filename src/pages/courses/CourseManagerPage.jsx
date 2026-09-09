@@ -44,7 +44,7 @@ export const CourseManagerPage = () => {
         </div>
         <button
           onClick={() => setShowAddModal(true)}
-          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
+          className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
         >
           <Plus className="w-4 h-4" />
           <span>Add New Course</span>
@@ -57,7 +57,7 @@ export const CourseManagerPage = () => {
             <div>
               <img src={c.thumbnail} alt={c.title} className="w-full h-36 rounded-xl object-cover mb-3" />
               <div className="flex items-center justify-between">
-                <span className="text-[10px] font-bold uppercase text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold uppercase text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
                   {c.category}
                 </span>
                 <button
@@ -149,7 +149,7 @@ export const CourseManagerPage = () => {
                 <button type="button" onClick={() => setShowAddModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold">
+                <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold">
                   Create Course
                 </button>
               </div>

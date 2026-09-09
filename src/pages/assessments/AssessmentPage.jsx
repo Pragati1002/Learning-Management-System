@@ -123,7 +123,7 @@ export const AssessmentPage = () => {
           <div className="flex space-x-2">
             <button
               onClick={() => setShowAddQuizModal(true)}
-              className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5"
+              className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5"
             >
               <Plus className="w-4 h-4" />
               <span>Add Quiz / Exam</span>
@@ -143,7 +143,7 @@ export const AssessmentPage = () => {
         <button
           onClick={() => { setActiveTabSub('quizzes'); setActiveQuiz(null); }}
           className={`pb-3 px-4 text-sm font-bold border-b-2 transition-all ${
-            activeTabSub === 'quizzes' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500'
+            activeTabSub === 'quizzes' ? 'border-purple-600 text-purple-600' : 'border-transparent text-slate-500'
           }`}
         >
           Certification Quizzes ({quizzes.length})
@@ -151,7 +151,7 @@ export const AssessmentPage = () => {
         <button
           onClick={() => { setActiveTabSub('assignments'); setActiveQuiz(null); }}
           className={`pb-3 px-4 text-sm font-bold border-b-2 transition-all ${
-            activeTabSub === 'assignments' ? 'border-blue-600 text-blue-600' : 'border-transparent text-slate-500'
+            activeTabSub === 'assignments' ? 'border-purple-600 text-purple-600' : 'border-transparent text-slate-500'
           }`}
         >
           Practical Assignments ({(assignments || []).length})
@@ -162,7 +162,7 @@ export const AssessmentPage = () => {
         <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
           <div className="flex items-center justify-between pb-4 border-b border-slate-100">
             <div>
-              <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded uppercase">
+              <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded uppercase">
                 {activeQuiz.courseTitle}
               </span>
               <h2 className="text-lg font-bold text-slate-900 mt-1">{activeQuiz.title}</h2>
@@ -183,7 +183,7 @@ export const AssessmentPage = () => {
                   <div className="space-y-2">
                     {q.options.map((opt, oIdx) => {
                       let btnStyle = 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700';
-                      if (userAns === oIdx) btnStyle = 'bg-blue-50 border-blue-500 text-blue-800 font-semibold ring-1 ring-blue-500';
+                      if (userAns === oIdx) btnStyle = 'bg-purple-50 border-purple-500 text-purple-800 font-semibold ring-1 ring-purple-500';
                       if (quizSubmitted) {
                         if (oIdx === q.correctAnswer) btnStyle = 'bg-emerald-50 border-emerald-500 text-emerald-800 font-bold';
                         else if (userAns === oIdx && oIdx !== q.correctAnswer) btnStyle = 'bg-red-50 border-red-400 text-red-800';
@@ -208,7 +208,7 @@ export const AssessmentPage = () => {
           {!quizSubmitted ? (
             <button
               onClick={handleSubmitQuiz}
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg transition-all"
+              className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm rounded-xl shadow-lg transition-all"
             >
               Submit Exam for Instant Evaluation
             </button>
@@ -231,7 +231,7 @@ export const AssessmentPage = () => {
             <div key={q.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
               <div>
                 <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded uppercase">
+                  <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded uppercase">
                     {q.courseTitle}
                   </span>
                   {currentUser?.role === 'admin' && (
@@ -256,7 +256,7 @@ export const AssessmentPage = () => {
               </div>
               <button
                 onClick={() => handleStartQuiz(q)}
-                className="w-full py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center space-x-1.5"
+                className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center space-x-1.5"
               >
                 <span>Take Assessment</span>
                 <ArrowRight className="w-4 h-4" />
@@ -397,7 +397,7 @@ export const AssessmentPage = () => {
                 <button type="button" onClick={() => setShowAddQuizModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold">
+                <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold">
                   Publish Quiz
                 </button>
               </div>

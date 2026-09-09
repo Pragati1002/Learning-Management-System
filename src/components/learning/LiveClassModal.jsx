@@ -72,13 +72,13 @@ export const LiveClassModal = ({ liveClass, isOpen, onClose }) => {
 
         <div className="w-80 bg-slate-900 border-l border-slate-800 flex flex-col">
           <div className="p-3 border-b border-slate-800 text-white text-xs font-bold flex items-center space-x-2">
-            <MessageSquare className="w-4 h-4 text-blue-400" />
+            <MessageSquare className="w-4 h-4 text-purple-400" />
             <span>Live Classroom Chat</span>
           </div>
           <div className="flex-1 p-3 overflow-y-auto space-y-3">
             {chatMessages.map(m => (
               <div key={m.id} className="text-xs bg-slate-800/80 p-2.5 rounded-xl border border-slate-700/60">
-                <span className="font-bold text-blue-400 block mb-0.5">{m.user}:</span>
+                <span className="font-bold text-purple-400 block mb-0.5">{m.user}:</span>
                 <span className="text-slate-200">{m.text}</span>
               </div>
             ))}
@@ -90,9 +90,9 @@ export const LiveClassModal = ({ liveClass, isOpen, onClose }) => {
               onChange={e => setMsgInput(e.target.value)}
               onKeyDown={e => e.key === 'Enter' && handleSend()}
               placeholder="Ask question live..."
-              className="flex-1 bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-blue-500"
+              className="flex-1 bg-slate-800 border border-slate-700 text-white rounded-lg px-3 py-1.5 text-xs focus:outline-none focus:ring-1 focus:ring-purple-500"
             />
-            <button onClick={handleSend} className="p-2 bg-blue-600 text-white rounded-lg hover:bg-blue-700">
+            <button onClick={handleSend} className="p-2 bg-purple-600 text-white rounded-lg hover:bg-purple-700">
               <Send className="w-3.5 h-3.5" />
             </button>
           </div>

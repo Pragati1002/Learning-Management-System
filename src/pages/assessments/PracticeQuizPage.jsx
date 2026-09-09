@@ -55,8 +55,8 @@ export const PracticeQuizPage = () => {
           {quizzes?.map(q => (
             <div key={q.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
               <div className="flex items-start justify-between">
-                <div className="p-2.5 bg-blue-50 rounded-xl">
-                  <FileCheck2 className="w-5 h-5 text-blue-600" />
+                <div className="p-2.5 bg-purple-50 rounded-xl">
+                  <FileCheck2 className="w-5 h-5 text-purple-600" />
                 </div>
                 <span className="flex items-center space-x-1 text-[11px] font-bold text-slate-500">
                   <Clock className="w-3.5 h-3.5" />
@@ -69,7 +69,7 @@ export const PracticeQuizPage = () => {
               </div>
               <button
                 onClick={() => startQuiz(q)}
-                className="w-full py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl transition-all"
+                className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition-all"
               >
                 Start Quiz
               </button>
@@ -94,7 +94,7 @@ export const PracticeQuizPage = () => {
           <button onClick={() => startQuiz(activeQuiz)} className="px-4 py-2 bg-slate-100 hover:bg-slate-200 text-slate-800 text-xs font-bold rounded-xl">
             Retry Quiz
           </button>
-          <button onClick={backToList} className="px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white text-xs font-bold rounded-xl">
+          <button onClick={backToList} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl">
             Back to Quizzes
           </button>
         </div>
@@ -114,7 +114,7 @@ export const PracticeQuizPage = () => {
       </div>
 
       <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-        <div className="h-full bg-blue-600 rounded-full transition-all" style={{ width: `${((qIndex + 1) / activeQuiz.questions.length) * 100}%` }}></div>
+        <div className="h-full bg-purple-600 rounded-full transition-all" style={{ width: `${((qIndex + 1) / activeQuiz.questions.length) * 100}%` }}></div>
       </div>
 
       <div className="bg-white p-6 rounded-3xl border border-slate-200 shadow-sm space-y-4">
@@ -143,7 +143,7 @@ export const PracticeQuizPage = () => {
       <button
         onClick={handleNext}
         disabled={answers[question.id] === undefined}
-        className="w-full py-3 bg-blue-600 hover:bg-blue-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-sm rounded-xl transition-all"
+        className="w-full py-3 bg-purple-600 hover:bg-purple-700 disabled:bg-slate-200 disabled:text-slate-400 text-white font-bold text-sm rounded-xl transition-all"
       >
         {qIndex < activeQuiz.questions.length - 1 ? 'Next Question' : 'Submit Quiz'}
       </button>

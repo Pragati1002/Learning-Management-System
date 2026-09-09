@@ -11,7 +11,7 @@ export const AIInterviewFeedbackPage = () => {
         <p className="text-sm text-slate-500">No interview feedback yet — complete a mock interview first.</p>
         <button
           onClick={() => setActiveTab('mock-interview')}
-          className="px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white text-xs font-bold rounded-xl"
+          className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl"
         >
           Start a Mock Interview
         </button>
@@ -21,7 +21,7 @@ export const AIInterviewFeedbackPage = () => {
 
   const { role, score, strengths, improvements, questionCount } = lastInterviewFeedback;
   const grade = score >= 85 ? 'Excellent' : score >= 70 ? 'Good' : score >= 50 ? 'Fair' : 'Needs Work';
-  const ringColor = score >= 85 ? '#10b981' : score >= 70 ? '#3b82f6' : score >= 50 ? '#f59e0b' : '#ef4444';
+  const ringColor = score >= 85 ? '#10b981' : score >= 70 ? '#9333ea' : score >= 50 ? '#f59e0b' : '#ef4444';
 
   return (
     <div className="max-w-2xl mx-auto space-y-6">
@@ -79,7 +79,7 @@ export const AIInterviewFeedbackPage = () => {
       <div className="flex gap-3">
         <button
           onClick={() => setActiveTab('mock-interview')}
-          className="flex-1 flex items-center justify-center space-x-1.5 py-3 bg-indigo-600 hover:bg-indigo-700 text-white font-bold text-xs rounded-xl transition-all"
+          className="flex-1 flex items-center justify-center space-x-1.5 py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition-all"
         >
           <RotateCcw className="w-4 h-4" />
           <span>Try Another Interview</span>

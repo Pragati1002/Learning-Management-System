@@ -45,7 +45,7 @@ export const LoginPage = () => {
       
       {/* Brand Header */}
       <div className="sm:mx-auto sm:w-full sm:max-w-md text-center space-y-3">
-        <div className="inline-flex p-3 bg-blue-600 text-white rounded-2xl shadow-lg shadow-blue-500/30">
+        <div className="inline-flex p-3 bg-purple-600 text-white rounded-2xl shadow-lg shadow-purple-500/30">
           <GraduationCap className="w-8 h-8" />
         </div>
         <h2 className="text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -71,13 +71,13 @@ export const LoginPage = () => {
                 onClick={() => handleQuickLogin('admin')}
                 className="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm"
               >
-                <Shield className="w-3.5 h-3.5 text-blue-400" />
+                <Shield className="w-3.5 h-3.5 text-purple-400" />
                 <span>Admin Login</span>
               </button>
               <button
                 type="button"
                 onClick={() => handleQuickLogin('student')}
-                className="py-2.5 px-3 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm shadow-blue-500/20"
+                className="py-2.5 px-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm shadow-purple-500/20"
               >
                 <BookOpen className="w-3.5 h-3.5" />
                 <span>Student Login</span>
@@ -109,7 +109,7 @@ export const LoginPage = () => {
                     value={name}
                     onChange={e => setName(e.target.value)}
                     placeholder="e.g. John Doe"
-                    className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                    className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                   />
                 </div>
               </div>
@@ -125,7 +125,7 @@ export const LoginPage = () => {
                   value={email}
                   onChange={e => setEmail(e.target.value)}
                   placeholder="admin@lms.com or student@lms.com"
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -140,7 +140,7 @@ export const LoginPage = () => {
                   value={password}
                   onChange={e => setPassword(e.target.value)}
                   placeholder="••••••••"
-                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>
             </div>
@@ -151,7 +151,7 @@ export const LoginPage = () => {
                 <select
                   value={role}
                   onChange={e => setRole(e.target.value)}
-                  className="w-full p-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm bg-white focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                  className="w-full p-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm bg-white focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 >
                   <option value="student">Student / Learner</option>
                   <option value="admin">Administrator / Trainer</option>
@@ -161,7 +161,7 @@ export const LoginPage = () => {
 
             <button
               type="submit"
-              className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-500/20 transition-all flex items-center justify-center space-x-2"
+              className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-purple-500/20 transition-all flex items-center justify-center space-x-2"
             >
               <span>{isRegister ? 'Create Account & Sign In' : 'Sign In to Portal'}</span>
               <ArrowRight className="w-4 h-4" />
@@ -175,7 +175,7 @@ export const LoginPage = () => {
                 setIsRegister(!isRegister);
                 setError('');
               }}
-              className="text-xs text-blue-600 hover:underline font-semibold"
+              className="text-xs text-purple-600 hover:underline font-semibold"
             >
               {isRegister ? 'Already have an account? Sign In' : 'Need an account? Sign Up for Free'}
             </button>

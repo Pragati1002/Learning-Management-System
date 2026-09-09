@@ -26,6 +26,12 @@ import { PracticeQuizPage } from './pages/assessments/PracticeQuizPage';
 import { MockTestPage } from './pages/assessments/MockTestPage';
 import { MockInterviewPage } from './pages/assessments/MockInterviewPage';
 import { AIInterviewFeedbackPage } from './pages/assessments/AIInterviewFeedbackPage';
+import { ResumeBuilderPage } from './pages/crm/ResumeBuilderPage';
+import { JobPortalPage } from './pages/crm/JobPortalPage';
+import { ApplicationTrackingPage } from './pages/crm/ApplicationTrackingPage';
+import { PlacementPortalPage } from './pages/crm/PlacementPortalPage';
+import { PlacementCertificatePage } from './pages/certificates/PlacementCertificatePage';
+import { FeedbackPage } from './pages/crm/FeedbackPage';
 import { DiscussionPage } from './pages/crm/DiscussionPage';
 
 import { CheckCircle2, AlertCircle, Lock, Award, PlayCircle, ArrowRight, Sparkles } from 'lucide-react';
@@ -127,6 +133,24 @@ export function LMSApp() {
       case 'interview-feedback':
         return <AIInterviewFeedbackPage />;
 
+      case 'resume':
+        return <ResumeBuilderPage />;
+
+      case 'job-portal':
+        return <JobPortalPage />;
+
+      case 'application-tracking':
+        return <ApplicationTrackingPage />;
+
+      case 'campus-placements':
+        return <PlacementPortalPage />;
+
+      case 'placement-certificate':
+        return <PlacementCertificatePage />;
+
+      case 'feedback':
+        return <FeedbackPage />;
+
       case 'discussions':
         return <DiscussionPage />;
 
@@ -151,7 +175,7 @@ export function LMSApp() {
                   }`}>
                     <div>
                       <div className="flex items-center justify-between">
-                        <span className="text-[10px] font-bold uppercase text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
+                        <span className="text-[10px] font-bold uppercase text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
                           {course.category}
                         </span>
                         {isUnlocked ? (
@@ -173,11 +197,11 @@ export function LMSApp() {
                       <div className="mt-3">
                         <div className="flex justify-between text-xs font-semibold mb-1">
                           <span className="text-slate-500">Progress</span>
-                          <span className={isUnlocked ? 'text-emerald-700 font-bold' : 'text-blue-700 font-bold'}>{progress}%</span>
+                          <span className={isUnlocked ? 'text-emerald-700 font-bold' : 'text-purple-700 font-bold'}>{progress}%</span>
                         </div>
                         <div className="w-full h-2.5 bg-slate-100 rounded-full overflow-hidden border border-slate-200/80">
                           <div 
-                            className={`h-full transition-all duration-500 ${isUnlocked ? 'bg-emerald-500' : 'bg-blue-600'}`} 
+                            className={`h-full transition-all duration-500 ${isUnlocked ? 'bg-emerald-500' : 'bg-purple-600'}`} 
                             style={{ width: `${progress}%` }}
                           ></div>
                         </div>
@@ -220,7 +244,7 @@ export function LMSApp() {
                             setSelectedCourseForPlayer(course);
                             setActiveTab('course-player');
                           }}
-                          className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white text-xs sm:text-sm font-bold rounded-2xl transition-all shadow-md shadow-blue-500/20 flex items-center justify-center space-x-2"
+                          className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white text-xs sm:text-sm font-bold rounded-2xl transition-all shadow-md shadow-purple-500/20 flex items-center justify-center space-x-2"
                         >
                           <PlayCircle className="w-4 h-4" />
                           <span>Complete Course Lessons ({progress}%) →</span>
@@ -240,7 +264,7 @@ export function LMSApp() {
   };
 
   return (
-    <div className="min-h-screen bg-slate-50 flex flex-col font-['Plus_Jakarta_Sans',sans-serif]">
+    <div className="min-h-screen bg-slate-50 dark:bg-slate-950 flex flex-col font-['Plus_Jakarta_Sans',sans-serif] transition-colors duration-200">
       {toastMessage && (
         <div className="fixed bottom-6 right-6 z-50 animate-in slide-in-from-bottom-5 fade-in duration-200">
           <div className={`flex items-center space-x-2.5 px-4 py-3 rounded-2xl shadow-xl border text-xs sm:text-sm font-semibold ${
@@ -292,7 +316,7 @@ export function LMSApp() {
                   setLockedCoursePrompt(null);
                   setActiveTab('course-player');
                 }}
-                className="flex-1 py-2.5 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1"
+                className="flex-1 py-2.5 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-md flex items-center justify-center space-x-1"
               >
                 <span>Resume Lessons</span>
                 <ArrowRight className="w-3.5 h-3.5" />

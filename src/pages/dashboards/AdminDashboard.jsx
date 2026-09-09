@@ -9,9 +9,9 @@ export const AdminDashboard = () => {
     <div className="space-y-6">
       
       {/* Top Banner */}
-      <div className="bg-gradient-to-r from-slate-900 to-blue-950 text-white p-6 rounded-3xl shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-slate-900 to-purple-950 text-white p-6 rounded-3xl shadow-lg flex flex-col sm:flex-row items-start sm:items-center justify-between gap-4">
         <div>
-          <span className="px-2.5 py-0.5 bg-blue-500/20 border border-blue-400/40 text-blue-300 text-xs font-bold rounded-full">
+          <span className="px-2.5 py-0.5 bg-purple-500/20 border border-purple-400/40 text-purple-300 text-xs font-bold rounded-full">
             ADMINISTRATOR WORKSPACE
           </span>
           <h1 className="text-2xl sm:text-3xl font-extrabold mt-1">Admin Learning & Course Manager</h1>
@@ -21,7 +21,7 @@ export const AdminDashboard = () => {
         </div>
         <button
           onClick={() => setActiveTab('courses-manage')}
-          className="px-5 py-2.5 bg-blue-600 hover:bg-blue-500 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center space-x-2 shrink-0"
+          className="px-5 py-2.5 bg-purple-600 hover:bg-purple-500 text-white font-bold text-xs rounded-xl shadow-md transition-all flex items-center space-x-2 shrink-0"
         >
           <PlusCircle className="w-4 h-4" />
           <span>Create New Course</span>
@@ -33,7 +33,7 @@ export const AdminDashboard = () => {
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <div className="flex items-center justify-between">
             <span className="text-xs font-semibold text-slate-500">Published Courses</span>
-            <div className="p-2 bg-blue-50 text-blue-600 rounded-xl">
+            <div className="p-2 bg-purple-50 text-purple-600 rounded-xl">
               <BookOpen className="w-5 h-5" />
             </div>
           </div>
@@ -68,7 +68,7 @@ export const AdminDashboard = () => {
       <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
         <div className="flex items-center justify-between">
           <h3 className="font-extrabold text-slate-900 text-base">Current Published Courses</h3>
-          <button onClick={() => setActiveTab('courses-manage')} className="text-xs text-blue-600 font-bold hover:underline">
+          <button onClick={() => setActiveTab('courses-manage')} className="text-xs text-purple-600 font-bold hover:underline">
             Manage All →
           </button>
         </div>
@@ -78,7 +78,7 @@ export const AdminDashboard = () => {
             <div key={c.id} className="p-4 bg-slate-50 rounded-2xl border border-slate-200 flex flex-col justify-between space-y-3">
               <div>
                 <img src={c.thumbnail} alt={c.title} className="w-full h-32 rounded-xl object-cover mb-2" />
-                <span className="text-[10px] font-bold uppercase text-blue-700 bg-blue-100 px-2 py-0.5 rounded">
+                <span className="text-[10px] font-bold uppercase text-purple-700 bg-purple-100 px-2 py-0.5 rounded">
                   {c.category}
                 </span>
                 <h4 className="font-bold text-sm text-slate-900 mt-1 line-clamp-1">{c.title}</h4>

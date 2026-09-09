@@ -60,7 +60,7 @@ export const BatchAttendancePage = () => {
         {currentUser?.role === 'admin' && (
           <button
             onClick={() => setShowAddBatchModal(true)}
-            className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
+            className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
           >
             <Plus className="w-4 h-4" />
             <span>Create New Batch</span>
@@ -73,7 +73,7 @@ export const BatchAttendancePage = () => {
           <p className="text-sm text-slate-500">No batches created yet.</p>
           <button
             onClick={() => setShowAddBatchModal(true)}
-            className="px-4 py-2 bg-blue-600 text-white text-xs font-bold rounded-xl"
+            className="px-4 py-2 bg-purple-600 text-white text-xs font-bold rounded-xl"
           >
             Create First Batch
           </button>
@@ -87,7 +87,7 @@ export const BatchAttendancePage = () => {
                 onClick={() => setSelectedBatchId(b.id)}
                 className={`px-4 py-2.5 rounded-xl text-xs sm:text-sm font-bold whitespace-nowrap transition-all ${
                   (selectedBatch?.id === b.id)
-                    ? 'bg-blue-600 text-white shadow-md'
+                    ? 'bg-purple-600 text-white shadow-md'
                     : 'bg-white text-slate-700 hover:bg-slate-100 border border-slate-200'
                 }`}
               >
@@ -232,7 +232,7 @@ export const BatchAttendancePage = () => {
                 <button type="button" onClick={() => setShowAddBatchModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold shadow-md">
+                <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold shadow-md">
                   Create Batch
                 </button>
               </div>

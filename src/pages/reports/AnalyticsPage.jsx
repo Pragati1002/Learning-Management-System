@@ -36,10 +36,10 @@ export const AnalyticsPage = () => {
               <div key={c.id} className="space-y-1.5">
                 <div className="flex justify-between text-xs font-semibold">
                   <span className="text-slate-700 truncate max-w-[200px]">{c.title}</span>
-                  <span className="text-blue-700 font-bold">{c.enrolledCount} Learners</span>
+                  <span className="text-purple-700 font-bold">{c.enrolledCount} Learners</span>
                 </div>
                 <div className="w-full h-2 bg-slate-100 rounded-full overflow-hidden">
-                  <div className="h-full bg-blue-600 rounded-full" style={{ width: `${Math.min(100, c.enrolledCount / 15)}%` }}></div>
+                  <div className="h-full bg-purple-600 rounded-full" style={{ width: `${Math.min(100, c.enrolledCount / 15)}%` }}></div>
                 </div>
               </div>
             ))}

@@ -30,7 +30,7 @@ export const FeeManagementPage = ({ onOpenPayment }) => {
             <tbody className="divide-y divide-slate-100">
               {fees.map(f => (
                 <tr key={f.invoiceId} className="hover:bg-slate-50/50">
-                  <td className="p-3 font-mono font-bold text-blue-700">{f.invoiceId}</td>
+                  <td className="p-3 font-mono font-bold text-purple-700">{f.invoiceId}</td>
                   <td className="p-3 font-bold text-slate-900">{f.studentName}</td>
                   <td className="p-3 text-slate-600">{f.courseName}</td>
                   <td className="p-3 font-extrabold text-slate-900">₹{f.paidAmount || f.amount}</td>
@@ -47,7 +47,7 @@ export const FeeManagementPage = ({ onOpenPayment }) => {
                     {f.status === 'Pending' ? (
                       <button
                         onClick={() => onOpenPayment(f)}
-                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg text-xs"
+                        className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg text-xs"
                       >
                         Checkout / Pay
                       </button>

@@ -18,7 +18,7 @@ export const CertificateVerifyPage = ({ onOpenCertificate }) => {
   return (
     <div className="max-w-3xl mx-auto space-y-6">
       <div className="text-center space-y-2">
-        <div className="inline-flex p-3 bg-blue-100 text-blue-700 rounded-2xl mb-1">
+        <div className="inline-flex p-3 bg-purple-100 text-purple-700 rounded-2xl mb-1">
           <ShieldCheck className="w-8 h-8" />
         </div>
         <h1 className="text-2xl sm:text-3xl font-extrabold text-slate-900 tracking-tight">
@@ -37,12 +37,12 @@ export const CertificateVerifyPage = ({ onOpenCertificate }) => {
             value={certCode}
             onChange={e => setCertCode(e.target.value)}
             placeholder="Enter Certificate ID (e.g. LMS-CERT-2026-8841)"
-            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm font-mono uppercase focus:ring-2 focus:ring-blue-500 focus:outline-none"
+            className="w-full pl-10 pr-4 py-2 border border-slate-300 rounded-xl text-xs sm:text-sm font-mono uppercase focus:ring-2 focus:ring-purple-500 focus:outline-none"
           />
         </div>
         <button
           type="submit"
-          className="px-5 py-2 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-colors"
+          className="px-5 py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs sm:text-sm rounded-xl shadow-md transition-colors"
         >
           Verify ID
         </button>

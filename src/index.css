@@ -1,9 +1,30 @@
 @import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
 
 body {
   background-color: #f8fafc;
-  color: #1e293b;
+  color: #0f172a;
   font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.dark body {
+  background-color: #0b0b0f;
+  color: #e2e8f0;
+}
+
+/* Udemy-style tactile touch feedback + smooth transitions, applied globally */
+button, a, [role="button"], select, input[type="checkbox"], input[type="radio"] {
+  transition: transform 150ms ease, box-shadow 180ms ease, background-color 180ms ease,
+              border-color 180ms ease, color 180ms ease, opacity 180ms ease;
+}
+button:not(:disabled):active, a:active, [role="button"]:not(:disabled):active {
+  transform: scale(0.97);
+}
+@media (hover: hover) {
+  button:not(:disabled):hover, [role="button"]:not(:disabled):hover {
+    filter: brightness(1.03);
+  }
 }
 
 /* Custom scrollbars */
@@ -20,6 +41,15 @@ body {
 }
 ::-webkit-scrollbar-thumb:hover {
   background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #18181b;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
 }
 
 @keyframes pulseGlow {

@@ -40,7 +40,7 @@ export const DiscussionPage = () => {
         </div>
         <button
           onClick={() => setShowAskModal(true)}
-          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
+          className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
         >
           <Plus className="w-4 h-4" />
           <span>Ask Question</span>
@@ -86,7 +86,7 @@ export const DiscussionPage = () => {
               <div className="space-y-2 pt-2 border-t border-slate-100">
                 {d.replies.map((r, rIdx) => (
                   <div key={rIdx} className="p-3 bg-slate-50 rounded-xl border border-slate-100 text-xs">
-                    <span className="font-bold text-blue-700 block mb-0.5">{r.author}:</span>
+                    <span className="font-bold text-purple-700 block mb-0.5">{r.author}:</span>
                     <span className="text-slate-700">{r.content}</span>
                   </div>
                 ))}
@@ -100,11 +100,11 @@ export const DiscussionPage = () => {
                 onChange={e => setReplyInput({ ...replyInput, [d.id]: e.target.value })}
                 onKeyDown={e => e.key === 'Enter' && handleReply(d.id)}
                 placeholder="Write a helpful response..."
-                className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-blue-500 focus:outline-none"
+                className="flex-1 border border-slate-200 rounded-xl px-3 py-2 text-xs focus:ring-1 focus:ring-purple-500 focus:outline-none"
               />
               <button
                 onClick={() => handleReply(d.id)}
-                className="p-2 bg-blue-600 text-white rounded-xl hover:bg-blue-700 transition-colors"
+                className="p-2 bg-purple-600 text-white rounded-xl hover:bg-purple-700 transition-colors"
               >
                 <Send className="w-3.5 h-3.5" />
               </button>
@@ -144,7 +144,7 @@ export const DiscussionPage = () => {
                 <button type="button" onClick={() => setShowAskModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold">
+                <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold">
                   Publish Question
                 </button>
               </div>

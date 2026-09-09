@@ -31,7 +31,7 @@ export const PaymentModal = ({ invoice, isOpen, onClose }) => {
   return (
     <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 animate-in fade-in">
       <div className="bg-white rounded-2xl shadow-2xl max-w-md w-full overflow-hidden border border-slate-200 animate-in zoom-in-95">
-        <div className="p-5 bg-gradient-to-r from-blue-700 to-indigo-700 text-white flex items-center justify-between">
+        <div className="p-5 bg-gradient-to-r from-purple-700 to-purple-700 text-white flex items-center justify-between">
           <div className="flex items-center space-x-2.5">
             <CreditCard className="w-5 h-5" />
             <h3 className="font-bold text-base">Secure Fee Payment Gateway</h3>
@@ -65,7 +65,7 @@ export const PaymentModal = ({ invoice, isOpen, onClose }) => {
                 value={coupon}
                 onChange={(e) => setCoupon(e.target.value)}
                 placeholder="Try 'LMS50' or 'TECH2026'"
-                className="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono uppercase focus:ring-2 focus:ring-blue-500 focus:outline-none"
+                className="flex-1 border border-slate-300 rounded-xl px-3 py-2 text-xs font-mono uppercase focus:ring-2 focus:ring-purple-500 focus:outline-none"
               />
               <button
                 onClick={applyCoupon}
@@ -93,14 +93,14 @@ export const PaymentModal = ({ invoice, isOpen, onClose }) => {
             </div>
             <div className="flex justify-between text-base font-extrabold text-slate-900 pt-2 border-t border-slate-200">
               <span>Total Payable:</span>
-              <span className="text-blue-700">₹{finalPrice}</span>
+              <span className="text-purple-700">₹{finalPrice}</span>
             </div>
           </div>
 
           <button
             onClick={handlePay}
             disabled={processing}
-            className="w-full py-3 bg-blue-600 hover:bg-blue-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-blue-600/30 flex items-center justify-center space-x-2 transition-all disabled:opacity-50"
+            className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm rounded-xl shadow-lg shadow-purple-600/30 flex items-center justify-center space-x-2 transition-all disabled:opacity-50"
           >
             {processing ? (
               <span>Processing Payment Gateway...</span>

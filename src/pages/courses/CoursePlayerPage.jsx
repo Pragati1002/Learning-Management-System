@@ -66,7 +66,7 @@ export const CoursePlayerPage = () => {
             <ArrowLeft className="w-5 h-5" />
           </button>
           <div>
-            <span className="text-[10px] uppercase font-bold text-blue-700 bg-blue-50 px-2 py-0.5 rounded">
+            <span className="text-[10px] uppercase font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded">
               {course.category}
             </span>
             <h2 className="text-base sm:text-lg font-bold text-slate-900 line-clamp-1">{course.title}</h2>
@@ -77,13 +77,13 @@ export const CoursePlayerPage = () => {
         <div className="flex items-center space-x-3 text-xs font-semibold">
           <div className="text-right">
             <span className="text-slate-500 block">Course Progress</span>
-            <span className={`font-extrabold ${progress === 100 ? 'text-emerald-600' : 'text-blue-700'}`}>
+            <span className={`font-extrabold ${progress === 100 ? 'text-emerald-600' : 'text-purple-700'}`}>
               {progress}% Completed ({allLessons.filter(l => currentUser?.completedLessons?.includes(l.id)).length}/{allLessons.length} Lessons)
             </span>
           </div>
           <div className="w-28 h-3 bg-slate-100 rounded-full overflow-hidden border border-slate-200">
             <div 
-              className={`h-full transition-all duration-500 ${progress === 100 ? 'bg-emerald-500' : 'bg-blue-600'}`} 
+              className={`h-full transition-all duration-500 ${progress === 100 ? 'bg-emerald-500' : 'bg-purple-600'}`} 
               style={{ width: `${progress}%` }}
             ></div>
           </div>
@@ -113,14 +113,14 @@ export const CoursePlayerPage = () => {
           </button>
         </div>
       ) : (
-        <div className="p-3.5 bg-blue-50/80 border border-blue-200 rounded-2xl flex items-center justify-between text-xs text-blue-900">
+        <div className="p-3.5 bg-purple-50/80 border border-purple-200 rounded-2xl flex items-center justify-between text-xs text-purple-900">
           <div className="flex items-center space-x-2">
-            <Sparkles className="w-4 h-4 text-blue-600" />
+            <Sparkles className="w-4 h-4 text-purple-600" />
             <span>Finish all lesson videos below to automatically unlock your official certificate!</span>
           </div>
           <button
             onClick={handleCompleteAllAndUnlock}
-            className="text-[11px] font-bold text-blue-700 hover:text-blue-900 underline ml-2 shrink-0"
+            className="text-[11px] font-bold text-purple-700 hover:text-purple-900 underline ml-2 shrink-0"
           >
             Mark All as Done (Fast Unlock)
           </button>
@@ -167,7 +167,7 @@ export const CoursePlayerPage = () => {
                 {activeLessonIndex < allLessons.length - 1 && (
                   <button
                     onClick={handleNextLesson}
-                    className="flex items-center space-x-1 px-4 py-2 bg-blue-600 hover:bg-blue-700 text-white rounded-xl text-xs font-bold shadow-md shadow-blue-500/20 transition-all"
+                    className="flex items-center space-x-1 px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold shadow-md shadow-purple-500/20 transition-all"
                   >
                     <span>Next Lesson</span>
                     <ChevronRight className="w-4 h-4" />
@@ -182,7 +182,7 @@ export const CoursePlayerPage = () => {
               <div className="flex flex-wrap gap-2">
                 {activeLesson.resources?.map((res, i) => (
                   <button key={i} className="flex items-center space-x-1.5 px-3 py-1.5 bg-slate-50 hover:bg-slate-100 text-slate-700 text-xs font-semibold rounded-xl transition-colors border border-slate-200">
-                    <Download className="w-3.5 h-3.5 text-blue-600" />
+                    <Download className="w-3.5 h-3.5 text-purple-600" />
                     <span>{res}</span>
                   </button>
                 ))}
@@ -195,7 +195,7 @@ export const CoursePlayerPage = () => {
         <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-4 h-fit space-y-4">
           <div className="flex items-center justify-between pb-3 border-b border-slate-100">
             <h3 className="font-bold text-slate-900 text-sm">Course Syllabus Checklist</h3>
-            <span className="text-xs text-blue-600 font-bold">{progress}% Completed</span>
+            <span className="text-xs text-purple-600 font-bold">{progress}% Completed</span>
           </div>
 
           <div className="space-y-4 max-h-[480px] overflow-y-auto pr-1">
@@ -215,7 +215,7 @@ export const CoursePlayerPage = () => {
                         onClick={() => setActiveLessonIndex(lIndex)}
                         className={`w-full flex items-center justify-between p-3 rounded-2xl text-left text-xs transition-all cursor-pointer ${
                           isSelected
-                            ? 'bg-blue-50 text-blue-900 font-bold border border-blue-200 shadow-sm'
+                            ? 'bg-purple-50 text-purple-900 font-bold border border-purple-200 shadow-sm'
                             : 'hover:bg-slate-50 text-slate-700 border border-transparent'
                         }`}
                       >
@@ -231,7 +231,7 @@ export const CoursePlayerPage = () => {
                             {isDone ? (
                               <CheckCircle2 className="w-5 h-5 text-emerald-600" />
                             ) : (
-                              <Circle className="w-5 h-5 text-slate-300 hover:text-blue-500" />
+                              <Circle className="w-5 h-5 text-slate-300 hover:text-purple-500" />
                             )}
                           </button>
                           <span className="truncate">{l.title}</span>

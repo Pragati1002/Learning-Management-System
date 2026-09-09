@@ -51,7 +51,7 @@ export const TrainerDashboard = ({ onOpenLiveClass }) => {
                 <p className="text-xs text-slate-500 mt-1">{b.schedule}</p>
                 <div className="mt-3 flex items-center justify-between pt-3 border-t border-slate-200/60 text-xs">
                   <span className="text-slate-600 font-medium">Avg Attendance: 92%</span>
-                  <button onClick={() => setActiveTab('batches')} className="text-blue-600 hover:text-blue-800 font-bold">
+                  <button onClick={() => setActiveTab('batches')} className="text-purple-600 hover:text-purple-800 font-bold">
                     Take Roll Call →
                   </button>
                 </div>

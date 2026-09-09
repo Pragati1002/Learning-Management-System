@@ -7,7 +7,10 @@ import {
   INITIAL_CERTIFICATES,
   INITIAL_DISCUSSIONS,
   INITIAL_MOCK_TESTS,
-  INITIAL_INTERVIEW_TRACKS
+  INITIAL_INTERVIEW_TRACKS,
+  INITIAL_JOBS,
+  INITIAL_REVIEWS,
+  INITIAL_LIVE_CLASSES
 } from '../data/mockData';
 
 const LMSContext = createContext();
@@ -53,12 +56,44 @@ export const LMSProvider = ({ children }) => {
     return saved ? JSON.parse(saved) : INITIAL_DISCUSSIONS;
   });
 
+  const [reviews, setReviews] = useState(() => {
+    const saved = localStorage.getItem('lms_reviews_v3');
+    return saved ? JSON.parse(saved) : INITIAL_REVIEWS;
+  });
+
+  const [platformFeedback, setPlatformFeedback] = useState(() => {
+    const saved = localStorage.getItem('lms_platform_feedback_v3');
+    return saved ? JSON.parse(saved) : [];
+  });
+
   const [activeTab, setActiveTab] = useState('dashboard');
+  const [courseSearchQuery, setCourseSearchQuery] = useState('');
+
+  const [darkMode, setDarkMode] = useState(() => {
+    const saved = localStorage.getItem('lms_theme_v3');
+    return saved ? saved === 'dark' : false;
+  });
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+    localStorage.setItem('lms_theme_v3', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
+
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
+
   const [selectedCourseForPlayer, setSelectedCourseForPlayer] = useState(null);
   const [selectedLessonForMaterials, setSelectedLessonForMaterials] = useState(null);
   const [selectedMockTest, setSelectedMockTest] = useState(null);
   const [selectedInterviewTrack, setSelectedInterviewTrack] = useState(null);
   const [lastInterviewFeedback, setLastInterviewFeedback] = useState(null);
+  const [jobApplications, setJobApplications] = useState(() => {
+    const saved = localStorage.getItem('lms_job_applications_v3');
+    return saved ? JSON.parse(saved) : [];
+  });
+  const [resumeData, setResumeData] = useState(() => {
+    const saved = localStorage.getItem('lms_resume_v3');
+    return saved ? JSON.parse(saved) : null;
+  });
   const [toastMessage, setToastMessage] = useState(null);
 
   useEffect(() => {
@@ -87,8 +122,24 @@ export const LMSProvider = ({ children }) => {
   }, [certificates]);
 
   useEffect(() => {
+    localStorage.setItem('lms_job_applications_v3', JSON.stringify(jobApplications));
+  }, [jobApplications]);
+
+  useEffect(() => {
+    if (resumeData) localStorage.setItem('lms_resume_v3', JSON.stringify(resumeData));
+  }, [resumeData]);
+
+  useEffect(() => {
     localStorage.setItem('lms_discussions_v3', JSON.stringify(discussions));
   }, [discussions]);
+
+  useEffect(() => {
+    localStorage.setItem('lms_reviews_v3', JSON.stringify(reviews));
+  }, [reviews]);
+
+  useEffect(() => {
+    localStorage.setItem('lms_platform_feedback_v3', JSON.stringify(platformFeedback));
+  }, [platformFeedback]);
 
   const showToast = (msg, type = 'success') => {
     setToastMessage({ text: msg, type });
@@ -135,6 +186,27 @@ export const LMSProvider = ({ children }) => {
     showToast('You have been logged out.');
   };
 
+  const applyToJob = (job) => {
+    const alreadyApplied = jobApplications.some(a => a.jobId === job.id);
+    if (alreadyApplied) return;
+    const statuses = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
+    const newApplication = {
+      id: 'app_' + Date.now(),
+      jobId: job.id,
+      jobTitle: job.title,
+      company: job.company,
+      location: job.location,
+      appliedDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
+      status: statuses[Math.floor(Math.random() * 2)] // simulated: most land as Applied/Shortlisted
+    };
+    setJobApplications(prev => [newApplication, ...prev]);
+    showToast(`Applied to ${job.title} at ${job.company}!`, 'success');
+  };
+
+  const updateResumeData = (data) => {
+    setResumeData(prev => ({ ...prev, ...data }));
+  };
+
   const getCourseProgress = (courseId, user = currentUser) => {
     if (!user) return 0;
     const course = courses.find(c => c.id === courseId);
@@ -143,6 +215,42 @@ export const LMSProvider = ({ children }) => {
     if (allLessonIds.length === 0) return 0;
     const completedCount = allLessonIds.filter(id => user.completedLessons?.includes(id)).length;
     return Math.round((completedCount / allLessonIds.length) * 100);
+  };
+
+  // Returns { list, average, count } for a course, blending live student reviews
+  // with the course's starting rating/reviewsCount so the number never looks empty.
+  const getCourseReviews = (courseId) => {
+    const course = courses.find(c => c.id === courseId);
+    const list = reviews.filter(r => r.courseId === courseId).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
+    if (list.length === 0) {
+      return { list, average: course?.rating || 0, count: course?.reviewsCount || 0 };
+    }
+    const sum = list.reduce((acc, r) => acc + r.rating, 0);
+    return { list, average: Math.round((sum / list.length) * 10) / 10, count: list.length };
+  };
+
+  // One review per student per course - re-submitting updates their existing review.
+  const submitReview = (courseId, rating, comment) => {
+    if (!currentUser) return;
+    setReviews(prev => {
+      const existingIndex = prev.findIndex(r => r.courseId === courseId && r.studentId === currentUser.id);
+      const entry = {
+        id: existingIndex >= 0 ? prev[existingIndex].id : `rev_${Date.now()}`,
+        courseId,
+        studentId: currentUser.id,
+        studentName: currentUser.name,
+        rating,
+        comment,
+        createdAt: new Date().toISOString().split('T')[0]
+      };
+      if (existingIndex >= 0) {
+        const updated = [...prev];
+        updated[existingIndex] = entry;
+        return updated;
+      }
+      return [...prev, entry];
+    });
+    showToast('Thanks for your review!', 'success');
   };
 
   const issueCertificateForCourse = (courseId, student = currentUser) => {
@@ -217,6 +325,20 @@ export const LMSProvider = ({ children }) => {
       const targetCourse = courses.find(c => c.id === courseId);
       showToast(`Enrolled in ${targetCourse?.title || 'course'}!`);
     }
+  };
+
+  const submitPlatformFeedback = (message, rating) => {
+    if (!currentUser || !message?.trim()) return;
+    const entry = {
+      id: 'fb_' + Date.now(),
+      studentId: currentUser.id,
+      studentName: currentUser.name,
+      message: message.trim(),
+      rating: rating || 0,
+      createdAt: new Date().toISOString()
+    };
+    setPlatformFeedback(prev => [entry, ...prev]);
+    showToast('Thanks for your feedback!');
   };
 
   const addCourse = (newCourseData) => {
@@ -442,8 +564,18 @@ export const LMSProvider = ({ children }) => {
       assignments,
       certificates,
       discussions,
+      reviews,
+      getCourseReviews,
+      submitReview,
+      liveClasses: INITIAL_LIVE_CLASSES,
+      platformFeedback,
+      submitPlatformFeedback,
       activeTab,
       setActiveTab,
+      courseSearchQuery,
+      setCourseSearchQuery,
+      darkMode,
+      toggleDarkMode,
       selectedCourseForPlayer,
       setSelectedCourseForPlayer,
       selectedLessonForMaterials,
@@ -456,6 +588,11 @@ export const LMSProvider = ({ children }) => {
       setSelectedInterviewTrack,
       lastInterviewFeedback,
       setLastInterviewFeedback,
+      jobs: INITIAL_JOBS,
+      jobApplications,
+      applyToJob,
+      resumeData,
+      updateResumeData,
       toastMessage,
       showToast,
       login,

@@ -19,11 +19,11 @@ export const LeadManagementPage = () => {
             <div>
               <div className="flex items-center justify-between">
                 <h3 className="font-extrabold text-base text-slate-900">{lead.name}</h3>
-                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-blue-50 text-blue-700 border border-blue-200">
+                <span className="text-[10px] font-bold px-2 py-0.5 rounded bg-purple-50 text-purple-700 border border-purple-200">
                   {lead.stage}
                 </span>
               </div>
-              <p className="text-xs font-bold text-blue-600 mt-1">{lead.courseInterest}</p>
+              <p className="text-xs font-bold text-purple-600 mt-1">{lead.courseInterest}</p>
               
               <div className="mt-3 space-y-1 text-xs text-slate-500">
                 <p className="flex items-center space-x-1.5">
@@ -47,7 +47,7 @@ export const LeadManagementPage = () => {
               <select
                 value={lead.stage}
                 onChange={e => updateLeadStage(lead.id, e.target.value)}
-                className="w-full border border-slate-200 rounded-lg p-2 text-xs bg-slate-50 font-semibold focus:outline-none focus:ring-1 focus:ring-blue-500"
+                className="w-full border border-slate-200 rounded-lg p-2 text-xs bg-slate-50 font-semibold focus:outline-none focus:ring-1 focus:ring-purple-500"
               >
                 {stages.map(s => <option key={s}>{s}</option>)}
               </select>

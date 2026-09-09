@@ -10,7 +10,7 @@ export const AccountantDashboard = ({ onOpenPayment }) => {
 
   return (
     <div className="space-y-6">
-      <div className="bg-gradient-to-r from-amber-900 via-slate-900 to-indigo-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
+      <div className="bg-gradient-to-r from-amber-900 via-slate-900 to-purple-950 text-white p-6 rounded-2xl shadow-xl flex flex-col md:flex-row items-start md:items-center justify-between gap-4">
         <div>
           <span className="px-2.5 py-0.5 bg-amber-500/20 border border-amber-400/40 text-amber-300 text-xs font-bold rounded-full">
             FINANCE & ACCOUNTS
@@ -35,7 +35,7 @@ export const AccountantDashboard = ({ onOpenPayment }) => {
         </div>
         <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
           <span className="text-xs font-semibold text-slate-500">Active Promo Coupons</span>
-          <h3 className="text-2xl font-extrabold text-indigo-600 mt-2">LMS50 • TECH2026</h3>
+          <h3 className="text-2xl font-extrabold text-purple-600 mt-2">LMS50 • TECH2026</h3>
           <p className="text-xs text-slate-400 mt-1">Up to ₹100 instant discount</p>
         </div>
       </div>
@@ -58,7 +58,7 @@ export const AccountantDashboard = ({ onOpenPayment }) => {
             <tbody className="divide-y divide-slate-100">
               {fees.map(f => (
                 <tr key={f.invoiceId} className="hover:bg-slate-50/50">
-                  <td className="p-3 font-mono font-bold text-blue-700">{f.invoiceId}</td>
+                  <td className="p-3 font-mono font-bold text-purple-700">{f.invoiceId}</td>
                   <td className="p-3 font-semibold text-slate-800">{f.studentName}</td>
                   <td className="p-3 text-slate-600">{f.courseName}</td>
                   <td className="p-3 font-extrabold text-slate-900">₹{f.paidAmount || f.amount}</td>
@@ -73,7 +73,7 @@ export const AccountantDashboard = ({ onOpenPayment }) => {
                     {f.status === 'Pending' ? (
                       <button 
                         onClick={() => onOpenPayment(f)}
-                        className="px-3 py-1 bg-blue-600 hover:bg-blue-700 text-white font-bold rounded-lg"
+                        className="px-3 py-1 bg-purple-600 hover:bg-purple-700 text-white font-bold rounded-lg"
                       >
                         Pay Now
                       </button>

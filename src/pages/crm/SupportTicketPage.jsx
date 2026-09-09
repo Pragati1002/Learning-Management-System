@@ -26,7 +26,7 @@ export const SupportTicketPage = () => {
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="px-4 py-2.5 bg-blue-600 hover:bg-blue-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
+          className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5 self-start"
         >
           <Plus className="w-4 h-4" />
           <span>New Ticket</span>
@@ -38,7 +38,7 @@ export const SupportTicketPage = () => {
           <div key={t.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
             <div className="flex items-center justify-between">
               <div className="flex items-center space-x-2">
-                <span className="font-mono font-bold text-blue-700 text-xs">{t.id}</span>
+                <span className="font-mono font-bold text-purple-700 text-xs">{t.id}</span>
                 <span className="text-xs bg-slate-100 text-slate-700 px-2 py-0.5 rounded font-semibold">{t.category}</span>
               </div>
               <span className={`text-[10px] font-bold px-2.5 py-0.5 rounded-full ${
@@ -88,7 +88,7 @@ export const SupportTicketPage = () => {
                 <button type="button" onClick={() => setShowModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">
                   Cancel
                 </button>
-                <button type="submit" className="px-4 py-2 bg-blue-600 text-white rounded-xl font-bold">
+                <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold">
                   Submit Ticket
                 </button>
               </div>
