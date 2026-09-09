@@ -37,7 +37,7 @@ export const PracticeQuizPage = () => {
       });
       const percentage = Math.round((correct / activeQuiz.questions.length) * 100);
       setResult({ correct, total: activeQuiz.questions.length, percentage });
-      submitQuizResult(activeQuiz.id, percentage, correct, activeQuiz.questions.length);
+      submitQuizResult(activeQuiz.id, percentage, correct, activeQuiz.questions.length, answers);
       setSubmitted(true);
     }
   };

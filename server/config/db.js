@@ -2,8 +2,12 @@ const mongoose = require('mongoose');
 
 const connectDB = async () => {
   try {
-    const uri = process.env.MONGO_URI || 'mongodb://127.0.0.1:27017/rsr_lms';
-    await mongoose.connect(uri);
+    if (!process.env.MONGO_URI) {
+      throw new Error('MONGO_URI is not defined in server/.env');
+    }
+
+    await mongoose.connect(process.env.MONGO_URI);
+
     console.log(`MongoDB connected: ${mongoose.connection.host}`);
   } catch (err) {
     console.error('MongoDB connection failed:', err.message);

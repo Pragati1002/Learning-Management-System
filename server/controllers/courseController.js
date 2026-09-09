@@ -63,8 +63,10 @@ const toggleLessonComplete = async (req, res, next) => {
     const isDone = user.completedLessons.includes(lessonId);
     if (isDone) {
       user.completedLessons = user.completedLessons.filter(id => id !== lessonId);
+      user.points = Math.max(0, (user.points || 0) - 25);
     } else {
       user.completedLessons.push(lessonId);
+      user.points = (user.points || 0) + 25;
     }
     await user.save();
 
@@ -91,7 +93,7 @@ const toggleLessonComplete = async (req, res, next) => {
       }
     }
 
-    res.json({ completedLessons: user.completedLessons, certificateIssued: certificate });
+    res.json({ completedLessons: user.completedLessons, points: user.points, certificateIssued: certificate });
   } catch (err) { next(err); }
 };
 

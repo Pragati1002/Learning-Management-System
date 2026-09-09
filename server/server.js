@@ -1,6 +1,7 @@
 require('dotenv').config();
 const express = require('express');
 const cors = require('cors');
+const path = require('path');
 const connectDB = require('./config/db');
 const { errorHandler, notFound } = require('./middleware/errorHandler');
 
@@ -22,6 +23,9 @@ connectDB();
 
 app.use(cors({ origin: process.env.CLIENT_ORIGIN || 'http://localhost:5173', credentials: true }));
 app.use(express.json());
+// Serve React frontend
+const frontendPath = path.join(__dirname, '..', 'dist');
+app.use(express.static(frontendPath));
 
 app.get('/api/health', (req, res) => res.json({ status: 'ok', message: 'RSR LMS API is running' }));
 
@@ -36,6 +40,11 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api/batches', batchRoutes);
+
+// React fallback
+app.get('*', (req, res) => {
+    res.sendFile(path.join(frontendPath, 'index.html'));
+});
 
 app.use(notFound);
 app.use(errorHandler);

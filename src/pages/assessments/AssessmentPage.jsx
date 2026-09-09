@@ -51,7 +51,7 @@ export const AssessmentPage = () => {
     const percentage = Math.round((correct / activeQuiz.questions.length) * 100);
     setQuizScore({ correct, total: activeQuiz.questions.length, percentage });
     setQuizSubmitted(true);
-    submitQuizResult(activeQuiz.id, percentage, correct, activeQuiz.questions.length);
+    submitQuizResult(activeQuiz.id, percentage, correct, activeQuiz.questions.length, selectedAnswers);
   };
 
   const handleCreateQuiz = (e) => {

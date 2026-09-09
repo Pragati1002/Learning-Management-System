@@ -3,7 +3,7 @@ import { useLMS } from '../../context/LMSContext';
 import { ClipboardList, Clock, ArrowLeft, Trophy, ListChecks } from 'lucide-react';
 
 export const MockTestPage = () => {
-  const { mockTests } = useLMS();
+  const { mockTests, submitMockTest } = useLMS();
 
   const [activeTest, setActiveTest] = useState(null);
   const [inProgress, setInProgress] = useState(false);
@@ -27,10 +27,15 @@ export const MockTestPage = () => {
 
   const question = allQuestions[qFlatIndex];
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (qFlatIndex < totalQuestions - 1) {
       setQFlatIndex(prev => prev + 1);
     } else {
+      try {
+        await submitMockTest(activeTest.id, answers);
+      } catch (err) {
+        console.error(err);
+      }
       setSubmitted(true);
       setInProgress(false);
     }

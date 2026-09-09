@@ -35,7 +35,7 @@ export const AuthPage = () => {
     setPassword(targetPortal === 'admin' ? 'admin' : 'student');
   };
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -52,14 +52,14 @@ export const AuthPage = () => {
         setError('Please agree to the Terms & Conditions to continue.');
         return;
       }
-      const success = signup(name, email, password, portal);
+      const success = await signup(name, email, password, portal);
       if (!success) setError('An account with this email already exists.');
     } else {
       if (!email.trim() || !password.trim()) {
         setError('Please enter your email and password.');
         return;
       }
-      const success = login(email, password);
+      const success = await login(email, password);
       if (!success) setError('Invalid credentials. Please try again.');
     }
   };

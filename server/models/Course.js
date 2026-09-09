@@ -23,6 +23,11 @@ const courseSchema = new mongoose.Schema({
   duration: String,
   level: String,
   instructor: String,
+  instructorId: String,
+  thumbnail: String,
+  price: { type: Number, default: 0 },
+  originalPrice: { type: Number, default: 0 },
+  enrolledCount: { type: Number, default: 0 },
   rating: { type: Number, default: 0 },
   reviewsCount: { type: Number, default: 0 },
   modules: [moduleSchema]

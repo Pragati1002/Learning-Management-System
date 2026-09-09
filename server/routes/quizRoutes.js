@@ -1,11 +1,10 @@
-const express = require('express');
-const router = express.Router();
-const { getQuizzes, createQuiz, submitQuiz, getMyAttempts } = require('../controllers/quizController');
-const { protect, requireRole } = require('../middleware/auth');
-
-router.get('/', protect, getQuizzes);
-router.post('/', protect, requireRole('admin', 'trainer'), createQuiz);
-router.post('/:id/submit', protect, submitQuiz);
-router.get('/attempts/mine', protect, getMyAttempts);
-
-module.exports = router;
+const express=require('express');
+const router=express.Router();
+const {getQuizzes,createQuiz,deleteQuiz,submitQuiz,getMyAttempts}=require('../controllers/quizController');
+const {protect,requireRole}=require('../middleware/auth');
+router.get('/',protect,getQuizzes);
+router.post('/',protect,requireRole('admin','trainer'),createQuiz);
+router.get('/attempts/mine',protect,getMyAttempts);
+router.post('/:id/submit',protect,submitQuiz);
+router.delete('/:id',protect,requireRole('admin','trainer'),deleteQuiz);
+module.exports=router;

@@ -9,7 +9,7 @@ const formatTime = (secs) => {
 };
 
 export const MockInterviewPage = () => {
-  const { interviewTracks, setActiveTab, setLastInterviewFeedback } = useLMS();
+  const { interviewTracks, setActiveTab, setLastInterviewFeedback, submitMockInterview } = useLMS();
 
   const [activeTrack, setActiveTrack] = useState(null);
   const [qIndex, setQIndex] = useState(0);
@@ -46,35 +46,35 @@ export const MockInterviewPage = () => {
     }
   };
 
-  const finishInterview = (finalResponses) => {
+  const finishInterview = async (finalResponses) => {
     clearInterval(timerRef.current);
-    const answeredCount = Object.values(finalResponses).filter(r => r.trim().length > 0).length;
-    const avgLength = Object.values(finalResponses).reduce((sum, r) => sum + r.trim().length, 0) / (activeTrack.questions.length || 1);
 
-    // Simple heuristic scoring since there's no backend/AI evaluation yet
-    let score = Math.round((answeredCount / activeTrack.questions.length) * 60 + Math.min(avgLength / 3, 40));
-    score = Math.max(30, Math.min(score, 98));
+    const responseList = Object.entries(finalResponses).map(([questionId, answer]) => ({
+      questionId,
+      answer
+    }));
 
-    const strengths = [];
-    const improvements = [];
-    if (answeredCount === activeTrack.questions.length) strengths.push('Answered every question in the interview');
-    if (avgLength > 120) strengths.push('Gave detailed, well-elaborated answers');
-    if (avgLength > 40) strengths.push('Communicated clearly and stayed on topic');
-    if (strengths.length === 0) strengths.push('Completed the mock interview session');
+    try {
+      const result = await submitMockInterview(
+        activeTrack.id,
+        responseList,
+        elapsed
+      );
 
-    if (avgLength < 60) improvements.push('Give more structured, detailed answers');
-    if (answeredCount < activeTrack.questions.length) improvements.push('Try to answer every question, even briefly');
-    improvements.push('Practice explaining technical concepts with real examples');
-
-    setLastInterviewFeedback({
-      role: activeTrack.role,
-      score,
-      strengths,
-      improvements,
-      questionCount: activeTrack.questions.length,
-      durationSeconds: elapsed
-    });
-    setActiveTab('interview-feedback');
+      if (result) {
+        setLastInterviewFeedback({
+          role: result.role || activeTrack.role,
+          score: result.score,
+          strengths: result.strengths || [],
+          improvements: result.improvements || [],
+          questionCount: activeTrack.questions.length,
+          durationSeconds: result.durationSeconds ?? elapsed
+        });
+        setActiveTab('interview-feedback');
+      }
+    } catch (err) {
+      console.error(err);
+    }
   };
 
   const endInterviewNow = () => {

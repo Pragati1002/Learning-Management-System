@@ -1,622 +1,619 @@
-import React, { createContext, useContext, useState, useEffect } from 'react';
+import React, { createContext, useContext, useEffect, useState } from 'react';
+import request from '../api/client';
 import {
-  INITIAL_USERS,
   INITIAL_COURSES,
   INITIAL_BATCHES,
-  INITIAL_QUIZZES,
-  INITIAL_CERTIFICATES,
-  INITIAL_DISCUSSIONS,
-  INITIAL_MOCK_TESTS,
-  INITIAL_INTERVIEW_TRACKS,
-  INITIAL_JOBS,
   INITIAL_REVIEWS,
   INITIAL_LIVE_CLASSES
 } from '../data/mockData';
 
 const LMSContext = createContext();
+const TOKEN_KEY = 'lms_token';
+const USER_KEY = 'lms_user_v3';
+const DEFAULT_AVATAR = 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80';
+
+const normalizeUser = (user) => {
+  if (!user) return null;
+  return {
+    ...user,
+    id: String(user.id || user._id),
+    enrolledCourses: (user.enrolledCourses || []).map(c => String(c?.id || c?._id || c)),
+    completedLessons: (user.completedLessons || []).map(String),
+    avatar: user.avatar || DEFAULT_AVATAR,
+    title: user.title || (user.role === 'admin' ? 'Platform Administrator & Instructor' : 'Registered Student'),
+    points: Number(user.points || 0)
+  };
+};
+
+const normalizeCourse = (course) => ({
+  ...course,
+  id: String(course.id || course._id),
+  thumbnail: course.thumbnail || 'https://images.unsplash.com/photo-1498050108023-c5249f4df085?w=600&auto=format&fit=crop&q=80',
+  price: course.price ?? 0,
+  originalPrice: course.originalPrice ?? course.price ?? 0,
+  enrolledCount: course.enrolledCount ?? 0,
+  modules: (course.modules || []).map(m => ({
+    ...m,
+    id: String(m.id || m.moduleId || m._id),
+    lessons: (m.lessons || []).map(l => ({
+      ...l,
+      id: String(l.id || l.lessonId || l._id)
+    }))
+  }))
+});
+
+const normalizeQuiz = (quiz) => ({
+  ...quiz,
+  id: String(quiz.id || quiz._id),
+  questions: (quiz.questions || []).map(q => ({ ...q, id: String(q.id || q._id) }))
+});
+
+const normalizeMockTest = (test) => ({
+  ...test,
+  id: String(test.id || test._id),
+  sections: (test.sections || []).map(s => ({
+    ...s,
+    id: String(s.id || s._id),
+    questions: (s.questions || []).map(q => ({ ...q, id: String(q.id || q._id) }))
+  }))
+});
+
+const normalizeInterview = (track) => ({
+  ...track,
+  id: String(track.id || track._id),
+  questions: (track.questions || []).map(q => ({ ...q, id: String(q.id || q._id) }))
+});
+
+const normalizeJob = (job) => ({
+  ...job,
+  id: String(job.id || job._id),
+  postedTime: job.postedTime || 'Recently posted'
+});
+
+const normalizePlacement = (placement) => ({
+  ...placement,
+  id: String(placement.id || placement._id),
+  logo: placement.logo || 'https://images.unsplash.com/photo-1560179707-f14e90ef3623?w=150&auto=format&fit=crop&q=80',
+  applicants: (placement.applicants || []).map(a => ({
+    ...a,
+    studentId: String(a.studentId || a.student?.id || a.student?._id || a.student)
+  }))
+});
+
+const normalizeCertificate = (cert) => ({
+  ...cert,
+  id: String(cert.id || cert._id || cert.certificateId),
+  studentId: String(cert.studentId || cert.student?.id || cert.student?._id || cert.student),
+  courseId: String(cert.courseId || cert.course?.id || cert.course?._id || cert.course)
+});
+
+const normalizeApplication = (app) => ({
+  ...app,
+  id: String(app.id || app._id),
+  jobId: String(app.jobId || app.job?.id || app.job?._id || app.job),
+  appliedDate: app.appliedDate || (app.createdAt ? new Date(app.createdAt).toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }) : '')
+});
+
+const normalizeAssignment = (a) => ({
+  ...a,
+  id: String(a.id || a._id),
+  courseId: String(a.courseId || a.course?.id || a.course?._id || a.course),
+  courseName: a.courseName || a.course?.title || 'Course',
+  totalPoints: a.totalPoints ?? 100
+});
+
+const normalizeDiscussion = (d) => ({
+  ...d,
+  id: String(d.id || d._id),
+  authorId: d.authorId ? String(d.authorId) : undefined,
+  replies: (d.replies || []).map(r => ({ ...r, id: String(r.id || r._id) }))
+});
+
+const normalizeBatch = (batch) => {
+  const students = batch.students || [];
+  const attendanceRecords = batch.attendance || [];
+  const today = new Date().toISOString().split('T')[0];
+  const record = attendanceRecords.find(a => a.date === today) || attendanceRecords[attendanceRecords.length - 1];
+  const presentIds = new Set((record?.presentStudentIds || []).map(x => String(x?.id || x?._id || x)));
+
+  return {
+    ...batch,
+    id: String(batch.id || batch._id),
+    courseId: batch.courseId ? String(batch.courseId?.id || batch.courseId?._id || batch.courseId) : '',
+    courseName: batch.courseName || 'Course',
+    schedule: batch.schedule || `${batch.startDate || ''}${batch.endDate ? ` - ${batch.endDate}` : ''}`,
+    status: batch.status || 'Active',
+    studentsCount: students.length,
+    attendance: students.map((student, index) => {
+      const studentId = String(student?.id || student?._id || student);
+      return {
+        studentId,
+        studentName: student?.name || 'Student',
+        rollNo: student?.rollNo || `LMS-${String(index + 1).padStart(3, '0')}`,
+        present: presentIds.has(studentId) ? 1 : 0,
+        total: record ? 1 : 0,
+        percentage: record ? (presentIds.has(studentId) ? 100 : 0) : 100
+      };
+    })
+  };
+};
 
 export const LMSProvider = ({ children }) => {
-  const [currentUser, setCurrentUser] = useState(() => {
-    const saved = localStorage.getItem('lms_user_v3');
-    return saved ? JSON.parse(saved) : INITIAL_USERS[0];
-  });
+  const savedToken = localStorage.getItem(TOKEN_KEY);
+  const savedUser = savedToken ? localStorage.getItem(USER_KEY) : null;
 
-  const [users, setUsers] = useState(() => {
-    const saved = localStorage.getItem('lms_users_v3');
-    return saved ? JSON.parse(saved) : INITIAL_USERS;
-  });
-
-  const [courses, setCourses] = useState(() => {
-    const saved = localStorage.getItem('lms_courses_v3');
-    return saved ? JSON.parse(saved) : INITIAL_COURSES;
-  });
-
-  const [batches, setBatches] = useState(() => {
-    const saved = localStorage.getItem('lms_batches_v3');
-    return saved ? JSON.parse(saved) : INITIAL_BATCHES;
-  });
-
-  const [quizzes, setQuizzes] = useState(() => {
-    const saved = localStorage.getItem('lms_quizzes_v3');
-    return saved ? JSON.parse(saved) : INITIAL_QUIZZES;
-  });
-
-  const [assignments, setAssignments] = useState(() => {
-    const saved = localStorage.getItem('lms_assignments_v3');
-    return saved ? JSON.parse(saved) : [];
-  });
-
-  const [certificates, setCertificates] = useState(() => {
-    const saved = localStorage.getItem('lms_certificates_v3');
-    return saved ? JSON.parse(saved) : INITIAL_CERTIFICATES;
-  });
-
-  const [discussions, setDiscussions] = useState(() => {
-    const saved = localStorage.getItem('lms_discussions_v3');
-    return saved ? JSON.parse(saved) : INITIAL_DISCUSSIONS;
-  });
-
+  const [currentUser, setCurrentUser] = useState(() => savedUser ? normalizeUser(JSON.parse(savedUser)) : null);
+  const [users, setUsers] = useState(() => currentUser ? [currentUser] : []);
+  const [courses, setCourses] = useState(INITIAL_COURSES);
+  const [batches, setBatches] = useState([]);
+  const [quizzes, setQuizzes] = useState([]);
+  const [assignments, setAssignments] = useState([]);
+  const [certificates, setCertificates] = useState([]);
+  const [discussions, setDiscussions] = useState([]);
   const [reviews, setReviews] = useState(() => {
     const saved = localStorage.getItem('lms_reviews_v3');
     return saved ? JSON.parse(saved) : INITIAL_REVIEWS;
   });
-
   const [platformFeedback, setPlatformFeedback] = useState(() => {
     const saved = localStorage.getItem('lms_platform_feedback_v3');
     return saved ? JSON.parse(saved) : [];
   });
+  const [placements, setPlacements] = useState([]);
+  const [jobs, setJobs] = useState([]);
+  const [jobApplications, setJobApplications] = useState([]);
+  const [mockTests, setMockTests] = useState([]);
+  const [interviewTracks, setInterviewTracks] = useState([]);
+  const [resumeData, setResumeData] = useState(() => {
+    const saved = localStorage.getItem('lms_resume_v3');
+    return saved ? JSON.parse(saved) : null;
+  });
+  const [fees, setFees] = useState(() => JSON.parse(localStorage.getItem('lms_fees_v3') || '[]'));
+  const [leads, setLeads] = useState(() => JSON.parse(localStorage.getItem('lms_leads_v3') || '[]'));
+  const [tickets, setTickets] = useState(() => JSON.parse(localStorage.getItem('lms_tickets_v3') || '[]'));
 
   const [activeTab, setActiveTab] = useState('dashboard');
   const [courseSearchQuery, setCourseSearchQuery] = useState('');
-
-  const [darkMode, setDarkMode] = useState(() => {
-    const saved = localStorage.getItem('lms_theme_v3');
-    return saved ? saved === 'dark' : false;
-  });
-
-  useEffect(() => {
-    document.documentElement.classList.toggle('dark', darkMode);
-    localStorage.setItem('lms_theme_v3', darkMode ? 'dark' : 'light');
-  }, [darkMode]);
-
-  const toggleDarkMode = () => setDarkMode(prev => !prev);
-
+  const [darkMode, setDarkMode] = useState(() => localStorage.getItem('lms_theme_v3') === 'dark');
   const [selectedCourseForPlayer, setSelectedCourseForPlayer] = useState(null);
   const [selectedLessonForMaterials, setSelectedLessonForMaterials] = useState(null);
   const [selectedMockTest, setSelectedMockTest] = useState(null);
   const [selectedInterviewTrack, setSelectedInterviewTrack] = useState(null);
   const [lastInterviewFeedback, setLastInterviewFeedback] = useState(null);
-  const [jobApplications, setJobApplications] = useState(() => {
-    const saved = localStorage.getItem('lms_job_applications_v3');
-    return saved ? JSON.parse(saved) : [];
-  });
-  const [resumeData, setResumeData] = useState(() => {
-    const saved = localStorage.getItem('lms_resume_v3');
-    return saved ? JSON.parse(saved) : null;
-  });
   const [toastMessage, setToastMessage] = useState(null);
 
-  useEffect(() => {
-    if (currentUser) localStorage.setItem('lms_user_v3', JSON.stringify(currentUser));
-    else localStorage.removeItem('lms_user_v3');
-  }, [currentUser]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_users_v3', JSON.stringify(users));
-  }, [users]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_courses_v3', JSON.stringify(courses));
-  }, [courses]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_batches_v3', JSON.stringify(batches));
-  }, [batches]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_quizzes_v3', JSON.stringify(quizzes));
-  }, [quizzes]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_certificates_v3', JSON.stringify(certificates));
-  }, [certificates]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_job_applications_v3', JSON.stringify(jobApplications));
-  }, [jobApplications]);
-
-  useEffect(() => {
-    if (resumeData) localStorage.setItem('lms_resume_v3', JSON.stringify(resumeData));
-  }, [resumeData]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_discussions_v3', JSON.stringify(discussions));
-  }, [discussions]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_reviews_v3', JSON.stringify(reviews));
-  }, [reviews]);
-
-  useEffect(() => {
-    localStorage.setItem('lms_platform_feedback_v3', JSON.stringify(platformFeedback));
-  }, [platformFeedback]);
+  const token = () => localStorage.getItem(TOKEN_KEY);
 
   const showToast = (msg, type = 'success') => {
     setToastMessage({ text: msg, type });
     setTimeout(() => setToastMessage(null), 3500);
   };
 
-  const login = (email, password) => {
-    const user = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (user && (user.password === password || password === 'admin' || password === 'student')) {
-      setCurrentUser(user);
-      setActiveTab('dashboard');
-      showToast(`Welcome back, ${user.name}!`);
-      return true;
-    }
-    return false;
+  const refreshUser = async () => {
+    const data = await request('/auth/me', { token: token() });
+    const user = normalizeUser(data.user);
+    setCurrentUser(user);
+    setUsers([user]);
+    localStorage.setItem(USER_KEY, JSON.stringify(user));
+    return user;
   };
 
-  const signup = (name, email, password, role = 'student') => {
-    const existing = users.find(u => u.email.toLowerCase() === email.toLowerCase());
-    if (existing) return false;
+  const loadData = async (user = currentUser) => {
+    if (!user || !token()) return;
 
-    const newUser = {
-      id: 'usr_' + Date.now(),
-      name,
-      email,
-      password,
-      role,
-      avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-      title: role === 'admin' ? 'Administrator' : 'Student Learner',
-      enrolledCourses: courses.length > 0 ? [courses[0].id] : [],
-      completedLessons: [],
-      points: 0
-    };
+    const tasks = [
+      request('/courses', { token: token() }).then(data => setCourses((data || []).map(normalizeCourse))),
+      request('/quizzes', { token: token() }).then(data => setQuizzes((data || []).map(normalizeQuiz))),
+      request('/mock-tests', { token: token() }).then(data => setMockTests((data || []).map(normalizeMockTest))),
+      request('/interviews', { token: token() }).then(data => setInterviewTracks((data || []).map(normalizeInterview))),
+      request('/jobs', { token: token() }).then(data => setJobs((data || []).map(normalizeJob))),
+      request('/placements', { token: token() }).then(data => setPlacements((data || []).map(normalizePlacement))),
+      request('/assignments', { token: token() }).then(data => setAssignments((data || []).map(normalizeAssignment))),
+      request('/discussions', { token: token() }).then(data => setDiscussions((data || []).map(normalizeDiscussion))),
+      request('/certificates/mine', { token: token() }).then(data => setCertificates((data || []).map(normalizeCertificate))),
+      request('/jobs/applications/mine', { token: token() }).then(data => setJobApplications((data || []).map(normalizeApplication)))
+    ];
 
-    setUsers(prev => [...prev, newUser]);
-    setCurrentUser(newUser);
-    setActiveTab('dashboard');
-    showToast('Account created successfully! Welcome to LMS.');
-    return true;
+    if (user.role === 'admin' || user.role === 'trainer') {
+      tasks.push(request('/batches', { token: token() }).then(data => setBatches((data || []).map(normalizeBatch))));
+    } else {
+      setBatches([]);
+    }
+
+    const results = await Promise.allSettled(tasks);
+    const failures = results.filter(r => r.status === 'rejected');
+    if (failures.length) console.warn('Some LMS data could not be loaded:', failures.map(f => f.reason?.message));
+  };
+
+  useEffect(() => {
+    document.documentElement.classList.toggle('dark', darkMode);
+    localStorage.setItem('lms_theme_v3', darkMode ? 'dark' : 'light');
+  }, [darkMode]);
+
+  useEffect(() => {
+    if (currentUser && token()) loadData(currentUser);
+  }, []);
+
+  useEffect(() => {
+    if (currentUser) localStorage.setItem(USER_KEY, JSON.stringify(currentUser));
+    else localStorage.removeItem(USER_KEY);
+  }, [currentUser]);
+
+  useEffect(() => localStorage.setItem('lms_reviews_v3', JSON.stringify(reviews)), [reviews]);
+  useEffect(() => localStorage.setItem('lms_platform_feedback_v3', JSON.stringify(platformFeedback)), [platformFeedback]);
+  useEffect(() => localStorage.setItem('lms_resume_v3', JSON.stringify(resumeData)), [resumeData]);
+  useEffect(() => localStorage.setItem('lms_fees_v3', JSON.stringify(fees)), [fees]);
+  useEffect(() => localStorage.setItem('lms_leads_v3', JSON.stringify(leads)), [leads]);
+  useEffect(() => localStorage.setItem('lms_tickets_v3', JSON.stringify(tickets)), [tickets]);
+
+  const toggleDarkMode = () => setDarkMode(prev => !prev);
+
+  const login = async (email, password) => {
+    try {
+      const data = await request('/auth/login', { method: 'POST', body: { email, password } });
+      localStorage.setItem(TOKEN_KEY, data.token);
+      const user = normalizeUser(data.user);
+      setCurrentUser(user);
+      setUsers([user]);
+      setActiveTab('dashboard');
+      showToast(`Welcome back, ${user.name}!`);
+      await loadData(user);
+      return true;
+    } catch (err) {
+      showToast(err.message || 'Invalid credentials', 'error');
+      return false;
+    }
+  };
+
+  const signup = async (name, email, password, role = 'student') => {
+    try {
+      const data = await request('/auth/register', { method: 'POST', body: { name, email, password, role } });
+      localStorage.setItem(TOKEN_KEY, data.token);
+      const user = normalizeUser(data.user);
+      setCurrentUser(user);
+      setUsers([user]);
+      setActiveTab('dashboard');
+      showToast('Account created successfully! Welcome to LMS.');
+      await loadData(user);
+      return true;
+    } catch (err) {
+      showToast(err.message || 'Registration failed', 'error');
+      return false;
+    }
   };
 
   const logout = () => {
+    localStorage.removeItem(TOKEN_KEY);
+    localStorage.removeItem(USER_KEY);
     setCurrentUser(null);
+    setUsers([]);
+    setCourses([]);
+    setCertificates([]);
+    setJobApplications([]);
     showToast('You have been logged out.');
-  };
-
-  const applyToJob = (job) => {
-    const alreadyApplied = jobApplications.some(a => a.jobId === job.id);
-    if (alreadyApplied) return;
-    const statuses = ['Applied', 'Shortlisted', 'Interview', 'Offered'];
-    const newApplication = {
-      id: 'app_' + Date.now(),
-      jobId: job.id,
-      jobTitle: job.title,
-      company: job.company,
-      location: job.location,
-      appliedDate: new Date().toLocaleDateString('en-GB', { day: '2-digit', month: 'short', year: 'numeric' }),
-      status: statuses[Math.floor(Math.random() * 2)] // simulated: most land as Applied/Shortlisted
-    };
-    setJobApplications(prev => [newApplication, ...prev]);
-    showToast(`Applied to ${job.title} at ${job.company}!`, 'success');
-  };
-
-  const updateResumeData = (data) => {
-    setResumeData(prev => ({ ...prev, ...data }));
   };
 
   const getCourseProgress = (courseId, user = currentUser) => {
     if (!user) return 0;
-    const course = courses.find(c => c.id === courseId);
+    const course = courses.find(c => c.id === String(courseId));
     if (!course) return 0;
-    const allLessonIds = course.modules?.flatMap(m => m.lessons?.map(l => l.id) || []) || [];
-    if (allLessonIds.length === 0) return 0;
-    const completedCount = allLessonIds.filter(id => user.completedLessons?.includes(id)).length;
-    return Math.round((completedCount / allLessonIds.length) * 100);
+    const allLessonIds = course.modules?.flatMap(m => m.lessons?.map(l => String(l.id)) || []) || [];
+    if (!allLessonIds.length) return 0;
+    const completed = new Set((user.completedLessons || []).map(String));
+    return Math.round((allLessonIds.filter(id => completed.has(id)).length / allLessonIds.length) * 100);
   };
 
-  // Returns { list, average, count } for a course, blending live student reviews
-  // with the course's starting rating/reviewsCount so the number never looks empty.
-  const getCourseReviews = (courseId) => {
-    const course = courses.find(c => c.id === courseId);
-    const list = reviews.filter(r => r.courseId === courseId).sort((a, b) => (a.createdAt < b.createdAt ? 1 : -1));
-    if (list.length === 0) {
-      return { list, average: course?.rating || 0, count: course?.reviewsCount || 0 };
+  const enrollCourse = async (courseId) => {
+    if (!currentUser) return false;
+    try {
+      const data = await request(`/courses/${courseId}/enroll`, { method: 'POST', token: token() });
+      const updated = normalizeUser({ ...currentUser, enrolledCourses: data.enrolledCourses });
+      setCurrentUser(updated);
+      const course = courses.find(c => c.id === String(courseId));
+      showToast(`Enrolled in ${course?.title || 'course'}!`);
+      return true;
+    } catch (err) {
+      showToast(err.message, 'error');
+      return false;
     }
-    const sum = list.reduce((acc, r) => acc + r.rating, 0);
-    return { list, average: Math.round((sum / list.length) * 10) / 10, count: list.length };
   };
 
-  // One review per student per course - re-submitting updates their existing review.
-  const submitReview = (courseId, rating, comment) => {
+  const toggleLessonComplete = async (lessonId, courseId) => {
     if (!currentUser) return;
-    setReviews(prev => {
-      const existingIndex = prev.findIndex(r => r.courseId === courseId && r.studentId === currentUser.id);
-      const entry = {
-        id: existingIndex >= 0 ? prev[existingIndex].id : `rev_${Date.now()}`,
-        courseId,
-        studentId: currentUser.id,
-        studentName: currentUser.name,
-        rating,
-        comment,
-        createdAt: new Date().toISOString().split('T')[0]
-      };
-      if (existingIndex >= 0) {
-        const updated = [...prev];
-        updated[existingIndex] = entry;
-        return updated;
+    try {
+      const data = await request(`/courses/${courseId}/lessons/${encodeURIComponent(lessonId)}/complete`, { method: 'POST', token: token() });
+      const updated = normalizeUser({
+        ...currentUser,
+        completedLessons: data.completedLessons,
+        points: data.points ?? currentUser.points
+      });
+      setCurrentUser(updated);
+      if (data.certificateIssued) {
+        const cert = normalizeCertificate(data.certificateIssued);
+        setCertificates(prev => [cert, ...prev.filter(c => c.certificateId !== cert.certificateId)]);
+        showToast(`🎓 Course finished! Certificate ${cert.certificateId} issued!`);
+      } else {
+        const done = updated.completedLessons.includes(String(lessonId));
+        showToast(done ? 'Lesson finished! +25 Learning XP ⭐' : 'Marked lesson as uncompleted', done ? 'success' : 'info');
       }
-      return [...prev, entry];
-    });
-    showToast('Thanks for your review!', 'success');
+    } catch (err) {
+      showToast(err.message, 'error');
+    }
   };
 
   const issueCertificateForCourse = (courseId, student = currentUser) => {
-    const course = courses.find(c => c.id === courseId);
-    if (!course || !student) return null;
-
-    const existingCert = certificates.find(c => c.studentId === student.id && c.courseId === courseId);
-    if (existingCert) return existingCert;
-
-    const certId = 'LMS-CERT-2026-' + Math.floor(100 + Math.random() * 900);
-    const newCert = {
-      certificateId: certId,
-      studentId: student.id,
-      studentName: student.name,
-      courseId: course.id,
-      courseName: course.title,
-      issueDate: new Date().toISOString().split('T')[0],
-      score: '100%',
-      grade: 'A+ (Excellence)',
-      instructor: course.instructor || 'Administrator',
-      verified: true
-    };
-
-    setCertificates(prev => [newCert, ...prev]);
-    showToast(`🎓 Course finished! Certificate ${certId} issued!`, 'success');
-    return newCert;
+    if (!student) return null;
+    return certificates.find(c => c.courseId === String(courseId) && c.studentId === String(student.id)) || null;
   };
 
-  const toggleLessonComplete = (lessonId, courseId) => {
-    if (!currentUser) return;
-    const isCompleted = currentUser.completedLessons?.includes(lessonId);
-    let updatedLessons = [];
-    if (isCompleted) {
-      updatedLessons = (currentUser.completedLessons || []).filter(id => id !== lessonId);
-    } else {
-      updatedLessons = [...(currentUser.completedLessons || []), lessonId];
-    }
-
-    const updatedUser = {
-      ...currentUser,
-      completedLessons: updatedLessons,
-      points: (currentUser.points || 0) + (isCompleted ? -25 : 25)
-    };
-
-    setCurrentUser(updatedUser);
-    setUsers(prev => prev.map(u => u.id === currentUser.id ? updatedUser : u));
-
-    if (!isCompleted) {
-      showToast('Lesson finished! +25 Learning XP ⭐');
-      const targetCourse = courses.find(c => c.id === courseId) || courses.find(c => c.modules.some(m => m.lessons.some(l => l.id === lessonId)));
-      if (targetCourse) {
-        const allLessons = targetCourse.modules.flatMap(m => m.lessons.map(l => l.id));
-        const allDone = allLessons.every(lId => updatedLessons.includes(lId));
-        if (allDone) {
-          issueCertificateForCourse(targetCourse.id, updatedUser);
-        }
-      }
-    } else {
-      showToast('Marked lesson as uncompleted');
-    }
+  const getCourseReviews = (courseId) => {
+    const course = courses.find(c => c.id === String(courseId));
+    const list = reviews.filter(r => String(r.courseId) === String(courseId)).sort((a, b) => a.createdAt < b.createdAt ? 1 : -1);
+    if (!list.length) return { list, average: course?.rating || 0, count: course?.reviewsCount || 0 };
+    const average = Math.round((list.reduce((sum, r) => sum + Number(r.rating || 0), 0) / list.length) * 10) / 10;
+    return { list, average, count: list.length };
   };
 
-  const enrollCourse = (courseId) => {
+  const submitReview = (courseId, rating, comment) => {
     if (!currentUser) return;
-    if (!currentUser.enrolledCourses?.includes(courseId)) {
-      const updatedUser = {
-        ...currentUser,
-        enrolledCourses: [...(currentUser.enrolledCourses || []), courseId]
+    setReviews(prev => {
+      const index = prev.findIndex(r => String(r.courseId) === String(courseId) && String(r.studentId) === String(currentUser.id));
+      const entry = { id: index >= 0 ? prev[index].id : `rev_${Date.now()}`, courseId: String(courseId), studentId: currentUser.id, studentName: currentUser.name, rating, comment, createdAt: new Date().toISOString().split('T')[0] };
+      if (index >= 0) { const next = [...prev]; next[index] = entry; return next; }
+      return [entry, ...prev];
+    });
+    showToast('Thanks for your review!');
+  };
+
+  const addCourse = async (data) => {
+    try {
+      const stamp = Date.now();
+      const payload = {
+        title: data.title,
+        category: data.category,
+        description: data.description,
+        duration: data.duration,
+        level: data.level || 'Beginner to Advanced',
+        instructor: currentUser?.name || 'Administrator',
+        instructorId: currentUser?.id,
+        thumbnail: data.thumbnail,
+        price: data.price ?? 0,
+        originalPrice: data.originalPrice ?? data.price ?? 0,
+        rating: 5,
+        reviewsCount: 0,
+        enrolledCount: 0,
+        modules: [{
+          moduleId: `mod_${stamp}`,
+          title: 'Module 1: Getting Started',
+          lessons: [{ lessonId: `les_${stamp}`, title: '1. Introduction & Overview', duration: '15 min', videoUrl: data.videoUrl || '', resources: ['Course_Overview.pdf'] }]
+        }]
       };
-      setCurrentUser(updatedUser);
-      setUsers(prev => prev.map(u => u.id === currentUser.id ? updatedUser : u));
-      const targetCourse = courses.find(c => c.id === courseId);
-      showToast(`Enrolled in ${targetCourse?.title || 'course'}!`);
+      const created = normalizeCourse(await request('/courses', { method: 'POST', body: payload, token: token() }));
+      setCourses(prev => [created, ...prev]);
+      showToast(`Course "${created.title}" created successfully!`);
+      return created;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const deleteCourse = async (courseId) => {
+    try {
+      await request(`/courses/${courseId}`, { method: 'DELETE', token: token() });
+      setCourses(prev => prev.filter(c => c.id !== String(courseId)));
+      showToast('Course removed.', 'info');
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+
+  const addQuiz = async (data) => {
+    try {
+      const payload = {
+        title: data.title,
+        courseId: data.courseId || undefined,
+        courseTitle: data.courseTitle,
+        durationMinutes: Number(data.durationMinutes) || 15,
+        passingScore: Number(data.passingScore) || 70,
+        questions: (data.questions || []).map(q => ({ question: q.question, options: q.options, correctAnswer: Number(q.correctAnswer) }))
+      };
+      const created = normalizeQuiz(await request('/quizzes', { method: 'POST', body: payload, token: token() }));
+      setQuizzes(prev => [created, ...prev]);
+      showToast(`Assessment "${created.title}" created!`);
+      return created;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const deleteQuiz = async (quizId) => {
+    try {
+      await request(`/quizzes/${quizId}`, { method: 'DELETE', token: token() });
+      setQuizzes(prev => prev.filter(q => q.id !== String(quizId)));
+      showToast('Assessment removed.');
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+
+  const submitQuizResult = async (quizId, scorePercentage, correctCount, totalCount, answers = null) => {
+    if (!currentUser) return null;
+    try {
+      let result;
+      if (answers) {
+        result = await request(`/quizzes/${quizId}/submit`, { method: 'POST', body: { answers }, token: token() });
+      } else {
+        result = { scorePercentage, correctCount, totalCount };
+      }
+      const quiz = quizzes.find(q => q.id === String(quizId));
+      const score = result.scorePercentage ?? scorePercentage;
+      if (score >= (quiz?.passingScore || 70)) showToast(`Passed ${quiz?.title || 'quiz'}! Score: ${score}%`, 'success');
+      else showToast(`Score: ${score}%. Minimum passing is ${quiz?.passingScore || 70}%.`, 'error');
+      return result;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const submitMockTest = async (testId, answers) => {
+    try {
+      const result = await request(`/mock-tests/${testId}/submit`, {
+        method: 'POST',
+        body: { answers },
+        token: token()
+      });
+      showToast(`Mock test submitted! Score: ${result.percentage}%`, 'success');
+      return result;
+    } catch (err) {
+      showToast(err.message, 'error');
+      return null;
     }
   };
+
+  const submitMockInterview = async (trackId, responses, durationSeconds) => {
+    try {
+      const result = await request(`/interviews/${trackId}/submit`, {
+        method: 'POST',
+        body: { responses, durationSeconds },
+        token: token()
+      });
+      return result;
+    } catch (err) {
+      showToast(err.message, 'error');
+      return null;
+    }
+  };
+
+  const addAssignment = async (data) => {
+    try {
+      const created = normalizeAssignment(await request('/assignments', { method: 'POST', body: { courseId: data.courseId, title: data.title, description: data.description, dueDate: data.dueDate }, token: token() }));
+      setAssignments(prev => [created, ...prev]);
+      showToast('Assignment created!');
+      return created;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const deleteAssignment = async (id) => {
+    try {
+      await request(`/assignments/${id}`, { method: 'DELETE', token: token() });
+      setAssignments(prev => prev.filter(a => a.id !== String(id)));
+      showToast('Assignment deleted.');
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+
+  const addDiscussionPost = async (title, content, tags = []) => {
+    try {
+      const created = normalizeDiscussion(await request('/discussions', { method: 'POST', body: { title, content, tags }, token: token() }));
+      setDiscussions(prev => [created, ...prev]);
+      showToast('Discussion question posted.');
+      return created;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const deleteDiscussionPost = async (id) => {
+    try {
+      await request(`/discussions/${id}`, { method: 'DELETE', token: token() });
+      setDiscussions(prev => prev.filter(d => d.id !== String(id)));
+      showToast('Post deleted.');
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+
+  const replyDiscussionPost = async (id, content) => {
+    try {
+      const updated = normalizeDiscussion(await request(`/discussions/${id}/reply`, { method: 'POST', body: { content }, token: token() }));
+      setDiscussions(prev => prev.map(d => d.id === String(id) ? updated : d));
+      showToast('Reply posted.');
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+
+  const applyToJob = async (job) => {
+    try {
+      const application = normalizeApplication(await request(`/jobs/${job.id}/apply`, { method: 'POST', token: token() }));
+      setJobApplications(prev => [application, ...prev.filter(a => a.jobId !== String(job.id))]);
+      showToast(`Applied to ${job.title} at ${job.company}!`);
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+
+  const applyPlacementJob = async (placementId) => {
+    try {
+      const updated = normalizePlacement(await request(`/placements/${placementId}/apply`, { method: 'POST', token: token() }));
+      setPlacements(prev => prev.map(p => p.id === String(placementId) ? updated : p));
+      showToast('Placement application submitted!');
+    } catch (err) { showToast(err.message, 'error'); }
+  };
+
+  const updateResumeData = data => setResumeData(prev => ({ ...(prev || {}), ...data }));
 
   const submitPlatformFeedback = (message, rating) => {
     if (!currentUser || !message?.trim()) return;
-    const entry = {
-      id: 'fb_' + Date.now(),
-      studentId: currentUser.id,
-      studentName: currentUser.name,
-      message: message.trim(),
-      rating: rating || 0,
-      createdAt: new Date().toISOString()
-    };
-    setPlatformFeedback(prev => [entry, ...prev]);
+    setPlatformFeedback(prev => [{ id: `fb_${Date.now()}`, studentId: currentUser.id, studentName: currentUser.name, message: message.trim(), rating: rating || 0, createdAt: new Date().toISOString() }, ...prev]);
     showToast('Thanks for your feedback!');
   };
 
-  const addCourse = (newCourseData) => {
-    const course = {
-      id: 'c_' + Date.now(),
-      rating: 5.0,
-      reviewsCount: 1,
-      enrolledCount: 1,
-      instructor: currentUser?.name || 'Administrator',
-      instructorId: currentUser?.id || 'usr_admin',
-      modules: [
-        {
-          id: 'mod_' + Date.now(),
-          title: 'Module 1: Getting Started',
-          lessons: [
-            {
-              id: 'les_' + Date.now(),
-              title: '1. Introduction & Overview',
-              duration: '15 min',
-              type: 'video',
-              videoUrl: newCourseData.videoUrl || 'https://www.youtube.com/embed/kUMe1FH4CHE',
-              resources: ['Course_Overview.pdf']
-            }
-          ]
-        }
-      ],
-      ...newCourseData
-    };
-    setCourses(prev => [course, ...prev]);
-    showToast(`Course "${course.title}" created successfully!`);
+  const addBatch = async data => {
+    try {
+      const created = normalizeBatch(await request('/batches', { method: 'POST', body: { name: data.name, courseId: data.courseId, courseName: data.courseName, schedule: data.schedule, status: 'Active', trainer: currentUser?.name }, token: token() }));
+      setBatches(prev => [created, ...prev]);
+      showToast(`Batch "${created.name}" created!`);
+      return created;
+    } catch (err) { showToast(err.message, 'error'); return null; }
   };
 
-  const deleteCourse = (courseId) => {
-    setCourses(prev => prev.filter(c => c.id !== courseId));
-    showToast('Course removed.', 'info');
+  const deleteBatch = async id => {
+    try {
+      await request(`/batches/${id}`, { method: 'DELETE', token: token() });
+      setBatches(prev => prev.filter(b => b.id !== String(id)));
+      showToast('Batch removed.');
+    } catch (err) { showToast(err.message, 'error'); }
   };
 
-  const addBatch = (batchData) => {
-    const newBatch = {
-      id: 'b_' + Date.now(),
-      name: batchData.name,
-      courseId: batchData.courseId,
-      courseName: batchData.courseName,
-      trainerName: currentUser?.name || 'Administrator',
-      studentsCount: 1,
-      schedule: batchData.schedule,
-      status: 'Active',
-      attendance: [
-        { studentId: 'usr_student', studentName: 'Student Learner', rollNo: 'LMS-001', present: 0, total: 0, percentage: 100 }
-      ]
-    };
-    setBatches(prev => [newBatch, ...prev]);
-    showToast(`Batch "${newBatch.name}" created!`);
+  const addStudentToBatch = async (batchId, studentName, rollNo) => {
+    try {
+      const updated = normalizeBatch(await request(`/batches/${batchId}/students`, { method: 'POST', body: { studentName, rollNo }, token: token() }));
+      setBatches(prev => prev.map(b => b.id === String(batchId) ? updated : b));
+      showToast(`Student \"${studentName}\" added to batch.`);
+    } catch (err) { showToast(err.message, 'error'); }
   };
 
-  const deleteBatch = (batchId) => {
-    setBatches(prev => prev.filter(b => b.id !== batchId));
-    showToast('Batch removed.');
+  const removeStudentFromBatch = async (batchId, studentId) => {
+    try {
+      const updated = normalizeBatch(await request(`/batches/${batchId}/students/${studentId}`, { method: 'DELETE', token: token() }));
+      setBatches(prev => prev.map(b => b.id === String(batchId) ? updated : b));
+      showToast('Student removed from batch.');
+    } catch (err) { showToast(err.message, 'error'); }
   };
 
-  const addStudentToBatch = (batchId, studentName, rollNo) => {
-    setBatches(prev => prev.map(b => {
-      if (b.id === batchId) {
-        const newStudent = {
-          studentId: 'usr_' + Date.now(),
-          studentName,
-          rollNo: rollNo || `LMS-00${b.attendance.length + 1}`,
-          present: 0,
-          total: 0,
-          percentage: 100
-        };
-        return {
-          ...b,
-          studentsCount: b.studentsCount + 1,
-          attendance: [...b.attendance, newStudent]
-        };
-      }
-      return b;
-    }));
-    showToast(`Student "${studentName}" added to batch.`);
+  const markAttendance = async (batchId, studentId, isPresent) => {
+    const batch = batches.find(b => b.id === String(batchId));
+    if (!batch) return;
+    const today = new Date().toISOString().split('T')[0];
+    const presentStudentIds = (batch.attendance || []).filter(a => a.present > 0).map(a => a.studentId);
+    const set = new Set(presentStudentIds);
+    if (isPresent) set.add(String(studentId)); else set.delete(String(studentId));
+    try {
+      const updated = await request(`/batches/${batchId}/attendance`, { method: 'POST', body: { date: today, presentStudentIds: [...set] }, token: token() });
+      setBatches(prev => prev.map(b => b.id === String(batchId) ? normalizeBatch(updated) : b));
+      showToast('Attendance updated.');
+    } catch (err) { showToast(err.message, 'error'); }
   };
 
-  const removeStudentFromBatch = (batchId, studentId) => {
-    setBatches(prev => prev.map(b => {
-      if (b.id === batchId) {
-        return {
-          ...b,
-          studentsCount: Math.max(0, b.studentsCount - 1),
-          attendance: b.attendance.filter(s => s.studentId !== studentId)
-        };
-      }
-      return b;
-    }));
-    showToast('Student removed from batch.');
-  };
-
-  const markAttendance = (batchId, studentId, isPresent) => {
-    setBatches(prev => prev.map(b => {
-      if (b.id === batchId) {
-        return {
-          ...b,
-          attendance: b.attendance.map(att => {
-            if (att.studentId === studentId) {
-              const newPresent = isPresent ? att.present + 1 : Math.max(0, att.present - 1);
-              const newTotal = att.total + (isPresent ? 1 : 0);
-              return {
-                ...att,
-                present: newPresent,
-                total: newTotal,
-                percentage: Math.round((newPresent / (newTotal || 1)) * 100)
-              };
-            }
-            return att;
-          })
-        };
-      }
-      return b;
-    }));
-    showToast('Attendance updated.');
-  };
-
-  const addQuiz = (quizData) => {
-    const newQuiz = {
-      id: 'q_' + Date.now(),
-      title: quizData.title,
-      courseId: quizData.courseId || 'c_webdev',
-      courseTitle: quizData.courseTitle || 'General Assessment',
-      durationMinutes: Number(quizData.durationMinutes) || 15,
-      totalQuestions: quizData.questions.length,
-      passingScore: Number(quizData.passingScore) || 70,
-      questions: quizData.questions
-    };
-    setQuizzes(prev => [newQuiz, ...prev]);
-    showToast(`Assessment "${newQuiz.title}" created!`);
-  };
-
-  const deleteQuiz = (quizId) => {
-    setQuizzes(prev => prev.filter(q => q.id !== quizId));
-    showToast('Assessment removed.');
-  };
-
-  const addAssignment = (asgData) => {
-    const newAsg = {
-      id: 'asg_' + Date.now(),
-      title: asgData.title,
-      courseId: asgData.courseId,
-      courseName: asgData.courseName,
-      dueDate: asgData.dueDate,
-      totalPoints: 100,
-      description: asgData.description
-    };
-    setAssignments(prev => [newAsg, ...prev]);
-    showToast(`Assignment created!`);
-  };
-
-  const deleteAssignment = (asgId) => {
-    setAssignments(prev => prev.filter(a => a.id !== asgId));
-    showToast('Assignment deleted.');
-  };
-
-  const submitQuizResult = (quizId, scorePercentage, correctCount, totalCount) => {
-    if (!currentUser) return;
-    const quiz = quizzes.find(q => q.id === quizId);
-    if (scorePercentage >= (quiz?.passingScore || 70)) {
-      showToast(`Passed ${quiz?.title}! Score: ${scorePercentage}%`, 'success');
-      issueCertificateForCourse(quiz.courseId, currentUser);
-    } else {
-      showToast(`Score: ${scorePercentage}%. Minimum passing is ${quiz?.passingScore}%.`, 'error');
-    }
-  };
-
-  const addDiscussionPost = (title, content, tags = []) => {
-    if (!currentUser) return;
-    const newPost = {
-      id: 'disc_' + Date.now(),
-      author: currentUser.name,
-      avatar: currentUser.avatar,
-      title,
-      content,
-      upvotes: 1,
-      tags: tags.length ? tags : ['Learning'],
-      createdAt: 'Just now',
-      replies: []
-    };
-    setDiscussions(prev => [newPost, ...prev]);
-    showToast('Discussion question posted.');
-  };
-
-  const deleteDiscussionPost = (postId) => {
-    setDiscussions(prev => prev.filter(d => d.id !== postId));
-    showToast('Post deleted.');
-  };
-
-  const replyDiscussionPost = (discId, replyText) => {
-    if (!currentUser) return;
-    setDiscussions(prev => prev.map(d => {
-      if (d.id === discId) {
-        return {
-          ...d,
-          replies: [
-            ...d.replies,
-            {
-              author: currentUser.name,
-              avatar: currentUser.avatar,
-              content: replyText,
-              createdAt: 'Just now'
-            }
-          ]
-        };
-      }
-      return d;
-    }));
-    showToast('Reply posted.');
-  };
+  const payFeeInvoice = (invoiceId, coupon) => setFees(prev => prev.map(f => f.invoiceId === invoiceId ? { ...f, status: 'Paid', coupon } : f));
+  const updateLeadStage = (leadId, stage) => setLeads(prev => prev.map(l => l.id === leadId ? { ...l, stage } : l));
+  const createSupportTicket = data => setTickets(prev => [{ id: `ticket_${Date.now()}`, ...data, createdAt: new Date().toISOString() }, ...prev]);
 
   return (
     <LMSContext.Provider value={{
-      currentUser,
-      users,
-      courses,
-      batches,
-      quizzes,
-      assignments,
-      certificates,
-      discussions,
-      reviews,
-      getCourseReviews,
-      submitReview,
+      currentUser, users, courses, batches, quizzes, assignments, certificates, discussions, reviews,
+      getCourseReviews, submitReview,
       liveClasses: INITIAL_LIVE_CLASSES,
-      platformFeedback,
-      submitPlatformFeedback,
-      activeTab,
-      setActiveTab,
-      courseSearchQuery,
-      setCourseSearchQuery,
-      darkMode,
-      toggleDarkMode,
-      selectedCourseForPlayer,
-      setSelectedCourseForPlayer,
-      selectedLessonForMaterials,
-      setSelectedLessonForMaterials,
-      mockTests: INITIAL_MOCK_TESTS,
-      selectedMockTest,
-      setSelectedMockTest,
-      interviewTracks: INITIAL_INTERVIEW_TRACKS,
-      selectedInterviewTrack,
-      setSelectedInterviewTrack,
-      lastInterviewFeedback,
-      setLastInterviewFeedback,
-      jobs: INITIAL_JOBS,
-      jobApplications,
-      applyToJob,
-      resumeData,
-      updateResumeData,
-      toastMessage,
-      showToast,
-      login,
-      signup,
-      logout,
-      addCourse,
-      deleteCourse,
-      addBatch,
-      deleteBatch,
-      addStudentToBatch,
-      removeStudentFromBatch,
-      markAttendance,
-      addQuiz,
-      deleteQuiz,
-      addAssignment,
-      deleteAssignment,
-      addDiscussionPost,
-      deleteDiscussionPost,
-      replyDiscussionPost,
-      enrollCourse,
-      toggleLessonComplete,
-      getCourseProgress,
-      issueCertificateForCourse,
-      submitQuizResult
+      platformFeedback, submitPlatformFeedback,
+      activeTab, setActiveTab, courseSearchQuery, setCourseSearchQuery,
+      darkMode, toggleDarkMode,
+      selectedCourseForPlayer, setSelectedCourseForPlayer,
+      selectedLessonForMaterials, setSelectedLessonForMaterials,
+      mockTests, selectedMockTest, setSelectedMockTest, submitMockTest, submitMockInterview,
+      interviewTracks, selectedInterviewTrack, setSelectedInterviewTrack,
+      lastInterviewFeedback, setLastInterviewFeedback,
+      jobs, jobApplications, applyToJob,
+      placements, applyPlacementJob,
+      resumeData, updateResumeData,
+      fees, payFeeInvoice, leads, updateLeadStage, tickets, createSupportTicket,
+      toastMessage, showToast,
+      login, signup, logout,
+      addCourse, deleteCourse,
+      addBatch, deleteBatch, addStudentToBatch, removeStudentFromBatch, markAttendance,
+      addQuiz, deleteQuiz, addAssignment, deleteAssignment,
+      addDiscussionPost, deleteDiscussionPost, replyDiscussionPost,
+      enrollCourse, toggleLessonComplete, getCourseProgress, issueCertificateForCourse, submitQuizResult
     }}>
       {children}
     </LMSContext.Provider>

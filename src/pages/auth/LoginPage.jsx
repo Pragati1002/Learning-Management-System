@@ -11,7 +11,7 @@ export const LoginPage = () => {
   const [role, setRole] = useState('student');
   const [error, setError] = useState('');
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault();
     setError('');
 
@@ -20,14 +20,14 @@ export const LoginPage = () => {
         setError('Please fill in all fields.');
         return;
       }
-      const success = signup(name, email, password, role);
+      const success = await signup(name, email, password, role);
       if (!success) setError('An account with this email already exists.');
     } else {
       if (!email.trim() || !password.trim()) {
         setError('Please enter both email and password.');
         return;
       }
-      const success = login(email, password);
+      const success = await login(email, password);
       if (!success) setError('Invalid email or password. Please try again.');
     }
   };
