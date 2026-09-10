@@ -3,6 +3,7 @@
 require('dotenv').config();
 const bcrypt = require('bcryptjs');
 const connectDB = require('../config/db');
+const { SEED_COURSES, SEED_QUIZZES } = require('./Courseseeddata');
 
 const User = require('../models/User');
 const Course = require('../models/Course');
@@ -26,73 +27,24 @@ const run = async () => {
   await User.create({ name: 'Admin User', email: 'admin@lms.com', passwordHash: adminPass, role: 'admin' });
   const student = await User.create({ name: 'Ramesh Kumar', email: 'student@lms.com', passwordHash: studentPass, role: 'student' });
 
-  console.log('Seeding courses...');
-  const fullStack = await Course.create({
-    title: 'Full Stack Development',
-    category: 'Web Development',
-    description: 'Learn to build complete web applications from front to back - HTML, CSS, JavaScript, React, Node.js, Express, and MongoDB.',
-    duration: '6 Months',
-    level: 'Beginner to Advanced',
-    instructor: 'Priya Sharma',
-    rating: 4.7,
-    reviewsCount: 128,
-    modules: [
-      {
-        moduleId: 'm1', title: 'HTML, CSS & JavaScript',
-        lessons: [
-          { lessonId: 'l1', title: 'HTML Introduction', duration: '45 min', videoUrl: 'https://www.youtube.com/embed/kUMe1FH4CHE', notes: 'HTML is the standard markup language for creating web pages.' },
-          { lessonId: 'l2', title: 'CSS Fundamentals', duration: '50 min', videoUrl: 'https://www.youtube.com/embed/1Rs2ND1ryYc' },
-          { lessonId: 'l3', title: 'JavaScript Basics', duration: '60 min', videoUrl: 'https://www.youtube.com/embed/W6NZfCO5SIk' }
-        ]
-      },
-      {
-        moduleId: 'm2', title: 'React JS',
-        lessons: [
-          { lessonId: 'l4', title: 'React Components & Props', duration: '55 min' },
-          { lessonId: 'l5', title: 'State & Hooks', duration: '60 min' }
-        ]
-      },
-      {
-        moduleId: 'm3', title: 'Node JS',
-        lessons: [
-          { lessonId: 'l6', title: 'Node.js Fundamentals', duration: '50 min' }
-        ]
-      }
-    ]
-  });
+  console.log(`Seeding ${SEED_COURSES.length} courses (full catalog, matching mockData.js)...`);
+  const courseIdMap = {}; // mockId ('c_java') -> real Mongo _id, needed to link quizzes below
+  for (const c of SEED_COURSES) {
+    const { mockId, ...courseFields } = c;
+    const created = await Course.create(courseFields);
+    courseIdMap[mockId] = created._id;
+  }
 
-  await Course.create({
-    title: 'Java Programming',
-    category: 'Programming',
-    description: 'Master core Java concepts, OOP principles, and data structures for interview-ready programming skills.',
-    duration: '4 Months',
-    level: 'Beginner',
-    instructor: 'Amit Verma',
-    rating: 4.5,
-    reviewsCount: 84,
-    modules: [
-      {
-        moduleId: 'jm1', title: 'Java Basics',
-        lessons: [
-          { lessonId: 'jl1', title: 'Introduction to Java', duration: '40 min' },
-          { lessonId: 'jl2', title: 'Variables & Data Types', duration: '35 min' }
-        ]
-      }
-    ]
-  });
-
-  console.log('Seeding quizzes...');
-  await Quiz.create({
-    title: 'HTML Basics Quiz',
-    courseTitle: 'Full Stack Development',
-    courseId: fullStack._id,
-    durationMinutes: 10,
-    passingScore: 60,
-    questions: [
-      { question: 'Which tag is used for the largest heading?', options: ['<h6>', '<heading>', '<h1>', '<h3>'], correctAnswer: 2 },
-      { question: 'What does HTML stand for?', options: ['Hyper Trainer Marking Language', 'HyperText Markup Language', 'Hyper Text Marketing Language', 'None'], correctAnswer: 1 }
-    ]
-  });
+  console.log(`Seeding ${SEED_QUIZZES.length} quizzes...`);
+  for (const q of SEED_QUIZZES) {
+    const { mockCourseId, ...quizFields } = q;
+    const courseId = courseIdMap[mockCourseId];
+    if (!courseId) {
+      console.warn(`  Skipping quiz "${quizFields.title}" - no matching course for "${mockCourseId}"`);
+      continue;
+    }
+    await Quiz.create({ ...quizFields, courseId });
+  }
 
   console.log('Seeding mock tests...');
   await MockTest.create({
@@ -138,7 +90,9 @@ const run = async () => {
     { title: 'Full Stack Developer', company: 'TCS', location: 'Bangalore', type: 'Full-time', skills: ['React', 'Node.js', 'MongoDB'] },
     { title: 'Frontend Developer', company: 'Infosys', location: 'Bangalore', type: 'Full-time', skills: ['React', 'CSS', 'JavaScript'] },
     { title: 'React Developer', company: 'Wipro', location: 'Hyderabad', type: 'Full-time', skills: ['React', 'Redux', 'Tailwind'] },
-    { title: 'Node JS Developer', company: 'Tech Mahindra', location: 'Pune', type: 'Full-time', skills: ['Node.js', 'Express', 'MySQL'] }
+    { title: 'Node JS Developer', company: 'Tech Mahindra', location: 'Pune', type: 'Full-time', skills: ['Node.js', 'Express', 'MySQL'] },
+    { title: 'Junior Software Engineer', company: 'Capgemini', location: 'Bangalore', type: 'Full-time', skills: ['Java', 'Spring Boot', 'SQL'] },
+    { title: 'MERN Stack Developer', company: 'Accenture', location: 'Remote', type: 'Full-time', skills: ['MongoDB', 'Express', 'React', 'Node.js'] }
   ]);
 
   console.log('Seeding placement drives...');
