@@ -59,19 +59,31 @@ const toggleLessonComplete = async (req, res, next) => {
   try {
     const { lessonId } = req.params;
     const user = await User.findById(req.user._id);
+    const course = await Course.findById(req.params.id);
 
     const isDone = user.completedLessons.includes(lessonId);
     if (isDone) {
       user.completedLessons = user.completedLessons.filter(id => id !== lessonId);
+      user.lessonCompletions = (user.lessonCompletions || []).filter(lc => lc.lessonId !== lessonId);
       user.points = Math.max(0, (user.points || 0) - 25);
     } else {
       user.completedLessons.push(lessonId);
+      const lessonTitle = course?.modules
+        ?.flatMap(m => m.lessons)
+        ?.find(l => l.lessonId === lessonId)?.title || 'Lesson';
+      user.lessonCompletions = user.lessonCompletions || [];
+      user.lessonCompletions.push({
+        lessonId,
+        courseId: course?._id,
+        courseTitle: course?.title || '',
+        lessonTitle,
+        completedAt: new Date()
+      });
       user.points = (user.points || 0) + 25;
     }
     await user.save();
 
     // Auto-issue certificate if every lesson in the course is now complete
-    const course = await Course.findById(req.params.id);
     const allLessonIds = course.modules.flatMap(m => m.lessons.map(l => l.lessonId));
     const allDone = allLessonIds.every(id => user.completedLessons.includes(id));
 
@@ -93,7 +105,12 @@ const toggleLessonComplete = async (req, res, next) => {
       }
     }
 
-    res.json({ completedLessons: user.completedLessons, points: user.points, certificateIssued: certificate });
+    res.json({
+      completedLessons: user.completedLessons,
+      lessonCompletions: user.lessonCompletions,
+      points: user.points,
+      certificateIssued: certificate
+    });
   } catch (err) { next(err); }
 };
 

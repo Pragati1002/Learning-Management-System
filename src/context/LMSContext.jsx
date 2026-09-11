@@ -3,8 +3,7 @@ import request from '../api/client';
 import {
   INITIAL_COURSES,
   INITIAL_BATCHES,
-  INITIAL_REVIEWS,
-  INITIAL_LIVE_CLASSES
+  INITIAL_REVIEWS
 } from '../data/mockData';
 
 const LMSContext = createContext();
@@ -19,6 +18,10 @@ const normalizeUser = (user) => {
     id: String(user.id || user._id),
     enrolledCourses: (user.enrolledCourses || []).map(c => String(c?.id || c?._id || c)),
     completedLessons: (user.completedLessons || []).map(String),
+    lessonCompletions: (user.lessonCompletions || []).map(lc => ({
+      ...lc,
+      courseId: String(lc.courseId?.id || lc.courseId?._id || lc.courseId || '')
+    })),
     avatar: user.avatar || DEFAULT_AVATAR,
     title: user.title || (user.role === 'admin' ? 'Platform Administrator & Instructor' : 'Registered Student'),
     points: Number(user.points || 0)
@@ -109,6 +112,14 @@ const normalizeDiscussion = (d) => ({
   replies: (d.replies || []).map(r => ({ ...r, id: String(r.id || r._id) }))
 });
 
+const normalizeLiveClass = (liveClass) => ({
+  ...liveClass,
+  id: String(liveClass.id || liveClass._id),
+  courseId: String(liveClass.courseId?.id || liveClass.courseId?._id || liveClass.courseId),
+  courseTitle: liveClass.courseTitle || liveClass.courseId?.title || 'Course',
+  time: liveClass.time || `${liveClass.startTime || ''} - ${liveClass.endTime || ''}`
+});
+
 const normalizeBatch = (batch) => {
   const students = batch.students || [];
   const attendanceRecords = batch.attendance || [];
@@ -146,6 +157,7 @@ export const LMSProvider = ({ children }) => {
   const [users, setUsers] = useState(() => currentUser ? [currentUser] : []);
   const [courses, setCourses] = useState(INITIAL_COURSES);
   const [batches, setBatches] = useState([]);
+  const [liveClasses, setLiveClasses] = useState([]);
   const [quizzes, setQuizzes] = useState([]);
   const [assignments, setAssignments] = useState([]);
   const [certificates, setCertificates] = useState([]);
@@ -210,7 +222,8 @@ export const LMSProvider = ({ children }) => {
       request('/assignments', { token: token() }).then(data => setAssignments((data || []).map(normalizeAssignment))),
       request('/discussions', { token: token() }).then(data => setDiscussions((data || []).map(normalizeDiscussion))),
       request('/certificates/mine', { token: token() }).then(data => setCertificates((data || []).map(normalizeCertificate))),
-      request('/jobs/applications/mine', { token: token() }).then(data => setJobApplications((data || []).map(normalizeApplication)))
+      request('/jobs/applications/mine', { token: token() }).then(data => setJobApplications((data || []).map(normalizeApplication))),
+      request('/live-classes', { token: token() }).then(data => setLiveClasses((data || []).map(normalizeLiveClass)))
     ];
 
     if (user.role === 'admin' || user.role === 'trainer') {
@@ -230,7 +243,20 @@ export const LMSProvider = ({ children }) => {
   }, [darkMode]);
 
   useEffect(() => {
-    if (currentUser && token()) loadData(currentUser);
+    const loadPublicCourses = async () => {
+      try {
+        const data = await request('/courses');
+        setCourses((data || []).map(normalizeCourse));
+      } catch (err) {
+        console.warn('Could not load public courses:', err.message);
+      }
+    };
+
+    loadPublicCourses();
+
+    if (currentUser && token()) {
+      loadData(currentUser);
+    }
   }, []);
 
   useEffect(() => {
@@ -249,44 +275,100 @@ export const LMSProvider = ({ children }) => {
 
   const login = async (email, password) => {
     try {
-      const data = await request('/auth/login', { method: 'POST', body: { email, password } });
+      const data = await request('/auth/login', {
+        method: 'POST',
+        body: { email, password }
+      });
+
       localStorage.setItem(TOKEN_KEY, data.token);
+
       const user = normalizeUser(data.user);
+
       setCurrentUser(user);
       setUsers([user]);
       setActiveTab('dashboard');
+
       showToast(`Welcome back, ${user.name}!`);
+
       await loadData(user);
-      return true;
+
+      return {
+        success: true,
+        user,
+        message: 'Login successful.'
+      };
     } catch (err) {
       showToast(err.message || 'Invalid credentials', 'error');
-      return false;
+
+      return {
+        success: false,
+        message: err.message || 'Invalid credentials'
+      };
     }
   };
 
-  const signup = async (name, email, password, role = 'student') => {
-    try {
-      const data = await request('/auth/register', { method: 'POST', body: { name, email, password, role } });
-      localStorage.setItem(TOKEN_KEY, data.token);
-      const user = normalizeUser(data.user);
-      setCurrentUser(user);
-      setUsers([user]);
-      setActiveTab('dashboard');
-      showToast('Account created successfully! Welcome to LMS.');
-      await loadData(user);
-      return true;
-    } catch (err) {
-      showToast(err.message || 'Registration failed', 'error');
-      return false;
-    }
-  };
+  const signup = async (
+  name,
+  email,
+  password,
+  role = 'student',
+  chosenCourse = ''
+) => {
+  try {
+    const data = await request('/auth/register', {
+      method: 'POST',
+      body: {
+        name,
+        email,
+        password,
+        role,
+        chosenCourse
+      }
+    });
+
+    localStorage.setItem(
+      TOKEN_KEY,
+      data.token
+    );
+
+    const user = normalizeUser(data.user);
+
+    setCurrentUser(user);
+    setUsers([user]);
+    setActiveTab('dashboard');
+
+    showToast(
+      'Account created successfully! Welcome to LMS.'
+    );
+
+    // Load all LMS data after registration.
+    await loadData(user);
+
+    return {
+      success: true,
+      user,
+      message: 'Account created successfully.'
+    };
+
+  } catch (err) {
+    showToast(
+      err.message || 'Registration failed',
+      'error'
+    );
+
+    return {
+      success: false,
+      message:
+        err.message || 'Registration failed'
+    };
+  }
+};
 
   const logout = () => {
     localStorage.removeItem(TOKEN_KEY);
     localStorage.removeItem(USER_KEY);
     setCurrentUser(null);
     setUsers([]);
-    setCourses([]);
     setCertificates([]);
     setJobApplications([]);
     showToast('You have been logged out.');
@@ -324,6 +406,7 @@ export const LMSProvider = ({ children }) => {
       const updated = normalizeUser({
         ...currentUser,
         completedLessons: data.completedLessons,
+        lessonCompletions: data.lessonCompletions,
         points: data.points ?? currentUser.points
       });
       setCurrentUser(updated);
@@ -539,6 +622,61 @@ export const LMSProvider = ({ children }) => {
     showToast('Thanks for your feedback!');
   };
 
+  const addLiveClass = async (data) => {
+    try {
+      const created = normalizeLiveClass(await request('/live-classes', {
+        method: 'POST',
+        body: {
+          courseId: data.courseId,
+          title: data.title,
+          instructor: data.instructor || currentUser?.name || 'Administrator',
+          date: data.date,
+          startTime: data.startTime,
+          endTime: data.endTime,
+          platform: data.platform || 'Google Meet',
+          meetingLink: data.meetingLink,
+          description: data.description || '',
+          status: data.status || 'Scheduled'
+        },
+        token: token()
+      }));
+      setLiveClasses(prev => [created, ...prev]);
+      showToast(`Live class "${created.title}" scheduled!`);
+      return created;
+    } catch (err) {
+      showToast(err.message, 'error');
+      return null;
+    }
+  };
+
+  const updateLiveClass = async (id, data) => {
+    try {
+      const updated = normalizeLiveClass(await request(`/live-classes/${id}`, {
+        method: 'PUT',
+        body: data,
+        token: token()
+      }));
+      setLiveClasses(prev => prev.map(item => item.id === String(id) ? updated : item));
+      showToast('Live class updated successfully.');
+      return updated;
+    } catch (err) {
+      showToast(err.message, 'error');
+      return null;
+    }
+  };
+
+  const deleteLiveClass = async (id) => {
+    try {
+      await request(`/live-classes/${id}`, { method: 'DELETE', token: token() });
+      setLiveClasses(prev => prev.filter(item => item.id !== String(id)));
+      showToast('Live class deleted.', 'info');
+      return true;
+    } catch (err) {
+      showToast(err.message, 'error');
+      return false;
+    }
+  };
+
   const addBatch = async data => {
     try {
       const created = normalizeBatch(await request('/batches', { method: 'POST', body: { name: data.name, courseId: data.courseId, courseName: data.courseName, schedule: data.schedule, status: 'Active', trainer: currentUser?.name }, token: token() }));
@@ -594,7 +732,8 @@ export const LMSProvider = ({ children }) => {
     <LMSContext.Provider value={{
       currentUser, users, courses, batches, quizzes, assignments, certificates, discussions, reviews,
       getCourseReviews, submitReview,
-      liveClasses: INITIAL_LIVE_CLASSES,
+      liveClasses,
+      addLiveClass, updateLiveClass, deleteLiveClass,
       platformFeedback, submitPlatformFeedback,
       activeTab, setActiveTab, courseSearchQuery, setCourseSearchQuery,
       darkMode, toggleDarkMode,

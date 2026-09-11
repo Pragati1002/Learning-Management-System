@@ -8,6 +8,13 @@ const userSchema = new mongoose.Schema({
   role: { type: String, enum: ['student', 'admin', 'trainer', 'accountant', 'placement'], default: 'student' },
   enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
   completedLessons: [{ type: String }], // lesson ids within course.modules.lessons
+  lessonCompletions: [{
+    lessonId: String,
+    courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },
+    courseTitle: String,
+    lessonTitle: String,
+    completedAt: { type: Date, default: Date.now }
+  }],
   points: { type: Number, default: 0 }
 }, { timestamps: true });
 

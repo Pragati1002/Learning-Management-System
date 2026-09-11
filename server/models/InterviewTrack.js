@@ -7,6 +7,8 @@ const ivQuestionSchema = new mongoose.Schema({
 const interviewTrackSchema = new mongoose.Schema({
   role: { type: String, required: true },
   interviewerName: { type: String, default: 'AI Interviewer' },
+  durationMinutes: { type: Number, default: 20 },
+  difficulty: { type: String, enum: ['Easy', 'Medium', 'Hard'], default: 'Medium' },
   questions: [ivQuestionSchema]
 }, { timestamps: true });
 

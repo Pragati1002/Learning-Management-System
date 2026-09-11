@@ -20,15 +20,21 @@ export const LoginPage = () => {
         setError('Please fill in all fields.');
         return;
       }
-      const success = await signup(name, email, password, role);
-      if (!success) setError('An account with this email already exists.');
+      const result = await signup(name, email, password, role);
+
+if (!result.success) {
+  setError(result.message || 'Registration failed. Please try again.');
+}
     } else {
       if (!email.trim() || !password.trim()) {
         setError('Please enter both email and password.');
         return;
       }
-      const success = await login(email, password);
-      if (!success) setError('Invalid email or password. Please try again.');
+     const result = await login(email, password);
+
+if (!result.success) {
+  setError(result.message || 'Invalid email or password. Please try again.');
+}
     }
   };
 
@@ -61,7 +67,7 @@ export const LoginPage = () => {
         <div className="bg-white py-8 px-6 shadow-xl border border-slate-200/80 rounded-3xl sm:px-10 space-y-6">
           
           {/* Quick Login Buttons */}
-          <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
+          {/* <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
             <span className="text-[11px] font-bold uppercase text-slate-400 block text-center tracking-wider">
               1-Click Quick Access
             </span>
@@ -83,7 +89,7 @@ export const LoginPage = () => {
                 <span>Student Login</span>
               </button>
             </div>
-          </div>
+          </div> */}
 
           <div className="relative flex py-1 items-center">
             <div className="flex-grow border-t border-slate-200"></div>

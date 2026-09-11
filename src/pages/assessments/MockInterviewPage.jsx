@@ -91,21 +91,35 @@ export const MockInterviewPage = () => {
           <p className="text-sm text-slate-500 mt-1">Practice with realistic role-based interview questions before the real thing.</p>
         </div>
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {interviewTracks?.map(t => (
-            <div key={t.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-              <div className="p-2.5 bg-purple-50 rounded-xl w-fit">
-                <User className="w-5 h-5 text-purple-600" />
+          {interviewTracks?.map(t => {
+            const difficultyStyle = {
+              Easy: 'bg-emerald-50 text-emerald-700',
+              Medium: 'bg-amber-50 text-amber-700',
+              Hard: 'bg-red-50 text-red-700'
+            }[t.difficulty] || 'bg-slate-100 text-slate-600';
+            return (
+              <div key={t.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
+                <div className="flex items-start justify-between">
+                  <div className="p-2.5 bg-purple-50 rounded-xl w-fit">
+                    <User className="w-5 h-5 text-purple-600" />
+                  </div>
+                  <span className={`text-[10px] font-bold uppercase px-2 py-1 rounded-full ${difficultyStyle}`}>
+                    {t.difficulty || 'Medium'}
+                  </span>
+                </div>
+                <h3 className="font-bold text-slate-900 text-sm">{t.role}</h3>
+                <p className="text-xs text-slate-500">
+                  {t.questions.length} Questions • {t.durationMinutes || t.questions.length * 3} min
+                </p>
+                <button
+                  onClick={() => startInterview(t)}
+                  className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition-all"
+                >
+                  Start Mock Interview
+                </button>
               </div>
-              <h3 className="font-bold text-slate-900 text-sm">{t.role}</h3>
-              <p className="text-xs text-slate-500">{t.questions.length} Questions • ~{t.questions.length * 3} min</p>
-              <button
-                onClick={() => startInterview(t)}
-                className="w-full py-2 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl transition-all"
-              >
-                Start Mock Interview
-              </button>
-            </div>
-          ))}
+            );
+          })}
         </div>
       </div>
     );

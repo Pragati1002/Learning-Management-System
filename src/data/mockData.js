@@ -1,27 +1,3 @@
-export const INITIAL_USERS = [
-  {
-    id: 'usr_admin',
-    name: 'Administrator',
-    email: 'admin@lms.com',
-    password: 'admin',
-    role: 'admin',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
-    title: 'Platform Administrator & Instructor'
-  },
-  {
-    id: 'usr_student',
-    name: 'Student Learner',
-    email: 'student@lms.com',
-    password: 'student',
-    role: 'student',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-    title: 'Registered Student',
-    enrolledCourses: ['c_webdev', 'c_python'],
-    completedLessons: [],
-    points: 0
-  }
-];
-
 export const INITIAL_COURSES = [
   {
     id: 'c_webdev',
@@ -508,14 +484,52 @@ export const INITIAL_MOCK_TESTS = [
           { id: 'mt1_q6', question: 'Choose the correctly spelled word:', options: ['Recieve', 'Receive', 'Receeve', 'Receve'], correctAnswer: 1 }
         ]
       },
-      {
-        id: 'mt1_gk',
+      { id: 'mt1_gk',
         title: 'General Awareness',
         durationMinutes: 10,
         questions: [
           { id: 'mt1_q7', question: 'Which is the capital of India?', options: ['Mumbai', 'Kolkata', 'New Delhi', 'Chennai'], correctAnswer: 2 }
         ]
       }
+    ]
+  },
+  {
+    id: 'mt_webdev',
+    title: 'Web Development Mock Test',
+    totalMarks: 40,
+    sections: [
+      { id: 'mt2_htmlcss', title: 'HTML & CSS', durationMinutes: 15, questions: [
+        { id: 'mt2_q1', question: 'Which CSS property controls text size?', options: ['font-style', 'text-size', 'font-size', 'text-style'], correctAnswer: 2 },
+        { id: 'mt2_q2', question: 'Which tag is used to create a hyperlink?', options: ['<link>', '<a>', '<href>', '<url>'], correctAnswer: 1 }
+      ]},
+      { id: 'mt2_js', title: 'JavaScript', durationMinutes: 20, questions: [
+        { id: 'mt2_q3', question: 'Which method converts a JSON string into an object?', options: ['JSON.parse()', 'JSON.stringify()', 'JSON.toObject()', 'JSON.convert()'], correctAnswer: 0 },
+        { id: 'mt2_q4', question: 'What does "this" refer to in a regular function called as a method?', options: ['The global object', 'The function itself', 'The object the method belongs to', 'undefined'], correctAnswer: 2 }
+      ]}
+    ]
+  },
+  {
+    id: 'mt_java',
+    title: 'Java Programming Mock Test',
+    totalMarks: 30,
+    sections: [
+      { id: 'mt3_core', title: 'Core Java', durationMinutes: 20, questions: [
+        { id: 'mt3_q1', question: 'Which keyword prevents a class from being inherited?', options: ['static', 'final', 'const', 'private'], correctAnswer: 1 },
+        { id: 'mt3_q2', question: 'Which collection does not allow duplicate elements?', options: ['ArrayList', 'LinkedList', 'HashSet', 'Vector'], correctAnswer: 2 }
+      ]}
+    ]
+  },
+  {
+    id: 'mt_reasoning',
+    title: 'Logical Reasoning & Verbal Ability',
+    totalMarks: 25,
+    sections: [
+      { id: 'mt4_logic', title: 'Logical Reasoning', durationMinutes: 15, questions: [
+        { id: 'mt4_q1', question: 'If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops definitely Lazzies?', options: ['Yes', 'No', 'Cannot be determined', 'Only sometimes'], correctAnswer: 0 }
+      ]},
+      { id: 'mt4_verbal', title: 'Verbal Ability', durationMinutes: 10, questions: [
+        { id: 'mt4_q2', question: 'Choose the word most opposite in meaning to "Abundant":', options: ['Plentiful', 'Scarce', 'Ample', 'Excessive'], correctAnswer: 1 }
+      ]}
     ]
   }
 ];
@@ -525,6 +539,8 @@ export const INITIAL_INTERVIEW_TRACKS = [
     id: 'iv_java_dev',
     role: 'Java Developer',
     interviewerName: 'AI Interviewer',
+    durationMinutes: 20,
+    difficulty: 'Medium',
     questions: [
       { id: 'iv_j_q1', question: 'Tell me about yourself and your experience with Java.' },
       { id: 'iv_j_q2', question: 'What is the difference between == and .equals() in Java?' },
@@ -537,12 +553,40 @@ export const INITIAL_INTERVIEW_TRACKS = [
     id: 'iv_fullstack_dev',
     role: 'Full Stack Developer',
     interviewerName: 'AI Interviewer',
+    durationMinutes: 25,
+    difficulty: 'Medium',
     questions: [
       { id: 'iv_f_q1', question: 'Walk me through a recent project you built end-to-end.' },
       { id: 'iv_f_q2', question: 'What is the difference between == and === in JavaScript?' },
       { id: 'iv_f_q3', question: 'How would you optimize a slow-loading React page?' },
       { id: 'iv_f_q4', question: 'Explain how you would design a REST API for a course catalog.' },
       { id: 'iv_f_q5', question: 'What is the difference between SQL and NoSQL databases?' }
+    ]
+  },
+  {
+    id: 'iv_frontend_entry',
+    role: 'Frontend Developer (Entry Level)',
+    interviewerName: 'AI Interviewer',
+    durationMinutes: 15,
+    difficulty: 'Easy',
+    questions: [
+      { id: 'iv_fe_q1', question: 'What is the difference between HTML and HTML5?' },
+      { id: 'iv_fe_q2', question: 'Explain the CSS box model.' },
+      { id: 'iv_fe_q3', question: 'What is the difference between let, const, and var?' }
+    ]
+  },
+  {
+    id: 'iv_senior_backend',
+    role: 'Senior Backend Engineer',
+    interviewerName: 'AI Interviewer',
+    durationMinutes: 35,
+    difficulty: 'Hard',
+    questions: [
+      { id: 'iv_sb_q1', question: 'How would you design a system to handle 1 million concurrent users?' },
+      { id: 'iv_sb_q2', question: 'Explain database indexing and when it can hurt performance.' },
+      { id: 'iv_sb_q3', question: 'How do you handle race conditions in a distributed system?' },
+      { id: 'iv_sb_q4', question: 'Walk me through how you would debug a memory leak in production.' },
+      { id: 'iv_sb_q5', question: 'What trade-offs would you consider between microservices and a monolith?' }
     ]
   }
 ];

@@ -16,6 +16,7 @@ const certificateRoutes = require('./routes/certificateRoutes');
 const assignmentRoutes = require('./routes/assignmentRoutes');
 const discussionRoutes = require('./routes/discussionRoutes');
 const batchRoutes = require('./routes/batchRoutes');
+const liveClassRoutes = require('./routes/liveClassRoutes');
 
 const app = express();
 
@@ -40,6 +41,7 @@ app.use('/api/certificates', certificateRoutes);
 app.use('/api/assignments', assignmentRoutes);
 app.use('/api/discussions', discussionRoutes);
 app.use('/api/batches', batchRoutes);
+app.use('/api/live-classes', liveClassRoutes);
 
 // React fallback
 app.get('*', (req, res) => {

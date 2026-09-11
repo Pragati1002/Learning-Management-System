@@ -13,6 +13,8 @@ import { CertificateModal } from './components/certificates/CertificateModal';
 // Dashboards
 import { AdminDashboard } from './pages/dashboards/AdminDashboard';
 import { StudentDashboard } from './pages/dashboards/StudentDashboard';
+import { ProgressTrackerPage } from './pages/dashboards/ProgressTrackerPage';
+import { TrainerDashboard } from './pages/dashboards/TrainerDashboard';
 
 // Pages
 import { CourseCatalogPage } from './pages/courses/CourseCatalogPage';
@@ -33,6 +35,7 @@ import { PlacementPortalPage } from './pages/crm/PlacementPortalPage';
 import { PlacementCertificatePage } from './pages/certificates/PlacementCertificatePage';
 import { FeedbackPage } from './pages/crm/FeedbackPage';
 import { DiscussionPage } from './pages/crm/DiscussionPage';
+import { LiveClassManagerPage } from './pages/liveClasses/LiveClassManagerPage';
 
 import { CheckCircle2, AlertCircle, Lock, Award, PlayCircle, ArrowRight, Sparkles } from 'lucide-react';
 
@@ -97,7 +100,11 @@ export function LMSApp() {
     switch (activeTab) {
       case 'dashboard':
         if (currentUser.role === 'admin') return <AdminDashboard />;
+        if (currentUser.role === 'trainer') return <TrainerDashboard />;
         return <StudentDashboard onOpenCertificate={handleOpenCertificate} />;
+
+      case 'progress-tracker':
+        return <ProgressTrackerPage />;
 
       case 'courses-catalog':
         return <CourseCatalogPage />;
@@ -117,6 +124,9 @@ export function LMSApp() {
 
       case 'batches':
         return <BatchAttendancePage />;
+
+      case 'live-classes-manage':
+        return <LiveClassManagerPage />;
 
       case 'assessments':
         return <AssessmentPage />;
@@ -259,7 +269,7 @@ export function LMSApp() {
         );
 
       default:
-        return currentUser.role === 'admin' ? <AdminDashboard /> : <StudentDashboard onOpenCertificate={handleOpenCertificate} />;
+        return currentUser.role === 'admin' ? <AdminDashboard /> : currentUser.role === 'trainer' ? <TrainerDashboard /> : <StudentDashboard onOpenCertificate={handleOpenCertificate} />;
     }
   };
 

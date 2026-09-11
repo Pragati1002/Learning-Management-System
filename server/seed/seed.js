@@ -47,43 +47,113 @@ const run = async () => {
   }
 
   console.log('Seeding mock tests...');
-  await MockTest.create({
-    title: 'Aptitude Mock Test 1',
-    totalMarks: 50,
-    sections: [
-      { title: 'Quantitative Aptitude', durationMinutes: 15, questions: [
-        { question: 'A train travels 60 km in 45 minutes. What is its speed in km/h?', options: ['70 km/h', '80 km/h', '75 km/h', '90 km/h'], correctAnswer: 1 },
-        { question: 'What is 15% of 200?', options: ['20', '25', '30', '35'], correctAnswer: 2 }
-      ]},
-      { title: 'Reasoning Ability', durationMinutes: 15, questions: [
-        { question: 'Find the odd one out: Apple, Mango, Carrot, Banana', options: ['Apple', 'Mango', 'Carrot', 'Banana'], correctAnswer: 2 }
-      ]},
-      { title: 'English Language', durationMinutes: 10, questions: [
-        { question: 'Choose the correctly spelled word:', options: ['Recieve', 'Receive', 'Receeve', 'Receve'], correctAnswer: 1 }
-      ]},
-      { title: 'General Awareness', durationMinutes: 10, questions: [
-        { question: 'Which is the capital of India?', options: ['Mumbai', 'Kolkata', 'New Delhi', 'Chennai'], correctAnswer: 2 }
-      ]}
-    ]
-  });
+  await MockTest.insertMany([
+    {
+      title: 'Aptitude Mock Test 1',
+      totalMarks: 50,
+      sections: [
+        { title: 'Quantitative Aptitude', durationMinutes: 15, questions: [
+          { question: 'A train travels 60 km in 45 minutes. What is its speed in km/h?', options: ['70 km/h', '80 km/h', '75 km/h', '90 km/h'], correctAnswer: 1 },
+          { question: 'What is 15% of 200?', options: ['20', '25', '30', '35'], correctAnswer: 2 }
+        ]},
+        { title: 'Reasoning Ability', durationMinutes: 15, questions: [
+          { question: 'Find the odd one out: Apple, Mango, Carrot, Banana', options: ['Apple', 'Mango', 'Carrot', 'Banana'], correctAnswer: 2 }
+        ]},
+        { title: 'English Language', durationMinutes: 10, questions: [
+          { question: 'Choose the correctly spelled word:', options: ['Recieve', 'Receive', 'Receeve', 'Receve'], correctAnswer: 1 }
+        ]},
+        { title: 'General Awareness', durationMinutes: 10, questions: [
+          { question: 'Which is the capital of India?', options: ['Mumbai', 'Kolkata', 'New Delhi', 'Chennai'], correctAnswer: 2 }
+        ]}
+      ]
+    },
+    {
+      title: 'Web Development Mock Test',
+      totalMarks: 40,
+      sections: [
+        { title: 'HTML & CSS', durationMinutes: 15, questions: [
+          { question: 'Which CSS property controls text size?', options: ['font-style', 'text-size', 'font-size', 'text-style'], correctAnswer: 2 },
+          { question: 'Which tag is used to create a hyperlink?', options: ['<link>', '<a>', '<href>', '<url>'], correctAnswer: 1 }
+        ]},
+        { title: 'JavaScript', durationMinutes: 20, questions: [
+          { question: 'Which method converts a JSON string into an object?', options: ['JSON.parse()', 'JSON.stringify()', 'JSON.toObject()', 'JSON.convert()'], correctAnswer: 0 },
+          { question: 'What does "this" refer to in a regular function called as a method?', options: ['The global object', 'The function itself', 'The object the method belongs to', 'undefined'], correctAnswer: 2 }
+        ]}
+      ]
+    },
+    {
+      title: 'Java Programming Mock Test',
+      totalMarks: 30,
+      sections: [
+        { title: 'Core Java', durationMinutes: 20, questions: [
+          { question: 'Which keyword prevents a class from being inherited?', options: ['static', 'final', 'const', 'private'], correctAnswer: 1 },
+          { question: 'Which collection does not allow duplicate elements?', options: ['ArrayList', 'LinkedList', 'HashSet', 'Vector'], correctAnswer: 2 }
+        ]}
+      ]
+    },
+    {
+      title: 'Logical Reasoning & Verbal Ability',
+      totalMarks: 25,
+      sections: [
+        { title: 'Logical Reasoning', durationMinutes: 15, questions: [
+          { question: 'If all Bloops are Razzies and all Razzies are Lazzies, are all Bloops definitely Lazzies?', options: ['Yes', 'No', 'Cannot be determined', 'Only sometimes'], correctAnswer: 0 }
+        ]},
+        { title: 'Verbal Ability', durationMinutes: 10, questions: [
+          { question: 'Choose the word most opposite in meaning to "Abundant":', options: ['Plentiful', 'Scarce', 'Ample', 'Excessive'], correctAnswer: 1 }
+        ]}
+      ]
+    }
+  ]);
 
   console.log('Seeding interview tracks...');
-  await InterviewTrack.create({
-    role: 'Java Developer',
-    questions: [
-      { question: 'Tell me about yourself and your experience with Java.' },
-      { question: 'What is the difference between == and .equals() in Java?' },
-      { question: 'Explain the concept of inheritance with an example.' }
-    ]
-  });
-  await InterviewTrack.create({
-    role: 'Full Stack Developer',
-    questions: [
-      { question: 'Walk me through a recent project you built end-to-end.' },
-      { question: 'What is the difference between == and === in JavaScript?' },
-      { question: 'How would you optimize a slow-loading React page?' }
-    ]
-  });
+  await InterviewTrack.insertMany([
+    {
+      role: 'Java Developer',
+      durationMinutes: 20,
+      difficulty: 'Medium',
+      questions: [
+        { question: 'Tell me about yourself and your experience with Java.' },
+        { question: 'What is the difference between == and .equals() in Java?' },
+        { question: 'Explain the concept of inheritance with an example.' },
+        { question: 'What are the differences between an interface and an abstract class?' },
+        { question: 'How does exception handling work in Java?' }
+      ]
+    },
+    {
+      role: 'Full Stack Developer',
+      durationMinutes: 25,
+      difficulty: 'Medium',
+      questions: [
+        { question: 'Walk me through a recent project you built end-to-end.' },
+        { question: 'What is the difference between == and === in JavaScript?' },
+        { question: 'How would you optimize a slow-loading React page?' },
+        { question: 'Explain how you would design a REST API for a course catalog.' },
+        { question: 'What is the difference between SQL and NoSQL databases?' }
+      ]
+    },
+    {
+      role: 'Frontend Developer (Entry Level)',
+      durationMinutes: 15,
+      difficulty: 'Easy',
+      questions: [
+        { question: 'What is the difference between HTML and HTML5?' },
+        { question: 'Explain the CSS box model.' },
+        { question: 'What is the difference between let, const, and var?' }
+      ]
+    },
+    {
+      role: 'Senior Backend Engineer',
+      durationMinutes: 35,
+      difficulty: 'Hard',
+      questions: [
+        { question: 'How would you design a system to handle 1 million concurrent users?' },
+        { question: 'Explain database indexing and when it can hurt performance.' },
+        { question: 'How do you handle race conditions in a distributed system?' },
+        { question: 'Walk me through how you would debug a memory leak in production.' },
+        { question: 'What trade-offs would you consider between microservices and a monolith?' }
+      ]
+    }
+  ]);
 
   console.log('Seeding jobs...');
   await Job.insertMany([

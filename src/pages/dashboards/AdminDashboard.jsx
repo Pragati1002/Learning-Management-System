@@ -1,9 +1,9 @@
 import React from 'react';
 import { useLMS } from '../../context/LMSContext';
-import { BookOpen, Users, Award, PlusCircle, CheckCircle2, ArrowRight } from 'lucide-react';
+import { BookOpen, Users, Award, PlusCircle, CheckCircle2, ArrowRight, Video } from 'lucide-react';
 
 export const AdminDashboard = () => {
-  const { courses, batches, users, certificates, setActiveTab } = useLMS();
+  const { courses, batches, users, certificates, liveClasses, setActiveTab } = useLMS();
 
   return (
     <div className="space-y-6">
@@ -61,6 +61,17 @@ export const AdminDashboard = () => {
           </div>
           <h3 className="text-2xl font-extrabold text-slate-900 mt-2">{certificates.length} Verified</h3>
           <p className="text-xs text-slate-500 mt-1">Authentic completion tokens</p>
+        </div>
+      </div>
+
+      {/* Live Classes */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm">
+        <div className="flex items-center justify-between">
+          <div>
+            <h3 className="font-extrabold text-slate-900 text-base flex items-center gap-2"><Video className="w-5 h-5 text-purple-600" /> Live Classes</h3>
+            <p className="text-xs text-slate-500 mt-1">{liveClasses.length} sessions currently stored in MongoDB.</p>
+          </div>
+          <button onClick={() => setActiveTab('live-classes-manage')} className="px-4 py-2 bg-purple-600 hover:bg-purple-700 text-white text-xs font-bold rounded-xl">Manage Live Classes</button>
         </div>
       </div>
 

@@ -10,29 +10,7 @@ function save(relPath, content) {
 
 // 1. Cleaned up mockData.js with real educational courses & clean accounts
 save('src/data/mockData.js', `
-export const INITIAL_USERS = [
-  {
-    id: 'usr_admin',
-    name: 'Administrator',
-    email: 'admin@lms.com',
-    password: 'admin',
-    role: 'admin',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&auto=format&fit=crop&q=80',
-    title: 'Platform Administrator & Instructor'
-  },
-  {
-    id: 'usr_student',
-    name: 'Student Learner',
-    email: 'student@lms.com',
-    password: 'student',
-    role: 'student',
-    avatar: 'https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?w=150&auto=format&fit=crop&q=80',
-    title: 'Registered Student',
-    enrolledCourses: ['c_webdev', 'c_python'],
-    completedLessons: ['web_m1_l1', 'py_m1_l1'],
-    points: 100
-  }
-];
+
 
 export const INITIAL_COURSES = [
   {

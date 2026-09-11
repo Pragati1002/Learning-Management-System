@@ -9,52 +9,6 @@ function write(filePath, content) {
 }
 
 const mockDataContent = `
-export const INITIAL_USERS = [
-  {
-    id: 'usr_admin',
-    name: 'Dr. Rajesh Sharma',
-    email: 'admin@lms.edu',
-    role: 'admin',
-    avatar: 'https://images.unsplash.com/photo-1534528741775-53994a69daeb?w=150&auto=format&fit=crop&q=80',
-    title: 'Super Administrator & Director'
-  },
-  {
-    id: 'usr_trainer',
-    name: 'Prof. Priya Menon',
-    email: 'trainer@lms.edu',
-    role: 'trainer',
-    avatar: 'https://images.unsplash.com/photo-1573496359142-b8d87734a5a2?w=150&auto=format&fit=crop&q=80',
-    title: 'Lead Full Stack & AI Instructor'
-  },
-  {
-    id: 'usr_student',
-    name: 'Aarav Patel',
-    email: 'student@lms.edu',
-    role: 'student',
-    avatar: 'https://images.unsplash.com/photo-1539571696357-5a69c17a67c6?w=150&auto=format&fit=crop&q=80',
-    title: 'Student (Batch FS-2026-A)',
-    enrolledCourses: ['c_fullstack', 'c_ai'],
-    completedLessons: ['fs_m1_l1', 'fs_m1_l2', 'ai_m1_l1'],
-    attendanceRate: 94,
-    points: 1250
-  },
-  {
-    id: 'usr_accountant',
-    name: 'Vikram Rao',
-    email: 'accountant@lms.edu',
-    role: 'accountant',
-    avatar: 'https://images.unsplash.com/photo-1507003211169-0a1dd7228f2d?w=150&auto=format&fit=crop&q=80',
-    title: 'Chief Financial Officer'
-  },
-  {
-    id: 'usr_placement',
-    name: 'Neha Gupta',
-    email: 'placement@lms.edu',
-    role: 'placement',
-    avatar: 'https://images.unsplash.com/photo-1580489944761-15a19d654956?w=150&auto=format&fit=crop&q=80',
-    title: 'Head of Corporate Relations & Placements'
-  }
-];
 
 export const INITIAL_COURSES = [
   {

@@ -14,17 +14,20 @@ import {
   FileText,
   Briefcase,
   Trophy,
-  MessageSquarePlus
+  MessageSquarePlus,
+  Video,
+  TrendingUp
 } from 'lucide-react';
 
 export const Sidebar = () => {
   const { currentUser, activeTab, setActiveTab } = useLMS();
 
   const getNavItems = () => {
-    if (currentUser?.role === 'admin') {
+    if (currentUser?.role === 'admin' || currentUser?.role === 'trainer') {
       return [
         { id: 'dashboard', label: 'Admin Dashboard', icon: LayoutDashboard },
         { id: 'courses-manage', label: 'Course Creator & Manager', icon: PlusCircle },
+        { id: 'live-classes-manage', label: 'Live Class Management', icon: Video },
         { id: 'courses-catalog', label: 'Explore All Courses', icon: BookOpen },
         { id: 'batches', label: 'Batches & Attendance', icon: Users },
         { id: 'assessments', label: 'Assessments & Quizzes', icon: FileCheck2 },
@@ -34,6 +37,7 @@ export const Sidebar = () => {
 
     return [
       { id: 'dashboard', label: 'My Learning Desk', icon: LayoutDashboard },
+      { id: 'progress-tracker', label: 'Progress Tracker', icon: TrendingUp },
       { id: 'courses-catalog', label: 'Browse Courses', icon: BookOpen },
       { id: 'my-learning', label: 'Active Course Player', icon: BookOpen },
       { id: 'practice-quizzes', label: 'Practice & Quizzes', icon: FileCheck2 },
@@ -66,7 +70,7 @@ export const Sidebar = () => {
           />
           <div className="overflow-hidden">
             <h4 className="text-sm font-bold text-slate-900 dark:text-white truncate">{currentUser?.name}</h4>
-            <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">{currentUser?.role === 'admin' ? 'Administrator' : 'Student Learner'}</p>
+            <p className="text-xs text-slate-500 dark:text-slate-400 capitalize">{currentUser?.role === 'admin' ? 'Administrator' : currentUser?.role === 'trainer' ? 'Trainer / Instructor' : 'Student Learner'}</p>
           </div>
         </div>
       </div>
@@ -74,7 +78,7 @@ export const Sidebar = () => {
       {/* Navigation list */}
       <div className="flex-1 px-3 py-4 space-y-1 overflow-y-auto">
         <div className="text-[10px] font-bold uppercase tracking-wider text-slate-400 dark:text-slate-500 px-3 pb-2">
-          {currentUser?.role === 'admin' ? 'Administration' : 'Learning Navigation'}
+          {currentUser?.role === 'admin' || currentUser?.role === 'trainer' ? 'Teaching & Administration' : 'Learning Navigation'}
         </div>
         {navItems.map((item) => {
           const Icon = item.icon;
