@@ -14,7 +14,7 @@ save('src/data/mockData.js', `
 export const INITIAL_COURSES = [
   {
     id: 'c_webdev',
-    title: 'Full Stack Web Development: Zero to Hero',
+    title: 'Full Stack Web Development',
     category: 'Web Development',
     rating: 4.9,
     reviewsCount: 120,
@@ -122,7 +122,7 @@ export const INITIAL_QUIZZES = [
     id: 'q_webdev_admin',
     title: 'Web Development Mastery Assessment (Admin Added)',
     courseId: 'c_webdev',
-    courseTitle: 'Full Stack Web Development: Zero to Hero',
+    courseTitle: 'Full Stack Web Development',
     durationMinutes: 15,
     totalQuestions: 3,
     passingScore: 70,

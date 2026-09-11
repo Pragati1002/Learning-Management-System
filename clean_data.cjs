@@ -15,7 +15,7 @@ save('src/data/mockData.js', `
 export const INITIAL_COURSES = [
   {
     id: 'c_webdev',
-    title: 'Full Stack Web Development: Zero to Hero',
+    title: 'Full Stack Web Development',
     category: 'Web Development',
     rating: 4.9,
     reviewsCount: 120,
@@ -310,7 +310,7 @@ export const INITIAL_CERTIFICATES = [
     studentId: 'usr_student',
     studentName: 'Student Learner',
     courseId: 'c_webdev',
-    courseName: 'Full Stack Web Development: Zero to Hero',
+    courseName: 'Full Stack Web Development',
     issueDate: '2026-08-26',
     score: '95%',
     grade: 'A+ (Excellence)',

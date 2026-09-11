@@ -3,7 +3,7 @@
 module.exports.SEED_COURSES = [
   {
     "mockId": "c_webdev",
-    "title": "Full Stack Web Development: Zero to Hero",
+    "title": "Full Stack Web Development",
     "category": "Web Development",
     "description": "Learn modern web development: HTML5 semantic structure, CSS3 responsive layout, JavaScript ES6+, and React state architecture.",
     "duration": "12 Weeks",
@@ -525,7 +525,7 @@ module.exports.SEED_QUIZZES = [
   {
     "mockCourseId": "c_webdev",
     "title": "Web Development Mastery Assessment (Admin Added)",
-    "courseTitle": "Full Stack Web Development: Zero to Hero",
+    "courseTitle": "Full Stack Web Development",
     "durationMinutes": 15,
     "passingScore": 70,
     "questions": [

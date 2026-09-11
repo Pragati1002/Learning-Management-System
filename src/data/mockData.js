@@ -1,7 +1,7 @@
 export const INITIAL_COURSES = [
   {
     id: 'c_webdev',
-    title: 'Full Stack Web Development: Zero to Hero',
+    title: 'Full Stack Web Development',
     category: 'Web Development',
     rating: 4.9,
     reviewsCount: 120,
@@ -338,7 +338,7 @@ export const INITIAL_QUIZZES = [
     id: 'q_webdev_admin',
     title: 'Web Development Mastery Assessment (Admin Added)',
     courseId: 'c_webdev',
-    courseTitle: 'Full Stack Web Development: Zero to Hero',
+    courseTitle: 'Full Stack Web Development',
     durationMinutes: 15,
     totalQuestions: 3,
     passingScore: 70,
@@ -604,7 +604,7 @@ export const INITIAL_LIVE_CLASSES = [
   {
     id: 'lc_1',
     courseId: 'c_webdev',
-    courseTitle: 'Full Stack Web Development: Zero to Hero',
+    courseTitle: 'Full Stack Web Development',
     title: 'Live Doubt-Clearing: React Hooks',
     instructor: 'Administrator',
     date: '2026-09-10',
