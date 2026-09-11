@@ -111,7 +111,7 @@ export const AITutorDrawer = ({ isOpen, onClose }) => {
           }}
           className="flex items-center space-x-2"
         >
-          <input
+          <input autoComplete="off"
             type="text"
             value={input}
             onChange={(e) => setInput(e.target.value)}

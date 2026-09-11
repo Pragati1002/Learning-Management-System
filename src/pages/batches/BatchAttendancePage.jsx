@@ -194,7 +194,7 @@ export const BatchAttendancePage = () => {
             <form onSubmit={handleCreateBatch} className="space-y-3 text-xs">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Batch Name *</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={batchName}
@@ -219,7 +219,7 @@ export const BatchAttendancePage = () => {
 
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Schedule & Timings</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   value={schedule}
                   onChange={e => setSchedule(e.target.value)}
@@ -249,7 +249,7 @@ export const BatchAttendancePage = () => {
             <form onSubmit={handleAddStudent} className="space-y-3 text-xs">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Student Full Name *</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={newStudentName}
@@ -260,7 +260,7 @@ export const BatchAttendancePage = () => {
               </div>
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Roll Number</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   value={newStudentRoll}
                   onChange={e => setNewStudentRoll(e.target.value)}

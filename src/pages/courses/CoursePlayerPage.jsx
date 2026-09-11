@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import { useLMS } from '../../context/LMSContext';
-import { PlayCircle, CheckCircle2, Circle, Download, ArrowLeft, Award, Sparkles, Check, ChevronRight } from 'lucide-react';
+import { PlayCircle, CheckCircle2, Circle, Download, ArrowLeft, Award, Sparkles, Check, ChevronRight, History, Clock } from 'lucide-react';
 import confetti from 'canvas-confetti';
 
 export const CoursePlayerPage = () => {
@@ -22,6 +22,16 @@ export const CoursePlayerPage = () => {
 
   const isCurrentCompleted = currentUser?.completedLessons?.includes(activeLesson.id);
   const progress = getCourseProgress(course.id);
+
+  // Completion history for THIS course only — shown inline here instead of
+  // on a separate "Progress Tracker" page.
+  const courseHistory = [...(currentUser?.lessonCompletions || [])]
+    .filter(h => String(h.courseId) === String(course.id))
+    .sort((a, b) => new Date(b.completedAt) - new Date(a.completedAt));
+
+  const formatDate = (d) => new Date(d).toLocaleDateString(undefined, {
+    day: 'numeric', month: 'short', year: 'numeric', hour: '2-digit', minute: '2-digit'
+  });
 
   // Auto trigger confetti when 100% reached
   useEffect(() => {
@@ -246,6 +256,32 @@ export const CoursePlayerPage = () => {
           </div>
         </div>
 
+      </div>
+
+      {/* Progress & completion history — kept inside the course itself */}
+      <div className="bg-white rounded-3xl border border-slate-200 shadow-sm p-5 space-y-4">
+        <div className="flex items-center space-x-2">
+          <History className="w-5 h-5 text-purple-700" />
+          <h3 className="font-extrabold text-slate-900 text-base">Your Progress in This Course</h3>
+        </div>
+        {courseHistory.length === 0 ? (
+          <p className="text-xs text-slate-500">No lessons completed yet — mark lessons finished on the left to build your history.</p>
+        ) : (
+          <div className="space-y-2 max-h-72 overflow-y-auto pr-1">
+            {courseHistory.map((h, i) => (
+              <div key={`${h.lessonId}_${i}`} className="flex items-center justify-between p-3 rounded-xl border border-slate-100">
+                <div className="flex items-center space-x-3">
+                  <CheckCircle2 className="w-4 h-4 text-emerald-600 shrink-0" />
+                  <p className="text-sm font-semibold text-slate-800">{h.lessonTitle}</p>
+                </div>
+                <span className="text-[11px] text-slate-400 flex items-center space-x-1 shrink-0">
+                  <Clock className="w-3 h-3" />
+                  <span>{formatDate(h.completedAt)}</span>
+                </span>
+              </div>
+            ))}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -15,8 +15,7 @@ import {
   Briefcase,
   Trophy,
   MessageSquarePlus,
-  Video,
-  TrendingUp
+  Video
 } from 'lucide-react';
 
 export const Sidebar = () => {
@@ -37,7 +36,6 @@ export const Sidebar = () => {
 
     return [
       { id: 'dashboard', label: 'My Learning Desk', icon: LayoutDashboard },
-      { id: 'progress-tracker', label: 'Progress Tracker', icon: TrendingUp },
       { id: 'courses-catalog', label: 'Browse Courses', icon: BookOpen },
       { id: 'my-learning', label: 'Active Course Player', icon: BookOpen },
       { id: 'practice-quizzes', label: 'Practice & Quizzes', icon: FileCheck2 },

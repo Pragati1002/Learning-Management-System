@@ -40,7 +40,7 @@ export const FeedbackPage = () => {
         </div>
         <div>
           <label className="block text-xs font-bold text-slate-700 uppercase mb-2">Your Feedback</label>
-          <textarea
+          <textarea autoComplete="off"
             value={message}
             onChange={e => setMessage(e.target.value)}
             rows={5}

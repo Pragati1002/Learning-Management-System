@@ -673,7 +673,7 @@ export const CourseContentPage = () => {
               onChange={setReviewRating}
             />
 
-            <textarea
+            <textarea autoComplete="off"
               value={reviewComment}
               onChange={e =>
                 setReviewComment(e.target.value)

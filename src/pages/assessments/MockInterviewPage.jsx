@@ -157,7 +157,7 @@ export const MockInterviewPage = () => {
           <Mic className="w-4 h-4 text-purple-500" />
           <span>Your Answer</span>
         </div>
-        <textarea
+        <textarea autoComplete="off"
           value={currentAnswer}
           onChange={e => setCurrentAnswer(e.target.value)}
           rows={5}

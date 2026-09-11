@@ -60,7 +60,7 @@ export const PaymentModal = ({ invoice, isOpen, onClose }) => {
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1.5">Discount Coupon</label>
             <div className="flex space-x-2">
-              <input
+              <input autoComplete="off"
                 type="text"
                 value={coupon}
                 onChange={(e) => setCoupon(e.target.value)}

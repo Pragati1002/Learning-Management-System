@@ -45,7 +45,10 @@ export const ResumeBuilderPage = () => {
 
   const downloadResume = () => {
     updateResumeData(form);
-    window.print();
+    // The printable resume only exists in the preview (non-editing) view,
+    // so switch to it first, then print on the next paint.
+    setEditing(false);
+    setTimeout(() => window.print(), 50);
   };
 
   return (
@@ -75,26 +78,26 @@ export const ResumeBuilderPage = () => {
           <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name</label>
-              <input value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+              <input autoComplete="off" value={form.name} onChange={e => setForm({ ...form, name: e.target.value })} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
             </div>
             <div>
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Phone</label>
-              <input value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+              <input autoComplete="off" value={form.phone} onChange={e => setForm({ ...form, phone: e.target.value })} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
             </div>
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email</label>
-            <input value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+            <input autoComplete="off" value={form.email} onChange={e => setForm({ ...form, email: e.target.value })} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
           </div>
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Professional Summary</label>
-            <textarea value={form.summary} onChange={e => setForm({ ...form, summary: e.target.value })} rows={3} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none" />
+            <textarea autoComplete="off" value={form.summary} onChange={e => setForm({ ...form, summary: e.target.value })} rows={3} className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none resize-none" />
           </div>
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Skills</label>
             <div className="flex gap-2 mb-2">
-              <input value={skillInput} onChange={e => setSkillInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addSkill())} placeholder="e.g. React JS" className="flex-1 p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+              <input autoComplete="off" value={skillInput} onChange={e => setSkillInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addSkill())} placeholder="e.g. React JS" className="flex-1 p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
               <button onClick={addSkill} className="px-3 bg-purple-100 hover:bg-purple-200 text-purple-800 rounded-xl"><Plus className="w-4 h-4" /></button>
             </div>
             <div className="flex flex-wrap gap-2">
@@ -110,7 +113,7 @@ export const ResumeBuilderPage = () => {
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Projects</label>
             <div className="flex gap-2 mb-2">
-              <input value={projectInput} onChange={e => setProjectInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addProject())} placeholder="e.g. E-Commerce Website — MERN stack" className="flex-1 p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+              <input autoComplete="off" value={projectInput} onChange={e => setProjectInput(e.target.value)} onKeyDown={e => e.key === 'Enter' && (e.preventDefault(), addProject())} placeholder="e.g. E-Commerce Website — MERN stack" className="flex-1 p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
               <button onClick={addProject} className="px-3 bg-purple-100 hover:bg-purple-200 text-purple-800 rounded-xl"><Plus className="w-4 h-4" /></button>
             </div>
             <ul className="space-y-1">
@@ -125,13 +128,13 @@ export const ResumeBuilderPage = () => {
 
           <div>
             <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Education</label>
-            <input value={form.education} onChange={e => setForm({ ...form, education: e.target.value })} placeholder="e.g. MCA — LNCT Bhopal" className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
+            <input autoComplete="off" value={form.education} onChange={e => setForm({ ...form, education: e.target.value })} placeholder="e.g. MCA — LNCT Bhopal" className="w-full p-2.5 border border-slate-200 rounded-xl text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none" />
           </div>
 
           <button onClick={saveResume} className="px-5 py-2.5 bg-black hover:bg-slate-800 text-white font-bold text-xs rounded-xl">Save Resume</button>
         </div>
       ) : (
-        <div className="bg-white p-8 rounded-3xl border border-purple-100 shadow-sm max-w-2xl mx-auto space-y-5" id="resume-preview">
+        <div className="bg-white p-8 rounded-3xl border border-purple-100 shadow-sm max-w-2xl mx-auto space-y-5" id="print-area">
           <div className="flex items-center space-x-4 pb-4 border-b border-slate-100">
             <div className="w-16 h-16 rounded-full bg-purple-600 text-white flex items-center justify-center font-extrabold text-xl">
               {form.name?.charAt(0) || 'S'}

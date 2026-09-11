@@ -94,7 +94,7 @@ export const DiscussionPage = () => {
             )}
 
             <div className="pt-2 flex space-x-2">
-              <input
+              <input autoComplete="off"
                 type="text"
                 value={replyInput[d.id] || ''}
                 onChange={e => setReplyInput({ ...replyInput, [d.id]: e.target.value })}
@@ -120,7 +120,7 @@ export const DiscussionPage = () => {
             <form onSubmit={handlePost} className="space-y-3 text-xs">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Question Title *</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={newTitle}
@@ -131,7 +131,7 @@ export const DiscussionPage = () => {
               </div>
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Context & Details</label>
-                <textarea
+                <textarea autoComplete="off"
                   rows="4"
                   required
                   value={newContent}

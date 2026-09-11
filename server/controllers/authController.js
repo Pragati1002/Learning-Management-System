@@ -2,6 +2,7 @@ const bcrypt = require('bcryptjs');
 const User = require('../models/User');
 const Course = require('../models/Course');
 const generateToken = require('../utils/generateToken');
+const sendEmail = require('../utils/sendEmail');
 
 // @route POST /api/auth/register
 const register = async (req, res, next) => {
@@ -68,6 +69,22 @@ const register = async (req, res, next) => {
       user._id,
       user.role
     );
+
+    // Fire-and-forget registration confirmation email — never blocks or
+    // fails the signup response if SMTP isn't configured or is slow.
+    sendEmail({
+      to: user.email,
+      subject: 'Welcome to RSR LMS — Registration Successful',
+      text: `Hi ${user.name},\n\nYour RSR LMS account has been created successfully with the email ${user.email}.\nYou can now log in and start learning.\n\n— RSR LMS Team`,
+      html: `
+        <div style="font-family: Arial, sans-serif; max-width: 480px; margin: 0 auto;">
+          <h2 style="color: #6d28d9;">Welcome to RSR LMS, ${user.name}! 🎓</h2>
+          <p>Your account has been registered successfully with the email <b>${user.email}</b>.</p>
+          <p>You can now log in and start exploring courses, mock tests, mock interviews and campus placements.</p>
+          <p style="margin-top: 24px; color: #64748b; font-size: 12px;">If you didn't create this account, please ignore this email.</p>
+        </div>
+      `
+    }).catch(() => {});
 
     res.status(201).json({
       token,

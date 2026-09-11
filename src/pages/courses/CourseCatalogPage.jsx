@@ -46,7 +46,7 @@ export const CourseCatalogPage = () => {
           </p>
           <div className="relative max-w-xl mx-auto">
             <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-            <input
+            <input autoComplete="off"
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}

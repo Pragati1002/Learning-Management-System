@@ -63,7 +63,7 @@ export const SupportTicketPage = () => {
             <form onSubmit={handleSubmit} className="space-y-3 text-xs">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Subject</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={subject}

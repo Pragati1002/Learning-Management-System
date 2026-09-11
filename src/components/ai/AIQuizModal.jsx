@@ -252,7 +252,7 @@ export const AIQuizModal = ({ isOpen, onClose }) => {
               <label className="block text-xs font-bold text-slate-700 uppercase tracking-wider mb-2">
                 Enter Any Topic or Skill
               </label>
-              <input
+              <input autoComplete="off"
                 type="text"
                 value={topic}
                 onChange={(e) => setTopic(e.target.value)}

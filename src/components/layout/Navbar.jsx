@@ -27,9 +27,6 @@ export const Navbar = ({ onOpenAITutor, onOpenAIQuiz }) => {
                 <span className="font-extrabold text-xl tracking-tight text-slate-900 dark:text-white">
                   RSR LMS
                 </span>
-                <span className="bg-purple-50 dark:bg-purple-900/40 text-purple-800 dark:text-purple-300 text-[10px] font-extrabold px-2 py-0.5 rounded-full">
-                  PRO
-                </span>
               </div>
               <span className="text-[11px] text-slate-500 dark:text-slate-400 block font-medium">Smart Learning System</span>
             </div>
@@ -40,7 +37,7 @@ export const Navbar = ({ onOpenAITutor, onOpenAIQuiz }) => {
             <form onSubmit={handleSearchSubmit} className="flex-1 max-w-xl hidden md:block">
               <div className="relative">
                 <Search className="w-4 h-4 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-                <input
+                <input autoComplete="off"
                   type="text"
                   value={searchInput}
                   onChange={e => setSearchInput(e.target.value)}

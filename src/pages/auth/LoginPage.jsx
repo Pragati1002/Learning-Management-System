@@ -109,7 +109,7 @@ if (!result.success) {
                 <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Full Name</label>
                 <div className="relative">
                   <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                  <input
+                  <input autoComplete="off"
                     type="text"
                     required
                     value={name}
@@ -125,7 +125,7 @@ if (!result.success) {
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Email Address</label>
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
+                <input autoComplete="off"
                   type="email"
                   required
                   value={email}
@@ -140,7 +140,7 @@ if (!result.success) {
               <label className="block text-xs font-bold text-slate-700 uppercase mb-1">Password</label>
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-                <input
+                <input autoComplete="off"
                   type="password"
                   required
                   value={password}

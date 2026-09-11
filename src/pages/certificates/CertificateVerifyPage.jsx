@@ -32,7 +32,7 @@ export const CertificateVerifyPage = ({ onOpenCertificate }) => {
       <form onSubmit={handleSearch} className="bg-white p-4 rounded-2xl border border-slate-200 shadow-sm flex gap-2">
         <div className="relative flex-1">
           <Search className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
-          <input
+          <input autoComplete="off"
             type="text"
             value={certCode}
             onChange={e => setCertCode(e.target.value)}

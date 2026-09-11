@@ -302,7 +302,7 @@ export const AssessmentPage = () => {
             <form onSubmit={handleCreateQuiz} className="space-y-3 text-xs">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Exam / Quiz Title *</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={quizTitle}
@@ -327,7 +327,7 @@ export const AssessmentPage = () => {
                 </div>
                 <div>
                   <label className="font-bold text-slate-700 block mb-1">Duration (Mins)</label>
-                  <input
+                  <input autoComplete="off"
                     type="number"
                     value={durationMinutes}
                     onChange={e => setDurationMinutes(e.target.value)}
@@ -338,7 +338,7 @@ export const AssessmentPage = () => {
 
               <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
                 <span className="font-bold text-slate-800 block">Question 1 Setup</span>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={qText}
@@ -347,7 +347,7 @@ export const AssessmentPage = () => {
                   className="w-full border border-slate-300 rounded-xl p-2 text-xs"
                 />
                 <div className="grid grid-cols-2 gap-2">
-                  <input
+                  <input autoComplete="off"
                     type="text"
                     required
                     value={opt0}
@@ -355,7 +355,7 @@ export const AssessmentPage = () => {
                     placeholder="Option A"
                     className="border border-slate-300 rounded-xl p-2 text-xs"
                   />
-                  <input
+                  <input autoComplete="off"
                     type="text"
                     required
                     value={opt1}
@@ -363,14 +363,14 @@ export const AssessmentPage = () => {
                     placeholder="Option B"
                     className="border border-slate-300 rounded-xl p-2 text-xs"
                   />
-                  <input
+                  <input autoComplete="off"
                     type="text"
                     value={opt2}
                     onChange={e => setOpt2(e.target.value)}
                     placeholder="Option C (Optional)"
                     className="border border-slate-300 rounded-xl p-2 text-xs"
                   />
-                  <input
+                  <input autoComplete="off"
                     type="text"
                     value={opt3}
                     onChange={e => setOpt3(e.target.value)}
@@ -414,7 +414,7 @@ export const AssessmentPage = () => {
             <form onSubmit={handleCreateAssignment} className="space-y-3 text-xs">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Assignment Title *</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={asgTitle}
@@ -439,7 +439,7 @@ export const AssessmentPage = () => {
                 </div>
                 <div>
                   <label className="font-bold text-slate-700 block mb-1">Due Date</label>
-                  <input
+                  <input autoComplete="off"
                     type="date"
                     value={asgDueDate}
                     onChange={e => setAsgDueDate(e.target.value)}
@@ -450,7 +450,7 @@ export const AssessmentPage = () => {
 
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Instructions</label>
-                <textarea
+                <textarea autoComplete="off"
                   rows="3"
                   value={asgDesc}
                   onChange={e => setAsgDesc(e.target.value)}

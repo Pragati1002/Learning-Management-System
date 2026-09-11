@@ -305,7 +305,7 @@ export const AuthPage = () => {
                   <div className="relative">
                     <User className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
 
-                    <input
+                    <input autoComplete="off"
                       type="text"
                       required
                       value={name}
@@ -330,7 +330,7 @@ export const AuthPage = () => {
                     <div className="relative">
                       <Building className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
 
-                      <input
+                      <input autoComplete="off"
                         type="text"
                         value={orgName}
                         onChange={(e) => setOrgName(e.target.value)}
@@ -350,7 +350,7 @@ export const AuthPage = () => {
                   <div className="relative">
                     <Phone className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
 
-                    <input
+                    <input autoComplete="off"
                       type="tel"
                       required
                       value={mobile}
@@ -417,7 +417,7 @@ export const AuthPage = () => {
               <div className="relative">
                 <Mail className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
 
-                <input
+                <input autoComplete="off"
                   type="email"
                   required
                   value={email}
@@ -441,7 +441,7 @@ export const AuthPage = () => {
               <div className="relative">
                 <Lock className="w-4 h-4 text-slate-400 absolute left-3.5 top-3" />
 
-                <input
+                <input autoComplete="off"
                   type="password"
                   required
                   value={password}
@@ -456,7 +456,7 @@ export const AuthPage = () => {
             {mode === 'register' && (
               <label className="flex items-start space-x-2 text-xs text-slate-600 cursor-pointer">
 
-                <input
+                <input autoComplete="off"
                   type="checkbox"
                   checked={agreedToTerms}
                   onChange={(e) =>

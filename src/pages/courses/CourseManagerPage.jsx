@@ -87,7 +87,7 @@ export const CourseManagerPage = () => {
             <form onSubmit={handleCreate} className="space-y-3 text-xs">
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Course Title *</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   required
                   value={title}
@@ -113,7 +113,7 @@ export const CourseManagerPage = () => {
                 </div>
                 <div>
                   <label className="font-bold text-slate-700 block mb-1">Duration</label>
-                  <input
+                  <input autoComplete="off"
                     type="text"
                     value={duration}
                     onChange={e => setDuration(e.target.value)}
@@ -125,7 +125,7 @@ export const CourseManagerPage = () => {
 
               <div>
                 <label className="font-bold text-slate-700 block mb-1">YouTube Embed / Video Link</label>
-                <input
+                <input autoComplete="off"
                   type="text"
                   value={videoUrl}
                   onChange={e => setVideoUrl(e.target.value)}
@@ -136,7 +136,7 @@ export const CourseManagerPage = () => {
 
               <div>
                 <label className="font-bold text-slate-700 block mb-1">Course Summary</label>
-                <textarea
+                <textarea autoComplete="off"
                   value={description}
                   onChange={e => setDescription(e.target.value)}
                   rows="3"

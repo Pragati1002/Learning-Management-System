@@ -193,28 +193,28 @@ export const LiveClassManagerPage = () => {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Class Title *</label>
-                <input name="title" value={form.title} onChange={handleChange} required placeholder="e.g. React Hooks Doubt Clearing" className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
+                <input autoComplete="off" name="title" value={form.title} onChange={handleChange} required placeholder="e.g. React Hooks Doubt Clearing" className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-3 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Date *</label>
-                  <input type="date" name="date" value={form.date} onChange={handleChange} required className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
+                  <input autoComplete="off" type="date" name="date" value={form.date} onChange={handleChange} required className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Start Time *</label>
-                  <input type="time" name="startTime" value={form.startTime} onChange={handleChange} required className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
+                  <input autoComplete="off" type="time" name="startTime" value={form.startTime} onChange={handleChange} required className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">End Time *</label>
-                  <input type="time" name="endTime" value={form.endTime} onChange={handleChange} required className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
+                  <input autoComplete="off" type="time" name="endTime" value={form.endTime} onChange={handleChange} required className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
                 </div>
               </div>
 
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Instructor</label>
-                  <input name="instructor" value={form.instructor} onChange={handleChange} placeholder="Instructor name" className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
+                  <input autoComplete="off" name="instructor" value={form.instructor} onChange={handleChange} placeholder="Instructor name" className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Platform</label>
@@ -230,7 +230,7 @@ export const LiveClassManagerPage = () => {
               <div className="grid grid-cols-1 sm:grid-cols-2 gap-3">
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Meeting Link *</label>
-                  <input type="url" name="meetingLink" value={form.meetingLink} onChange={handleChange} required placeholder="https://meet.google.com/..." className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
+                  <input autoComplete="off" type="url" name="meetingLink" value={form.meetingLink} onChange={handleChange} required placeholder="https://meet.google.com/..." className="w-full border border-slate-300 rounded-xl p-2.5 text-sm" />
                 </div>
                 <div>
                   <label className="block text-xs font-bold text-slate-700 mb-1">Status</label>
@@ -245,7 +245,7 @@ export const LiveClassManagerPage = () => {
 
               <div>
                 <label className="block text-xs font-bold text-slate-700 mb-1">Description / Agenda</label>
-                <textarea name="description" value={form.description} onChange={handleChange} rows="3" placeholder="Topics students should prepare for..." className="w-full border border-slate-300 rounded-xl p-2.5 text-sm resize-none" />
+                <textarea autoComplete="off" name="description" value={form.description} onChange={handleChange} rows="3" placeholder="Topics students should prepare for..." className="w-full border border-slate-300 rounded-xl p-2.5 text-sm resize-none" />
               </div>
 
               <div className="flex justify-end gap-2 pt-2">

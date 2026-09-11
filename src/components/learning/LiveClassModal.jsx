@@ -84,7 +84,7 @@ export const LiveClassModal = ({ liveClass, isOpen, onClose }) => {
             ))}
           </div>
           <div className="p-3 border-t border-slate-800 flex space-x-2">
-            <input
+            <input autoComplete="off"
               type="text"
               value={msgInput}
               onChange={e => setMsgInput(e.target.value)}

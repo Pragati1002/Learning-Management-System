@@ -329,6 +329,414 @@ export const INITIAL_COURSES = [
         ]
       }
     ]
+  },
+  {
+    id: "c_aws",
+    title: "Cloud Computing with AWS",
+    category: "Cloud Computing",
+    rating: 4.7,
+    reviewsCount: 75,
+    price: 0,
+    originalPrice: 0,
+    duration: "8 Weeks",
+    level: "Beginner to Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1451187580459-43490279c0fa?w=600&auto=format&fit=crop&q=80",
+    description: "Master cloud fundamentals and Amazon Web Services: EC2, S3, IAM, VPC, RDS and deploying scalable applications on the cloud.",
+    enrolledCount: 46,
+    modules: [
+      {
+        id: "c_aws_m1",
+        title: "Module 1: Cloud & AWS Fundamentals",
+        lessons: [
+          { id: "c_aws_m1_l1", title: "1. Cloud Computing Concepts & Service Models", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/GhQdlIFylQ8", resources: [] },
+          { id: "c_aws_m1_l2", title: "2. AWS Console, IAM Users & Roles", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/HXV3zeQKqGY", resources: [] },
+        ]
+      },
+      {
+        id: "c_aws_m2",
+        title: "Module 2: Core AWS Services",
+        lessons: [
+          { id: "c_aws_m2_l1", title: "3. EC2 Instances & Elastic Load Balancing", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/Mo4vesaut8g", resources: [] },
+          { id: "c_aws_m2_l2", title: "4. S3 Storage & RDS Managed Databases", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/OK_JCtrrv-c", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_devops",
+    title: "DevOps Engineering: Docker, Kubernetes & CI/CD",
+    category: "DevOps",
+    rating: 4.7,
+    reviewsCount: 134,
+    price: 0,
+    originalPrice: 0,
+    duration: "10 Weeks",
+    level: "Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1667372393119-3d4c48d07fc9?w=600&auto=format&fit=crop&q=80",
+    description: "Learn containerization with Docker, orchestration with Kubernetes, and building automated CI/CD pipelines with Jenkins and GitHub Actions.",
+    enrolledCount: 51,
+    modules: [
+      {
+        id: "c_devops_m1",
+        title: "Module 1: Containers with Docker",
+        lessons: [
+          { id: "c_devops_m1_l1", title: "1. Docker Images, Containers & Dockerfiles", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/PoRJizFvM7s", resources: [] },
+          { id: "c_devops_m1_l2", title: "2. Docker Compose & Multi-Container Apps", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/QUT1VHiLmmI", resources: [] },
+        ]
+      },
+      {
+        id: "c_devops_m2",
+        title: "Module 2: Kubernetes & CI/CD",
+        lessons: [
+          { id: "c_devops_m2_l1", title: "3. Kubernetes Pods, Deployments & Services", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/RGOj5yH7evk", resources: [] },
+          { id: "c_devops_m2_l2", title: "4. Building CI/CD Pipelines with GitHub Actions", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_cyber",
+    title: "Cybersecurity & Ethical Hacking",
+    category: "Cybersecurity",
+    rating: 4.7,
+    reviewsCount: 73,
+    price: 0,
+    originalPrice: 0,
+    duration: "10 Weeks",
+    level: "Beginner to Advanced",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1550751827-4bd374c3f58b?w=600&auto=format&fit=crop&q=80",
+    description: "Understand network security, common attack vectors, penetration testing methodology, and how to secure applications and systems.",
+    enrolledCount: 42,
+    modules: [
+      {
+        id: "c_cyber_m1",
+        title: "Module 1: Security Fundamentals",
+        lessons: [
+          { id: "c_cyber_m1_l1", title: "1. CIA Triad, Threats & Vulnerabilities", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/fYq5PXgSsbE", resources: [] },
+          { id: "c_cyber_m1_l2", title: "2. Network Security & Firewalls", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/kUMe1FH4CHE", resources: [] },
+        ]
+      },
+      {
+        id: "c_cyber_m2",
+        title: "Module 2: Ethical Hacking Basics",
+        lessons: [
+          { id: "c_cyber_m2_l1", title: "3. Reconnaissance & Scanning with Nmap", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/kqtD5dpn9C8", resources: [] },
+          { id: "c_cyber_m2_l2", title: "4. Web App Vulnerabilities: OWASP Top 10", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/vLnPwxZdW4Y", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_ds_ml",
+    title: "Data Science & Machine Learning",
+    category: "Data Science",
+    rating: 4.7,
+    reviewsCount: 115,
+    price: 0,
+    originalPrice: 0,
+    duration: "12 Weeks",
+    level: "Intermediate to Advanced",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1551288049-bebda4e38f71?w=600&auto=format&fit=crop&q=80",
+    description: "Build a strong foundation in statistics, data analysis, and machine learning algorithms using Python, scikit-learn and real datasets.",
+    enrolledCount: 67,
+    modules: [
+      {
+        id: "c_ds_ml_m1",
+        title: "Module 1: Data Analysis Foundations",
+        lessons: [
+          { id: "c_ds_ml_m1_l1", title: "1. Statistics & Exploratory Data Analysis", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/w7ejDZ8SWv8", resources: [] },
+          { id: "c_ds_ml_m1_l2", title: "2. Data Cleaning & Feature Engineering", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/GhQdlIFylQ8", resources: [] },
+        ]
+      },
+      {
+        id: "c_ds_ml_m2",
+        title: "Module 2: Machine Learning Models",
+        lessons: [
+          { id: "c_ds_ml_m2_l1", title: "3. Regression & Classification Algorithms", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/HXV3zeQKqGY", resources: [] },
+          { id: "c_ds_ml_m2_l2", title: "4. Model Evaluation & scikit-learn Pipelines", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/Mo4vesaut8g", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_ai_dl",
+    title: "Artificial Intelligence & Deep Learning",
+    category: "Data Science",
+    rating: 4.7,
+    reviewsCount: 83,
+    price: 0,
+    originalPrice: 0,
+    duration: "10 Weeks",
+    level: "Advanced",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1620712943543-bcc4688e7485?w=600&auto=format&fit=crop&q=80",
+    description: "Dive into neural networks, deep learning architectures, and hands-on projects using TensorFlow/Keras for computer vision and NLP basics.",
+    enrolledCount: 20,
+    modules: [
+      {
+        id: "c_ai_dl_m1",
+        title: "Module 1: Neural Network Foundations",
+        lessons: [
+          { id: "c_ai_dl_m1_l1", title: "1. Perceptrons & Backpropagation", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/OK_JCtrrv-c", resources: [] },
+          { id: "c_ai_dl_m1_l2", title: "2. Building Networks with TensorFlow/Keras", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/PoRJizFvM7s", resources: [] },
+        ]
+      },
+      {
+        id: "c_ai_dl_m2",
+        title: "Module 2: Applied Deep Learning",
+        lessons: [
+          { id: "c_ai_dl_m2_l1", title: "3. Convolutional Neural Networks for Images", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/QUT1VHiLmmI", resources: [] },
+          { id: "c_ai_dl_m2_l2", title: "4. Intro to NLP & Transformers", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/RGOj5yH7evk", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_android",
+    title: "Android App Development with Kotlin",
+    category: "Mobile Development",
+    rating: 4.7,
+    reviewsCount: 68,
+    price: 0,
+    originalPrice: 0,
+    duration: "9 Weeks",
+    level: "Beginner to Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1607252650355-f7fd0460ccdb?w=600&auto=format&fit=crop&q=80",
+    description: "Design and build native Android applications using Kotlin, Jetpack components, and Android Studio, from UI to Play Store deployment.",
+    enrolledCount: 40,
+    modules: [
+      {
+        id: "c_android_m1",
+        title: "Module 1: Kotlin & Android Basics",
+        lessons: [
+          { id: "c_android_m1_l1", title: "1. Kotlin Syntax & Android Studio Setup", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34", resources: [] },
+          { id: "c_android_m1_l2", title: "2. Activities, Layouts & Jetpack Compose", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/fYq5PXgSsbE", resources: [] },
+        ]
+      },
+      {
+        id: "c_android_m2",
+        title: "Module 2: Building Real Apps",
+        lessons: [
+          { id: "c_android_m2_l1", title: "3. Navigation, ViewModel & Room Database", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/kUMe1FH4CHE", resources: [] },
+          { id: "c_android_m2_l2", title: "4. REST API Integration & Publishing to Play Store", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/kqtD5dpn9C8", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_reactnative",
+    title: "React Native: Cross-Platform Mobile Apps",
+    category: "Mobile Development",
+    rating: 4.7,
+    reviewsCount: 129,
+    price: 0,
+    originalPrice: 0,
+    duration: "8 Weeks",
+    level: "Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1512941937669-90a1b58e7e9c?w=600&auto=format&fit=crop&q=80",
+    description: "Build iOS and Android apps from a single JavaScript/React codebase using React Native, Expo, and native device APIs.",
+    enrolledCount: 70,
+    modules: [
+      {
+        id: "c_reactnative_m1",
+        title: "Module 1: React Native Fundamentals",
+        lessons: [
+          { id: "c_reactnative_m1_l1", title: "1. Components, Styling & Navigation", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/vLnPwxZdW4Y", resources: [] },
+          { id: "c_reactnative_m1_l2", title: "2. State Management & Expo Workflow", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/w7ejDZ8SWv8", resources: [] },
+        ]
+      },
+      {
+        id: "c_reactnative_m2",
+        title: "Module 2: Native Features & Deployment",
+        lessons: [
+          { id: "c_reactnative_m2_l1", title: "3. Camera, Location & Push Notifications", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/GhQdlIFylQ8", resources: [] },
+          { id: "c_reactnative_m2_l2", title: "4. Building & Publishing the App", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/HXV3zeQKqGY", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_uiux",
+    title: "UI/UX Design with Figma",
+    category: "Design",
+    rating: 4.7,
+    reviewsCount: 110,
+    price: 0,
+    originalPrice: 0,
+    duration: "6 Weeks",
+    level: "Beginner",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1561070791-2526d30994b5?w=600&auto=format&fit=crop&q=80",
+    description: "Learn user research, wireframing, prototyping and visual design principles, and build a professional portfolio using Figma.",
+    enrolledCount: 31,
+    modules: [
+      {
+        id: "c_uiux_m1",
+        title: "Module 1: UX Foundations",
+        lessons: [
+          { id: "c_uiux_m1_l1", title: "1. User Research & Wireframing", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/Mo4vesaut8g", resources: [] },
+          { id: "c_uiux_m1_l2", title: "2. Information Architecture & User Flows", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/OK_JCtrrv-c", resources: [] },
+        ]
+      },
+      {
+        id: "c_uiux_m2",
+        title: "Module 2: UI Design & Prototyping",
+        lessons: [
+          { id: "c_uiux_m2_l1", title: "3. Design Systems, Typography & Color Theory", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/PoRJizFvM7s", resources: [] },
+          { id: "c_uiux_m2_l2", title: "4. Interactive Prototypes in Figma", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/QUT1VHiLmmI", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_networking",
+    title: "Computer Networking Fundamentals (CCNA Prep)",
+    category: "Networking",
+    rating: 4.7,
+    reviewsCount: 95,
+    price: 0,
+    originalPrice: 0,
+    duration: "8 Weeks",
+    level: "Beginner to Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1544197150-b99a580bb7a8?w=600&auto=format&fit=crop&q=80",
+    description: "Understand the OSI model, IP addressing, routing and switching fundamentals to prepare for entry-level networking certifications.",
+    enrolledCount: 79,
+    modules: [
+      {
+        id: "c_networking_m1",
+        title: "Module 1: Networking Basics",
+        lessons: [
+          { id: "c_networking_m1_l1", title: "1. OSI & TCP/IP Models", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/RGOj5yH7evk", resources: [] },
+          { id: "c_networking_m1_l2", title: "2. IP Addressing & Subnetting", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34", resources: [] },
+        ]
+      },
+      {
+        id: "c_networking_m2",
+        title: "Module 2: Routing & Switching",
+        lessons: [
+          { id: "c_networking_m2_l1", title: "3. Routers, Switches & VLANs", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/fYq5PXgSsbE", resources: [] },
+          { id: "c_networking_m2_l2", title: "4. Network Troubleshooting Basics", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/kUMe1FH4CHE", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_linux",
+    title: "Linux System Administration",
+    category: "System Administration",
+    rating: 4.7,
+    reviewsCount: 132,
+    price: 0,
+    originalPrice: 0,
+    duration: "6 Weeks",
+    level: "Beginner to Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1629654297299-c8506221ca97?w=600&auto=format&fit=crop&q=80",
+    description: "Get comfortable with the Linux command line, file permissions, process management, shell scripting and server administration.",
+    enrolledCount: 65,
+    modules: [
+      {
+        id: "c_linux_m1",
+        title: "Module 1: Linux Command Line",
+        lessons: [
+          { id: "c_linux_m1_l1", title: "1. File System, Permissions & Users", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/kqtD5dpn9C8", resources: [] },
+          { id: "c_linux_m1_l2", title: "2. Process Management & Package Managers", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/vLnPwxZdW4Y", resources: [] },
+        ]
+      },
+      {
+        id: "c_linux_m2",
+        title: "Module 2: Shell Scripting & Servers",
+        lessons: [
+          { id: "c_linux_m2_l1", title: "3. Bash Scripting Fundamentals", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/w7ejDZ8SWv8", resources: [] },
+          { id: "c_linux_m2_l2", title: "4. Setting Up & Securing a Linux Server", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/GhQdlIFylQ8", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_qa_testing",
+    title: "Software Testing & QA Automation with Selenium",
+    category: "Testing & QA",
+    rating: 4.7,
+    reviewsCount: 121,
+    price: 0,
+    originalPrice: 0,
+    duration: "7 Weeks",
+    level: "Beginner to Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1518432031352-d6fc5c10da5a?w=600&auto=format&fit=crop&q=80",
+    description: "Learn manual testing fundamentals plus automated testing with Selenium WebDriver, TestNG and building a test automation framework.",
+    enrolledCount: 31,
+    modules: [
+      {
+        id: "c_qa_testing_m1",
+        title: "Module 1: Manual Testing Fundamentals",
+        lessons: [
+          { id: "c_qa_testing_m1_l1", title: "1. Test Case Design & Bug Life Cycle", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/HXV3zeQKqGY", resources: [] },
+          { id: "c_qa_testing_m1_l2", title: "2. Test Plans & Test Management Tools", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/Mo4vesaut8g", resources: [] },
+        ]
+      },
+      {
+        id: "c_qa_testing_m2",
+        title: "Module 2: Automation with Selenium",
+        lessons: [
+          { id: "c_qa_testing_m2_l1", title: "3. Selenium WebDriver & Locators", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/OK_JCtrrv-c", resources: [] },
+          { id: "c_qa_testing_m2_l2", title: "4. Building a TestNG Automation Framework", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/PoRJizFvM7s", resources: [] },
+        ]
+      },
+    ]
+  },
+  {
+    id: "c_mongodb",
+    title: "MongoDB & NoSQL Database Design",
+    category: "Databases",
+    rating: 4.7,
+    reviewsCount: 112,
+    price: 0,
+    originalPrice: 0,
+    duration: "5 Weeks",
+    level: "Beginner to Intermediate",
+    instructor: "Administrator",
+    instructorId: "usr_admin",
+    thumbnail: "https://images.unsplash.com/photo-1544383835-bda2bc66a55d?w=600&auto=format&fit=crop&q=80",
+    description: "Learn document-oriented database design with MongoDB: schemas, aggregation pipelines, indexing and integrating with Node.js apps.",
+    enrolledCount: 33,
+    modules: [
+      {
+        id: "c_mongodb_m1",
+        title: "Module 1: MongoDB Fundamentals",
+        lessons: [
+          { id: "c_mongodb_m1_l1", title: "1. Documents, Collections & CRUD Operations", duration: "20 min", type: "video", videoUrl: "https://www.youtube.com/embed/QUT1VHiLmmI", resources: [] },
+          { id: "c_mongodb_m1_l2", title: "2. Schema Design & Data Modeling", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/RGOj5yH7evk", resources: [] },
+        ]
+      },
+      {
+        id: "c_mongodb_m2",
+        title: "Module 2: Advanced MongoDB",
+        lessons: [
+          { id: "c_mongodb_m2_l1", title: "3. Aggregation Pipelines & Indexing", duration: "25 min", type: "video", videoUrl: "https://www.youtube.com/embed/eIrMbAQSU34", resources: [] },
+          { id: "c_mongodb_m2_l2", title: "4. Connecting MongoDB to a Node.js App", duration: "30 min", type: "video", videoUrl: "https://www.youtube.com/embed/fYq5PXgSsbE", resources: [] },
+        ]
+      },
+    ]
   }
 ];
 

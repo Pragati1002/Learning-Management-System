@@ -13,7 +13,6 @@ import { CertificateModal } from './components/certificates/CertificateModal';
 // Dashboards
 import { AdminDashboard } from './pages/dashboards/AdminDashboard';
 import { StudentDashboard } from './pages/dashboards/StudentDashboard';
-import { ProgressTrackerPage } from './pages/dashboards/ProgressTrackerPage';
 import { TrainerDashboard } from './pages/dashboards/TrainerDashboard';
 
 // Pages
@@ -102,9 +101,6 @@ export function LMSApp() {
         if (currentUser.role === 'admin') return <AdminDashboard />;
         if (currentUser.role === 'trainer') return <TrainerDashboard />;
         return <StudentDashboard onOpenCertificate={handleOpenCertificate} />;
-
-      case 'progress-tracker':
-        return <ProgressTrackerPage />;
 
       case 'courses-catalog':
         return <CourseCatalogPage />;

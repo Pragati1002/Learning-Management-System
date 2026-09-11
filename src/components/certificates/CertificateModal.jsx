@@ -23,7 +23,7 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
     <div className="fixed inset-0 z-50 bg-slate-900/70 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto animate-in fade-in">
       <div className="bg-white rounded-3xl shadow-2xl max-w-3xl w-full overflow-hidden border border-slate-200 animate-in zoom-in-95 my-8">
         
-        <div className="bg-slate-900 text-white p-4 flex items-center justify-between">
+        <div className="bg-slate-900 text-white p-4 flex items-center justify-between print:hidden">
           <div className="flex items-center space-x-2">
             <Award className="w-5 h-5 text-yellow-400" />
             <span className="font-bold text-sm">Official RSR LMS Certificate of Completion</span>
@@ -39,7 +39,7 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
           </div>
         </div>
 
-        <div className="p-8 bg-gradient-to-br from-amber-50/50 via-white to-purple-50/50 border-8 border-amber-500/30 m-4 rounded-2xl relative shadow-inner">
+        <div id="print-area" className="p-8 bg-gradient-to-br from-amber-50/50 via-white to-purple-50/50 border-8 border-amber-500/30 m-4 rounded-2xl relative shadow-inner">
           <div className="text-center space-y-6 relative z-10">
             <div className="flex items-center justify-center space-x-2 text-purple-900 font-extrabold text-2xl tracking-widest uppercase font-serif">
               <span>RSR ACADEMY OF EXCELLENCE</span>
@@ -84,7 +84,7 @@ export const CertificateModal = ({ certificate, isOpen, onClose }) => {
           </div>
         </div>
 
-        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600">
+        <div className="p-4 bg-slate-50 border-t border-slate-200 flex items-center justify-between text-xs text-slate-600 print:hidden">
           <div className="flex items-center space-x-1.5 text-emerald-700 font-semibold">
             <ShieldCheck className="w-4 h-4" />
             <span>Digital Token: {certificate.certificateId}</span>
