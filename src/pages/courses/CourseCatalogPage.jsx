@@ -3,7 +3,7 @@ import { useLMS } from '../../context/LMSContext';
 import { Search, Star, Clock, BookOpen, CheckCircle2, Filter, Users, TrendingUp } from 'lucide-react';
 
 export const CourseCatalogPage = () => {
-  const { courses, currentUser, enrollCourse, setSelectedCourseForPlayer, setActiveTab, courseSearchQuery } = useLMS();
+  const { courses, currentUser, startCourseEnrollment, setSelectedCourseForPlayer, setActiveTab, courseSearchQuery } = useLMS();
   const [search, setSearch] = useState(courseSearchQuery || '');
   const [category, setCategory] = useState('All');
   const [sortBy, setSortBy] = useState('popular');
@@ -46,7 +46,7 @@ export const CourseCatalogPage = () => {
           </p>
           <div className="relative max-w-xl mx-auto">
             <Search className="w-5 h-5 text-slate-400 absolute left-4 top-1/2 -translate-y-1/2" />
-            <input autoComplete="off"
+            <input
               type="text"
               value={search}
               onChange={e => setSearch(e.target.value)}
@@ -92,7 +92,9 @@ export const CourseCatalogPage = () => {
         {/* Courses Grid */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6 pb-6">
           {filteredCourses.map(course => {
-            const isEnrolled = currentUser.enrolledCourses?.includes(course.id);
+            const enrolledIds = (currentUser?.enrolledCourses || []).map(id => String(id?.id || id?._id || id));
+            const paidIds = (currentUser?.paidCourseIds || []).map(String);
+            const isEnrolled = enrolledIds.includes(String(course.id)) && (Number(course.price || 0) === 0 || paidIds.includes(String(course.id)));
             const isBestseller = course.rating >= 4.7 && (course.reviewsCount || 0) >= 50;
             const discountPct = course.originalPrice > course.price
               ? Math.round(((course.originalPrice - course.price) / course.originalPrice) * 100)
@@ -175,7 +177,7 @@ export const CourseCatalogPage = () => {
                     </button>
                   ) : (
                     <button
-                      onClick={() => enrollCourse(course.id)}
+                      onClick={() => startCourseEnrollment(course)}
                       className="px-4 py-2 bg-purple-700 hover:bg-purple-800 text-white font-bold text-xs rounded-xl shadow-sm transition-all"
                     >
                       Enroll Now

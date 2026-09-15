@@ -5,8 +5,12 @@
   "type": "commonjs",
   "scripts": {
     "dev": "nodemon server.js",
-    "start": "node server.js",
-    "seed": "node seed/seed.js"
+    "seed": "node seed/seed.js",
+    "seed:tech": "node seed/seedTechCatalog.js",
+    "seed:restore": "node seed/seedMissingDemoData.js",
+    "seed:expand": "node seed/seedCourseExpansion.js",
+    "seed:repair": "node seed/seedCourseContentRepair.js",
+    "seed:student-one-course": "node seed/repairStudentEnrollment.js"
   },
   "dependencies": {
     "bcryptjs": "^2.4.3",

@@ -1,0 +1,90 @@
+@import "tailwindcss";
+@custom-variant dark (&:where(.dark, .dark *));
+
+body {
+  background-color: #f8fafc;
+  color: #0f172a;
+  font-family: 'Plus Jakarta Sans', sans-serif;
+  transition: background-color 200ms ease, color 200ms ease;
+}
+
+.dark body {
+  background-color: #0b0b0f;
+  color: #e2e8f0;
+}
+
+/* Udemy-style tactile touch feedback + smooth transitions, applied globally */
+button, a, [role="button"], select, input[type="checkbox"], input[type="radio"] {
+  transition: transform 150ms ease, box-shadow 180ms ease, background-color 180ms ease,
+              border-color 180ms ease, color 180ms ease, opacity 180ms ease;
+}
+button:not(:disabled):active, a:active, [role="button"]:not(:disabled):active {
+  transform: scale(0.97);
+}
+@media (hover: hover) {
+  button:not(:disabled):hover, [role="button"]:not(:disabled):hover {
+    filter: brightness(1.03);
+  }
+}
+
+/* Custom scrollbars */
+::-webkit-scrollbar {
+  width: 6px;
+  height: 6px;
+}
+::-webkit-scrollbar-track {
+  background: #f1f5f9;
+}
+::-webkit-scrollbar-thumb {
+  background: #cbd5e1;
+  border-radius: 4px;
+}
+::-webkit-scrollbar-thumb:hover {
+  background: #94a3b8;
+}
+.dark ::-webkit-scrollbar-track {
+  background: #18181b;
+}
+.dark ::-webkit-scrollbar-thumb {
+  background: #3f3f46;
+}
+.dark ::-webkit-scrollbar-thumb:hover {
+  background: #52525b;
+}
+
+@keyframes pulseGlow {
+  0%, 100% { opacity: 0.85; transform: scale(1); }
+  50% { opacity: 1; transform: scale(1.03); }
+}
+
+.ai-glow {
+  animation: pulseGlow 2.5s infinite ease-in-out;
+}
+
+/* Print isolation: when printing (e.g. resume download), show ONLY the
+   element marked as the print target, not the navbar/sidebar/dashboard
+   behind it. Any page that wants "Download PDF via print" should wrap
+   the printable content in an element with id="print-area". */
+@media print {
+  body * {
+    visibility: hidden;
+  }
+  #print-area,
+  #print-area * {
+    visibility: visible;
+  }
+  #print-area {
+    position: absolute;
+    inset: 0;
+    left: 0;
+    top: 0;
+    width: 100%;
+    margin: 0;
+    padding: 24px;
+    box-shadow: none !important;
+    border: none !important;
+  }
+  .print\:hidden {
+    display: none !important;
+  }
+}

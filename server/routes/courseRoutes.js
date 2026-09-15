@@ -1,49 +1,14 @@
 const express = require('express');
 const router = express.Router();
-
-const {
-  getCourses,
-  getCourseById,
-  createCourse,
-  updateCourse,
-  deleteCourse,
-  enrollInCourse,
-  toggleLessonComplete
-} = require('../controllers/courseController');
-
+const { getCourses, getCourseById, createCourse, updateCourse, updateModuleAccess, deleteCourse, enrollInCourse, confirmCoursePayment, toggleLessonComplete } = require('../controllers/courseController');
 const { protect, requireRole } = require('../middleware/auth');
-
-router.get('/', getCourses);
-
+router.get('/', protect, getCourses);
 router.get('/:id', protect, getCourseById);
-
-router.post(
-  '/',
-  protect,
-  requireRole('admin', 'trainer'),
-  createCourse
-);
-
-router.put(
-  '/:id',
-  protect,
-  requireRole('admin', 'trainer'),
-  updateCourse
-);
-
-router.delete(
-  '/:id',
-  protect,
-  requireRole('admin'),
-  deleteCourse
-);
-
+router.post('/', protect, requireRole('admin', 'trainer'), createCourse);
+router.put('/:id', protect, requireRole('admin', 'trainer'), updateCourse);
+router.put('/:id/module-access', protect, requireRole('admin'), updateModuleAccess);
+router.delete('/:id', protect, requireRole('admin'), deleteCourse);
 router.post('/:id/enroll', protect, enrollInCourse);
-
-router.post(
-  '/:id/lessons/:lessonId/complete',
-  protect,
-  toggleLessonComplete
-);
-
+router.post('/:id/payment/confirm', protect, confirmCoursePayment);
+router.post('/:id/lessons/:lessonId/complete', protect, toggleLessonComplete);
 module.exports = router;

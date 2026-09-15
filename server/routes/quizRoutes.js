@@ -1,9 +1,12 @@
 const express=require('express');
 const router=express.Router();
-const {getQuizzes,createQuiz,deleteQuiz,submitQuiz,getMyAttempts}=require('../controllers/quizController');
+const {getQuizzes,createQuiz,updateQuiz,assignQuiz,getQuizDashboard,deleteQuiz,submitQuiz,getMyAttempts}=require('../controllers/quizController');
 const {protect,requireRole}=require('../middleware/auth');
 router.get('/',protect,getQuizzes);
 router.post('/',protect,requireRole('admin','trainer'),createQuiz);
+router.put('/:id',protect,requireRole('admin','trainer'),updateQuiz);
+router.put('/:id/assign',protect,requireRole('admin','trainer'),assignQuiz);
+router.get('/:id/dashboard',protect,requireRole('admin'),getQuizDashboard);
 router.get('/attempts/mine',protect,getMyAttempts);
 router.post('/:id/submit',protect,submitQuiz);
 router.delete('/:id',protect,requireRole('admin','trainer'),deleteQuiz);

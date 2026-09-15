@@ -5,7 +5,9 @@ import { TrendingUp, CheckCircle2, Clock, BookOpen, Award, History } from 'lucid
 export const ProgressTrackerPage = () => {
   const { currentUser, courses, getCourseProgress, certificates } = useLMS();
 
-  const enrolledCourses = courses.filter(c => currentUser?.enrolledCourses?.includes(c.id));
+  const enrolledIds = (currentUser?.enrolledCourses || []).map(String);
+  const paidIds = (currentUser?.paidCourseIds || []).map(String);
+  const enrolledCourses = courses.filter(c => enrolledIds.includes(String(c.id)) && (Number(c.price || 0) === 0 || paidIds.includes(String(c.id))));
 
   const totalLessons = enrolledCourses.reduce((sum, c) => sum + (c.modules?.flatMap(m => m.lessons)?.length || 0), 0);
   const completedCount = currentUser?.completedLessons?.length || 0;

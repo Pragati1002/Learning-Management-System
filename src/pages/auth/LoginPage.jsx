@@ -38,14 +38,6 @@ if (!result.success) {
     }
   };
 
-  const handleQuickLogin = (roleType) => {
-    if (roleType === 'admin') {
-      login('admin@lms.com', 'admin');
-    } else {
-      login('student@lms.com', 'student');
-    }
-  };
-
   return (
     <div className="min-h-screen bg-slate-50 flex flex-col justify-center py-12 sm:px-6 lg:px-8 font-['Plus_Jakarta_Sans',sans-serif]">
       
@@ -66,31 +58,6 @@ if (!result.success) {
       <div className="mt-8 sm:mx-auto sm:w-full sm:max-w-md px-4">
         <div className="bg-white py-8 px-6 shadow-xl border border-slate-200/80 rounded-3xl sm:px-10 space-y-6">
           
-          {/* Quick Login Buttons */}
-          {/* <div className="p-3.5 bg-slate-50 rounded-2xl border border-slate-200/80 space-y-2">
-            <span className="text-[11px] font-bold uppercase text-slate-400 block text-center tracking-wider">
-              1-Click Quick Access
-            </span>
-            <div className="grid grid-cols-2 gap-2">
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('admin')}
-                className="py-2.5 px-3 bg-slate-900 hover:bg-slate-800 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm"
-              >
-                <Shield className="w-3.5 h-3.5 text-purple-400" />
-                <span>Admin Login</span>
-              </button>
-              <button
-                type="button"
-                onClick={() => handleQuickLogin('student')}
-                className="py-2.5 px-3 bg-purple-600 hover:bg-purple-700 text-white rounded-xl text-xs font-bold transition-all flex items-center justify-center space-x-1.5 shadow-sm shadow-purple-500/20"
-              >
-                <BookOpen className="w-3.5 h-3.5" />
-                <span>Student Login</span>
-              </button>
-            </div>
-          </div> */}
-
           <div className="relative flex py-1 items-center">
             <div className="flex-grow border-t border-slate-200"></div>
             <span className="flex-shrink mx-3 text-slate-400 text-xs font-semibold">Or enter credentials</span>
@@ -130,7 +97,7 @@ if (!result.success) {
                   required
                   value={email}
                   onChange={e => setEmail(e.target.value)}
-                  placeholder="admin@lms.com or student@lms.com"
+                  placeholder="Enter your email address"
                   className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />
               </div>

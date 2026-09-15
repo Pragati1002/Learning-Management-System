@@ -23,8 +23,8 @@ Open `.env` and fill in:
 npm run seed
 ```
 This wipes and repopulates the database with the same demo courses, quizzes, mock tests, interview tracks, jobs, and users your frontend already uses — including:
-- `admin@lms.com` / `admin`
-- `student@lms.com` / `student`
+- Admin credentials: `ADMIN_EMAIL` / `ADMIN_PASSWORD` from `server/.env`
+- Student credentials: `SEED_STUDENT_EMAIL` / `SEED_STUDENT_PASSWORD` from `server/.env`
 
 ## 4. Run the server
 ```

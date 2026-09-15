@@ -38,22 +38,8 @@ const register = async (req, res, next) => {
     // Admin accounts should be created separately.
     const userRole = 'student';
 
-    let enrolledCourses = [];
-
-    // If a student selected a course during registration,
-    // verify that the course actually exists.
-    if (chosenCourse) {
-      const course = await Course.findById(chosenCourse);
-
-      if (!course) {
-        return res.status(400).json({
-          message: 'Selected course was not found'
-        });
-      }
-
-      enrolledCourses = [course._id];
-    }
-
+    const enrolledCourses = [];
+    // Course selection during registration never grants access. Paid courses require payment.
     const passwordHash = await bcrypt.hash(password, 10);
 
     const user = await User.create({
@@ -86,6 +72,34 @@ const register = async (req, res, next) => {
       `
     }).catch(() => {});
 
+    // Optional admin notification. This is also fire-and-forget so a
+    // registration never fails because SMTP is unavailable.
+    if (process.env.REGISTRATION_ADMIN_EMAIL) {
+      sendEmail({
+        to: process.env.REGISTRATION_ADMIN_EMAIL,
+        subject: `New RSR LMS Registration — ${user.name}`,
+        text: `A new student registered on RSR LMS.
+
+Name: ${user.name}
+Email: ${user.email}
+Mobile: ${user.mobile || 'Not provided'}
+Role: ${user.role}
+Registered: ${new Date().toISOString()}`,
+        html: `
+          <div style="font-family: Arial, sans-serif; max-width: 520px; margin: 0 auto;">
+            <h2 style="color: #6d28d9;">New RSR LMS Registration</h2>
+            <p>A new student account has been created.</p>
+            <table style="border-collapse: collapse; width: 100%;">
+              <tr><td style="padding:8px;font-weight:bold;">Name</td><td style="padding:8px;">${user.name}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Email</td><td style="padding:8px;">${user.email}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Mobile</td><td style="padding:8px;">${user.mobile || 'Not provided'}</td></tr>
+              <tr><td style="padding:8px;font-weight:bold;">Role</td><td style="padding:8px;">${user.role}</td></tr>
+            </table>
+          </div>
+        `
+      }).catch(() => {});
+    }
+
     res.status(201).json({
       token,
       user: {
@@ -94,7 +108,8 @@ const register = async (req, res, next) => {
         email: user.email,
         role: user.role,
         mobile: user.mobile,
-        enrolledCourses: user.enrolledCourses
+        enrolledCourses: user.enrolledCourses,
+        paidCourseIds: user.paidCourseIds || []
       }
     });
 
@@ -151,7 +166,8 @@ const login = async (req, res, next) => {
         email: user.email,
         role: user.role,
         mobile: user.mobile,
-        enrolledCourses: user.enrolledCourses
+        enrolledCourses: user.enrolledCourses,
+        paidCourseIds: user.paidCourseIds || []
       }
     });
 
@@ -163,14 +179,20 @@ const login = async (req, res, next) => {
 
 // @route GET /api/auth/me
 const getMe = async (req, res) => {
-  res.json({
-    user: req.user
-  });
+  res.json({ user: req.user });
+};
+
+const getStudents = async (req, res, next) => {
+  try {
+    const students = await User.find({ role: 'student' }).select('_id name email mobile');
+    res.json(students);
+  } catch (err) { next(err); }
 };
 
 
 module.exports = {
   register,
   login,
-  getMe
+  getMe,
+  getStudents
 };

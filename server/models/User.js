@@ -7,7 +7,8 @@ const userSchema = new mongoose.Schema({
   passwordHash: { type: String, required: true },
   role: { type: String, enum: ['student', 'admin', 'trainer', 'accountant', 'placement'], default: 'student' },
   enrolledCourses: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
-  completedLessons: [{ type: String }], // lesson ids within course.modules.lessons
+  paidCourseIds: [{ type: mongoose.Schema.Types.ObjectId, ref: 'Course' }],
+  completedLessons: [{ type: String }],
   lessonCompletions: [{
     lessonId: String,
     courseId: { type: mongoose.Schema.Types.ObjectId, ref: 'Course' },

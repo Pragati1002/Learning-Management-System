@@ -1,476 +1,78 @@
-import React, { useState } from 'react';
+import React, { useMemo, useState } from 'react';
 import { useLMS } from '../../context/LMSContext';
-import { FileCheck2, Clock, Trash2, Plus, ArrowRight } from 'lucide-react';
+import { Trash2, Plus, Search, Edit3, Users, BarChart3, X } from 'lucide-react';
+
+const blankQuestion = () => ({ question: '', options: ['', '', '', ''], correctAnswer: 0 });
 
 export const AssessmentPage = () => {
-  const { quizzes, assignments, courses, addQuiz, deleteQuiz, addAssignment, deleteAssignment, submitQuizResult, currentUser } = useLMS();
-  
-  const [activeTabSub, setActiveTabSub] = useState('quizzes');
+  const { quizzes, courses, users, addQuiz, updateQuiz, assignQuiz, getQuizDashboard, deleteQuiz, submitQuizResult, currentUser } = useLMS();
   const [activeQuiz, setActiveQuiz] = useState(null);
-  const [selectedAnswers, setSelectedAnswers] = useState({});
-  const [quizSubmitted, setQuizSubmitted] = useState(false);
-  const [quizScore, setQuizScore] = useState(null);
+  const [answers, setAnswers] = useState({});
+  const [result, setResult] = useState(null);
+  const [search, setSearch] = useState('');
+  const [showEditor, setShowEditor] = useState(false);
+  const [editing, setEditing] = useState(null);
+  const [title, setTitle] = useState('');
+  const [courseId, setCourseId] = useState('');
+  const [institution, setInstitution] = useState('Dayanand Sagar');
+  const [duration, setDuration] = useState(15);
+  const [passing, setPassing] = useState(70);
+  const [questions, setQuestions] = useState([blankQuestion()]);
+  const [assigning, setAssigning] = useState(null);
+  const [studentSearch, setStudentSearch] = useState('');
+  const [selectedStudents, setSelectedStudents] = useState([]);
+  const [dashboard, setDashboard] = useState(null);
 
-  // Modal states
-  const [showAddQuizModal, setShowAddQuizModal] = useState(false);
-  const [quizTitle, setQuizTitle] = useState('');
-  const [quizCourseId, setQuizCourseId] = useState(courses[0]?.id || '');
-  const [durationMinutes, setDurationMinutes] = useState(15);
-  const [passingScore, setPassingScore] = useState(70);
+  const isAdmin = currentUser?.role === 'admin';
+  const visibleQuizzes = useMemo(() => {
+    const term = search.trim().toLowerCase();
+    return (quizzes || []).filter(q => !term || [q.title, q.courseTitle, q.institution].some(v => String(v || '').toLowerCase().includes(term)));
+  }, [quizzes, search]);
 
-  const [qText, setQText] = useState('');
-  const [opt0, setOpt0] = useState('');
-  const [opt1, setOpt1] = useState('');
-  const [opt2, setOpt2] = useState('');
-  const [opt3, setOpt3] = useState('');
-  const [correctOpt, setCorrectOpt] = useState(0);
+  const startQuiz = q => { setActiveQuiz(q); setAnswers({}); setResult(null); };
 
-  const [showAddAsgModal, setShowAddAsgModal] = useState(false);
-  const [asgTitle, setAsgTitle] = useState('');
-  const [asgCourseId, setAsgCourseId] = useState(courses[0]?.id || '');
-  const [asgDueDate, setAsgDueDate] = useState('2026-09-30');
-  const [asgDesc, setAsgDesc] = useState('');
-
-  const handleStartQuiz = (q) => {
-    setActiveQuiz(q);
-    setSelectedAnswers({});
-    setQuizSubmitted(false);
-    setQuizScore(null);
+  const submit = async () => {
+    const r = await submitQuizResult(activeQuiz.id, null, null, activeQuiz.questions.length, answers);
+    if (r) setResult(r);
   };
 
-  const handleSelectOption = (qId, optionIdx) => {
-    if (quizSubmitted) return;
-    setSelectedAnswers(prev => ({ ...prev, [qId]: optionIdx }));
+  const openCreate = () => {
+    setEditing(null); setTitle(''); setCourseId(courses[0]?.id || ''); setInstitution('Dayanand Sagar'); setDuration(15); setPassing(70); setQuestions([blankQuestion()]); setShowEditor(true);
   };
 
-  const handleSubmitQuiz = () => {
-    let correct = 0;
-    activeQuiz.questions.forEach(q => {
-      if (selectedAnswers[q.id] === q.correctAnswer) correct++;
-    });
-    const percentage = Math.round((correct / activeQuiz.questions.length) * 100);
-    setQuizScore({ correct, total: activeQuiz.questions.length, percentage });
-    setQuizSubmitted(true);
-    submitQuizResult(activeQuiz.id, percentage, correct, activeQuiz.questions.length, selectedAnswers);
+  const openEdit = q => {
+    setEditing(q); setTitle(q.title || ''); setCourseId(q.courseId || ''); setInstitution(q.institution || 'Dayanand Sagar'); setDuration(q.durationMinutes || 15); setPassing(q.passingScore || 70);
+    setQuestions((q.questions || []).map(x => ({ question: x.question || '', options: [...(x.options || [])].concat(['','','','']).slice(0,4), correctAnswer: Number(x.correctAnswer || 0) })));
+    setShowEditor(true);
   };
 
-  const handleCreateQuiz = (e) => {
+  const saveQuiz = async e => {
     e.preventDefault();
-    if (!quizTitle.trim() || !qText.trim() || !opt0.trim() || !opt1.trim()) return;
-    
-    const matchedCourse = courses.find(c => c.id === quizCourseId);
-    addQuiz({
-      title: quizTitle,
-      courseId: quizCourseId,
-      courseTitle: matchedCourse?.title || 'General Course',
-      durationMinutes,
-      passingScore,
-      questions: [
-        {
-          id: 1,
-          question: qText,
-          options: [opt0, opt1, opt2 || 'None of the above', opt3 || 'All of the above'],
-          correctAnswer: Number(correctOpt),
-          explanation: 'Verified course question criteria.'
-        }
-      ]
-    });
-    setShowAddQuizModal(false);
-    setQuizTitle('');
-    setQText('');
-    setOpt0('');
-    setOpt1('');
+    if (!title.trim() || !questions.length || questions.some(q => !q.question.trim() || q.options.some(o => !o.trim()))) return;
+    const course = courses.find(c => c.id === courseId);
+    const payload = { title: title.trim(), courseId: courseId || undefined, courseTitle: course?.title || 'General Course', institution: institution.trim(), durationMinutes: Number(duration), passingScore: Number(passing), status: editing?.status || 'published', questions: questions.map(q => ({ question: q.question.trim(), options: q.options, correctAnswer: Number(q.correctAnswer) })) };
+    if (editing) await updateQuiz(editing.id, payload); else await addQuiz(payload);
+    setShowEditor(false);
   };
 
-  const handleCreateAssignment = (e) => {
-    e.preventDefault();
-    if (!asgTitle.trim()) return;
-    const matchedCourse = courses.find(c => c.id === asgCourseId);
-    addAssignment({
-      title: asgTitle,
-      courseId: asgCourseId,
-      courseName: matchedCourse?.title || 'General Course',
-      dueDate: asgDueDate,
-      totalPoints: 100,
-      description: asgDesc || 'Complete all tasks and submit repository.'
-    });
-    setShowAddAsgModal(false);
-    setAsgTitle('');
-    setAsgDesc('');
-  };
+  const openAssign = q => { setAssigning(q); setSelectedStudents((q.assignedStudents || []).map(x => String(x?.id || x?._id || x))); setStudentSearch(''); };
+  const saveAssign = async () => { await assignQuiz(assigning.id, selectedStudents); setAssigning(null); };
+  const openDashboard = async q => { const d = await getQuizDashboard(q.id); if (d) setDashboard(d); };
 
-  const handleDeleteQuiz = (qId, qTitle) => {
-    if (window.confirm(`Delete quiz "${qTitle}"?`)) {
-      deleteQuiz(qId);
-    }
-  };
+  if (activeQuiz && !isAdmin) {
+    return <div className="space-y-5"><button onClick={() => setActiveQuiz(null)} className="text-sm font-bold text-purple-700">← Back to quizzes</button><div className="bg-white p-6 rounded-2xl border shadow-sm"><p className="text-xs text-purple-700 font-bold">{activeQuiz.courseTitle}</p><h1 className="text-xl font-extrabold mt-1">{activeQuiz.title}</h1><p className="text-xs text-slate-500 mt-1">{activeQuiz.questions.length} questions • {activeQuiz.durationMinutes} minutes</p><div className="mt-6 space-y-5">{activeQuiz.questions.map((q,i)=><div key={q.id} className="p-4 bg-slate-50 rounded-xl border"><p className="font-bold text-sm">{i+1}. {q.question}</p><div className="mt-3 space-y-2">{q.options.map((o,j)=><button key={j} disabled={!!result} onClick={() => setAnswers(a=>({...a,[q.id]:j}))} className={`w-full text-left p-3 rounded-xl border text-sm ${answers[q.id]===j?'border-purple-500 bg-purple-50':'bg-white border-slate-200'}`}>{o}</button>)}</div></div>)}</div>{!result?<button onClick={submit} className="w-full mt-6 py-3 rounded-xl bg-purple-700 text-white font-bold">Submit Quiz</button>:<div className="mt-6 p-5 rounded-xl bg-emerald-50 border border-emerald-200 text-center"><h2 className="text-xl font-extrabold">Score: {result.scorePercentage}%</h2><p className="text-sm mt-1">{result.correctCount} / {result.totalCount} correct • {result.passed?'Passed':'Not passed'}</p></div>}</div></div>;
+  }
 
-  const handleDeleteAssignment = (asgId, asgTitle) => {
-    if (window.confirm(`Delete assignment "${asgTitle}"?`)) {
-      deleteAssignment(asgId);
-    }
-  };
+  return <div className="space-y-6">
+    <div className="flex flex-col md:flex-row md:items-center justify-between gap-3"><div><h1 className="text-2xl font-extrabold">Assessments & Quizzes</h1><p className="text-sm text-slate-500">{isAdmin?'Create, edit, assign and monitor every quiz.':'Only published quizzes belonging to your enrolled course are shown here.'}</p></div>{isAdmin&&<button onClick={openCreate} className="px-4 py-2.5 bg-purple-700 text-white rounded-xl text-xs font-bold flex items-center gap-2"><Plus className="w-4 h-4"/>Create Quiz</button>}</div>
+    <div className="relative"><Search className="absolute left-3 top-3 w-4 h-4 text-slate-400"/><input value={search} onChange={e=>setSearch(e.target.value)} placeholder={isAdmin?'Search quizzes by name, course or institution...':'Search quizzes from your enrolled courses...'} className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-sm"/></div>
+    <div className="grid md:grid-cols-2 gap-5">{visibleQuizzes.map(q=><div key={q.id} className="bg-white p-5 rounded-2xl border shadow-sm"><div className="flex justify-between gap-3"><div><span className="text-[10px] font-bold uppercase text-purple-700 bg-purple-50 px-2 py-1 rounded">{q.institution || q.courseTitle}</span><h3 className="font-extrabold mt-2">{q.title}</h3><p className="text-xs text-slate-500 mt-1">{q.courseTitle} • {q.questions?.length || 0} questions • {q.status || 'published'}</p></div>{isAdmin&&<span className="text-[10px] font-bold text-slate-500">{q.assignedStudents?.length||0} assigned</span>}</div>{isAdmin?<div className="grid grid-cols-4 gap-2 mt-4"><button onClick={()=>openEdit(q)} className="py-2 rounded-lg bg-slate-100 text-xs font-bold flex justify-center"><Edit3 className="w-3.5 h-3.5 mr-1"/>Edit</button><button onClick={()=>openAssign(q)} className="py-2 rounded-lg bg-blue-50 text-blue-700 text-xs font-bold flex justify-center"><Users className="w-3.5 h-3.5 mr-1"/>Assign</button><button onClick={()=>openDashboard(q)} className="py-2 rounded-lg bg-purple-50 text-purple-700 text-xs font-bold flex justify-center"><BarChart3 className="w-3.5 h-3.5 mr-1"/>Dashboard</button><button onClick={()=>window.confirm(`Delete ${q.title}?`)&&deleteQuiz(q.id)} className="py-2 rounded-lg bg-red-50 text-red-600 text-xs font-bold flex justify-center"><Trash2 className="w-3.5 h-3.5"/></button></div>:<button onClick={()=>startQuiz(q)} className="w-full mt-4 py-2.5 rounded-xl bg-purple-700 text-white text-xs font-bold">Take Quiz</button>}</div>)}</div>
+    {!visibleQuizzes.length&&<div className="bg-white border rounded-2xl p-10 text-center text-sm text-slate-500">No quizzes found.</div>}
 
-  return (
-    <div className="space-y-6">
-      <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-4">
-        <div>
-          <h1 className="text-2xl font-extrabold text-slate-900 tracking-tight">Assessments & Quizzes</h1>
-          <p className="text-sm text-slate-500 mt-1">Take certification tests, create assessments, and delete quizzes.</p>
-        </div>
-        
-        {currentUser?.role === 'admin' && (
-          <div className="flex space-x-2">
-            <button
-              onClick={() => setShowAddQuizModal(true)}
-              className="px-4 py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Quiz / Exam</span>
-            </button>
-            <button
-              onClick={() => setShowAddAsgModal(true)}
-              className="px-4 py-2.5 bg-slate-900 hover:bg-slate-800 text-white font-bold text-xs rounded-xl shadow-md flex items-center space-x-1.5"
-            >
-              <Plus className="w-4 h-4" />
-              <span>Add Assignment</span>
-            </button>
-          </div>
-        )}
-      </div>
+    {showEditor&&<div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4 overflow-y-auto"><form onSubmit={saveQuiz} className="bg-white rounded-2xl p-6 max-w-3xl w-full my-8 space-y-4"><div className="flex justify-between"><h2 className="text-lg font-extrabold">{editing?'Edit Quiz':'Create Quiz'}</h2><button type="button" onClick={()=>setShowEditor(false)}><X/></button></div><div className="grid md:grid-cols-2 gap-3"><input required value={title} onChange={e=>setTitle(e.target.value)} placeholder="Quiz name" className="border rounded-xl p-3 text-sm"/><select value={courseId} onChange={e=>setCourseId(e.target.value)} className="border rounded-xl p-3 text-sm"><option value="">General Course</option>{courses.map(c=><option key={c.id} value={c.id}>{c.title}</option>)}</select><input value={institution} onChange={e=>setInstitution(e.target.value)} placeholder="Institution / College" className="border rounded-xl p-3 text-sm"/><input type="number" value={duration} onChange={e=>setDuration(e.target.value)} placeholder="Duration" className="border rounded-xl p-3 text-sm"/><input type="number" value={passing} onChange={e=>setPassing(e.target.value)} placeholder="Passing %" className="border rounded-xl p-3 text-sm"/></div><div className="flex items-center justify-between"><h3 className="font-bold">Questions ({questions.length})</h3><button type="button" onClick={()=>setQuestions(q=>[...q,blankQuestion()])} className="px-3 py-2 rounded-lg bg-purple-50 text-purple-700 text-xs font-bold">+ Add Question</button></div><div className="space-y-4 max-h-[55vh] overflow-y-auto">{questions.map((q,qi)=><div key={qi} className="border rounded-xl p-4 space-y-2"><div className="flex justify-between"><b className="text-sm">Question {qi+1}</b>{questions.length>1&&<button type="button" onClick={()=>setQuestions(qs=>qs.filter((_,i)=>i!==qi))} className="text-xs text-red-600 font-bold">Remove</button>}</div><input required value={q.question} onChange={e=>setQuestions(qs=>qs.map((x,i)=>i===qi?{...x,question:e.target.value}:x))} placeholder="Question" className="w-full border rounded-xl p-2.5 text-sm"/>{q.options.map((o,oi)=><input key={oi} required value={o} onChange={e=>setQuestions(qs=>qs.map((x,i)=>i===qi?{...x,options:x.options.map((v,j)=>j===oi?e.target.value:v)}:x))} placeholder={`Option ${String.fromCharCode(65+oi)}`} className="w-full border rounded-xl p-2.5 text-sm"/>)}<select value={q.correctAnswer} onChange={e=>setQuestions(qs=>qs.map((x,i)=>i===qi?{...x,correctAnswer:Number(e.target.value)}:x))} className="w-full border rounded-xl p-2.5 text-sm">{q.options.map((_,oi)=><option key={oi} value={oi}>Correct: Option {String.fromCharCode(65+oi)}</option>)}</select></div>)}</div><div className="flex justify-end gap-2"><button type="button" onClick={()=>setShowEditor(false)} className="px-4 py-2 rounded-xl bg-slate-100">Cancel</button><button className="px-5 py-2 rounded-xl bg-purple-700 text-white font-bold">{editing?'Save Changes':'Create Quiz'}</button></div></form></div>}
 
-      <div className="flex space-x-2 border-b border-slate-200">
-        <button
-          onClick={() => { setActiveTabSub('quizzes'); setActiveQuiz(null); }}
-          className={`pb-3 px-4 text-sm font-bold border-b-2 transition-all ${
-            activeTabSub === 'quizzes' ? 'border-purple-600 text-purple-600' : 'border-transparent text-slate-500'
-          }`}
-        >
-          Certification Quizzes ({quizzes.length})
-        </button>
-        <button
-          onClick={() => { setActiveTabSub('assignments'); setActiveQuiz(null); }}
-          className={`pb-3 px-4 text-sm font-bold border-b-2 transition-all ${
-            activeTabSub === 'assignments' ? 'border-purple-600 text-purple-600' : 'border-transparent text-slate-500'
-          }`}
-        >
-          Practical Assignments ({(assignments || []).length})
-        </button>
-      </div>
+    {assigning&&<div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4"><div className="bg-white rounded-2xl p-6 max-w-lg w-full space-y-4"><div className="flex justify-between"><h2 className="font-extrabold">Assign: {assigning.title}</h2><button onClick={()=>setAssigning(null)}><X/></button></div><input value={studentSearch} onChange={e=>setStudentSearch(e.target.value)} placeholder="Search student by name or email" className="w-full border rounded-xl p-3 text-sm"/><div className="max-h-64 overflow-y-auto space-y-1">{(users||[]).filter(u=>u.role==='student'&&(`${u.name} ${u.email}`).toLowerCase().includes(studentSearch.toLowerCase())).map(u=><label key={u.id} className="flex gap-3 items-center p-3 rounded-lg hover:bg-slate-50"><input type="checkbox" checked={selectedStudents.includes(String(u.id))} onChange={e=>setSelectedStudents(prev=>e.target.checked?[...new Set([...prev,String(u.id)])]:prev.filter(id=>id!==String(u.id)))} /><span className="text-sm">{u.name}<small className="block text-slate-400">{u.email}</small></span></label>)}</div><button onClick={saveAssign} className="w-full py-3 rounded-xl bg-purple-700 text-white font-bold">Save Assignment</button></div></div>}
 
-      {activeQuiz ? (
-        <div className="bg-white p-6 rounded-2xl border border-slate-200 shadow-sm space-y-6">
-          <div className="flex items-center justify-between pb-4 border-b border-slate-100">
-            <div>
-              <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded uppercase">
-                {activeQuiz.courseTitle}
-              </span>
-              <h2 className="text-lg font-bold text-slate-900 mt-1">{activeQuiz.title}</h2>
-            </div>
-            <button onClick={() => setActiveQuiz(null)} className="text-xs text-slate-500 hover:text-slate-800 font-semibold">
-              ← Back to List
-            </button>
-          </div>
-
-          <div className="space-y-6">
-            {activeQuiz.questions.map((q, idx) => {
-              const userAns = selectedAnswers[q.id];
-              return (
-                <div key={q.id} className="p-4 bg-slate-50/80 rounded-xl border border-slate-200/80 space-y-3">
-                  <h4 className="font-bold text-sm text-slate-900">
-                    {idx + 1}. {q.question}
-                  </h4>
-                  <div className="space-y-2">
-                    {q.options.map((opt, oIdx) => {
-                      let btnStyle = 'bg-white hover:bg-slate-100 border-slate-200 text-slate-700';
-                      if (userAns === oIdx) btnStyle = 'bg-purple-50 border-purple-500 text-purple-800 font-semibold ring-1 ring-purple-500';
-                      if (quizSubmitted) {
-                        if (oIdx === q.correctAnswer) btnStyle = 'bg-emerald-50 border-emerald-500 text-emerald-800 font-bold';
-                        else if (userAns === oIdx && oIdx !== q.correctAnswer) btnStyle = 'bg-red-50 border-red-400 text-red-800';
-                      }
-
-                      return (
-                        <button
-                          key={oIdx}
-                          onClick={() => handleSelectOption(q.id, oIdx)}
-                          className={`w-full text-left p-3 rounded-xl border text-xs sm:text-sm transition-all ${btnStyle}`}
-                        >
-                          {opt}
-                        </button>
-                      );
-                    })}
-                  </div>
-                </div>
-              );
-            })}
-          </div>
-
-          {!quizSubmitted ? (
-            <button
-              onClick={handleSubmitQuiz}
-              className="w-full py-3 bg-purple-600 hover:bg-purple-700 text-white font-bold text-sm rounded-xl shadow-lg transition-all"
-            >
-              Submit Exam for Instant Evaluation
-            </button>
-          ) : (
-            <div className="p-5 bg-gradient-to-r from-emerald-50 to-teal-50 border border-emerald-200 rounded-xl text-center space-y-2">
-              <h3 className="text-xl font-extrabold text-emerald-800">
-                Score: {quizScore.percentage}% ({quizScore.correct} / {quizScore.total} Correct)
-              </h3>
-              <p className="text-xs text-emerald-700">
-                {quizScore.percentage >= activeQuiz.passingScore
-                  ? '🎉 Outstanding! Passing score met. Official certificate auto-issued!'
-                  : 'Score was below passing threshold. Review the lessons and retry.'}
-              </p>
-            </div>
-          )}
-        </div>
-      ) : activeTabSub === 'quizzes' ? (
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-5">
-          {quizzes.map(q => (
-            <div key={q.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm flex flex-col justify-between space-y-4">
-              <div>
-                <div className="flex items-center justify-between">
-                  <span className="text-[10px] font-bold text-purple-700 bg-purple-50 px-2 py-0.5 rounded uppercase">
-                    {q.courseTitle}
-                  </span>
-                  {currentUser?.role === 'admin' && (
-                    <button
-                      onClick={() => handleDeleteQuiz(q.id, q.title)}
-                      className="p-1.5 text-slate-400 hover:text-red-600 hover:bg-red-50 rounded-lg transition-colors"
-                      title="Delete Quiz"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-                <h3 className="font-extrabold text-base text-slate-900 mt-2">{q.title}</h3>
-                <div className="flex items-center space-x-4 text-xs text-slate-500 mt-2">
-                  <span className="flex items-center space-x-1">
-                    <Clock className="w-3.5 h-3.5" />
-                    <span>{q.durationMinutes} Minutes</span>
-                  </span>
-                  <span>{q.totalQuestions} Questions</span>
-                  <span>Pass: {q.passingScore}%</span>
-                </div>
-              </div>
-              <button
-                onClick={() => handleStartQuiz(q)}
-                className="w-full py-2.5 bg-purple-600 hover:bg-purple-700 text-white font-bold text-xs rounded-xl shadow-sm transition-all flex items-center justify-center space-x-1.5"
-              >
-                <span>Take Assessment</span>
-                <ArrowRight className="w-4 h-4" />
-              </button>
-            </div>
-          ))}
-        </div>
-      ) : (
-        <div className="space-y-4">
-          {(assignments || []).map(asg => (
-            <div key={asg.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
-              <div className="flex flex-col sm:flex-row sm:items-center justify-between gap-2">
-                <div>
-                  <h3 className="font-bold text-slate-900 text-base">{asg.title}</h3>
-                  <p className="text-xs text-slate-500">{asg.courseName} • Due: {asg.dueDate}</p>
-                </div>
-                <div className="flex items-center space-x-2">
-                  <span className="text-xs bg-slate-100 text-slate-700 font-bold px-2.5 py-1 rounded">
-                    Max: {asg.totalPoints} Pts
-                  </span>
-                  {currentUser?.role === 'admin' && (
-                    <button
-                      onClick={() => handleDeleteAssignment(asg.id, asg.title)}
-                      className="p-1 text-slate-400 hover:text-red-600"
-                      title="Delete Assignment"
-                    >
-                      <Trash2 className="w-4 h-4" />
-                    </button>
-                  )}
-                </div>
-              </div>
-              <p className="text-xs text-slate-600">{asg.description}</p>
-            </div>
-          ))}
-        </div>
-      )}
-
-      {/* Add Quiz Modal */}
-      {showAddQuizModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4 overflow-y-auto">
-          <div className="bg-white rounded-2xl p-6 max-w-lg w-full shadow-2xl space-y-4 my-8">
-            <h3 className="text-base font-bold text-slate-900">Create Assessment Exam</h3>
-            <form onSubmit={handleCreateQuiz} className="space-y-3 text-xs">
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">Exam / Quiz Title *</label>
-                <input autoComplete="off"
-                  type="text"
-                  required
-                  value={quizTitle}
-                  onChange={e => setQuizTitle(e.target.value)}
-                  placeholder="e.g. JavaScript Async Mastery Quiz"
-                  className="w-full border border-slate-300 rounded-xl p-2.5 text-sm"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="font-bold text-slate-700 block mb-1">Course</label>
-                  <select
-                    value={quizCourseId}
-                    onChange={e => setQuizCourseId(e.target.value)}
-                    className="w-full border border-slate-300 rounded-xl p-2.5 text-xs bg-white"
-                  >
-                    {courses.map(c => (
-                      <option key={c.id} value={c.id}>{c.title}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="font-bold text-slate-700 block mb-1">Duration (Mins)</label>
-                  <input autoComplete="off"
-                    type="number"
-                    value={durationMinutes}
-                    onChange={e => setDurationMinutes(e.target.value)}
-                    className="w-full border border-slate-300 rounded-xl p-2.5 text-xs"
-                  />
-                </div>
-              </div>
-
-              <div className="p-3 bg-slate-50 rounded-xl border border-slate-200 space-y-2">
-                <span className="font-bold text-slate-800 block">Question 1 Setup</span>
-                <input autoComplete="off"
-                  type="text"
-                  required
-                  value={qText}
-                  onChange={e => setQText(e.target.value)}
-                  placeholder="Question text..."
-                  className="w-full border border-slate-300 rounded-xl p-2 text-xs"
-                />
-                <div className="grid grid-cols-2 gap-2">
-                  <input autoComplete="off"
-                    type="text"
-                    required
-                    value={opt0}
-                    onChange={e => setOpt0(e.target.value)}
-                    placeholder="Option A"
-                    className="border border-slate-300 rounded-xl p-2 text-xs"
-                  />
-                  <input autoComplete="off"
-                    type="text"
-                    required
-                    value={opt1}
-                    onChange={e => setOpt1(e.target.value)}
-                    placeholder="Option B"
-                    className="border border-slate-300 rounded-xl p-2 text-xs"
-                  />
-                  <input autoComplete="off"
-                    type="text"
-                    value={opt2}
-                    onChange={e => setOpt2(e.target.value)}
-                    placeholder="Option C (Optional)"
-                    className="border border-slate-300 rounded-xl p-2 text-xs"
-                  />
-                  <input autoComplete="off"
-                    type="text"
-                    value={opt3}
-                    onChange={e => setOpt3(e.target.value)}
-                    placeholder="Option D (Optional)"
-                    className="border border-slate-300 rounded-xl p-2 text-xs"
-                  />
-                </div>
-                <div>
-                  <label className="font-bold text-slate-700 block mb-1">Correct Option</label>
-                  <select
-                    value={correctOpt}
-                    onChange={e => setCorrectOpt(e.target.value)}
-                    className="w-full border border-slate-300 rounded-xl p-2 text-xs bg-white"
-                  >
-                    <option value={0}>Option A is Correct</option>
-                    <option value={1}>Option B is Correct</option>
-                    <option value={2}>Option C is Correct</option>
-                    <option value={3}>Option D is Correct</option>
-                  </select>
-                </div>
-              </div>
-
-              <div className="flex justify-end space-x-2 pt-2">
-                <button type="button" onClick={() => setShowAddQuizModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">
-                  Cancel
-                </button>
-                <button type="submit" className="px-4 py-2 bg-purple-600 text-white rounded-xl font-bold">
-                  Publish Quiz
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {/* Add Assignment Modal */}
-      {showAddAsgModal && (
-        <div className="fixed inset-0 z-50 bg-slate-900/60 backdrop-blur-sm flex items-center justify-center p-4">
-          <div className="bg-white rounded-2xl p-6 max-w-md w-full shadow-2xl space-y-4">
-            <h3 className="text-base font-bold text-slate-900">Add Practical Assignment</h3>
-            <form onSubmit={handleCreateAssignment} className="space-y-3 text-xs">
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">Assignment Title *</label>
-                <input autoComplete="off"
-                  type="text"
-                  required
-                  value={asgTitle}
-                  onChange={e => setAsgTitle(e.target.value)}
-                  placeholder="e.g. Build an E-Commerce Cart UI"
-                  className="w-full border border-slate-300 rounded-xl p-2.5 text-sm"
-                />
-              </div>
-
-              <div className="grid grid-cols-2 gap-3">
-                <div>
-                  <label className="font-bold text-slate-700 block mb-1">Course</label>
-                  <select
-                    value={asgCourseId}
-                    onChange={e => setAsgCourseId(e.target.value)}
-                    className="w-full border border-slate-300 rounded-xl p-2.5 text-xs bg-white"
-                  >
-                    {courses.map(c => (
-                      <option key={c.id} value={c.id}>{c.title}</option>
-                    ))}
-                  </select>
-                </div>
-                <div>
-                  <label className="font-bold text-slate-700 block mb-1">Due Date</label>
-                  <input autoComplete="off"
-                    type="date"
-                    value={asgDueDate}
-                    onChange={e => setAsgDueDate(e.target.value)}
-                    className="w-full border border-slate-300 rounded-xl p-2.5 text-xs"
-                  />
-                </div>
-              </div>
-
-              <div>
-                <label className="font-bold text-slate-700 block mb-1">Instructions</label>
-                <textarea autoComplete="off"
-                  rows="3"
-                  value={asgDesc}
-                  onChange={e => setAsgDesc(e.target.value)}
-                  placeholder="List assignment instructions..."
-                  className="w-full border border-slate-300 rounded-xl p-2 text-xs"
-                ></textarea>
-              </div>
-
-              <div className="flex justify-end space-x-2 pt-2">
-                <button type="button" onClick={() => setShowAddAsgModal(false)} className="px-4 py-2 bg-slate-100 rounded-xl font-semibold">
-                  Cancel
-                </button>
-                <button type="submit" className="px-4 py-2 bg-slate-900 text-white rounded-xl font-bold">
-                  Create Assignment
-                </button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-    </div>
-  );
+    {dashboard&&<div className="fixed inset-0 z-50 bg-slate-900/60 flex items-center justify-center p-4 overflow-y-auto"><div className="bg-white rounded-2xl p-6 max-w-5xl w-full my-8"><div className="flex justify-between"><div><h2 className="text-lg font-extrabold">{dashboard.quiz.title}</h2><p className="text-xs text-slate-500">Admin-only quiz dashboard</p></div><button onClick={()=>setDashboard(null)}><X/></button></div><div className="grid grid-cols-2 md:grid-cols-4 gap-3 mt-5">{Object.entries(dashboard.stats).map(([k,v])=><div key={k} className="p-3 bg-slate-50 border rounded-xl"><p className="text-[10px] uppercase font-bold text-slate-500">{k}</p><b className="text-xl">{v}</b></div>)}</div><div className="mt-5 overflow-auto"><table className="w-full text-xs"><thead><tr className="border-b text-left"><th className="p-2">Student</th><th>Score</th><th>Correct</th><th>Date</th></tr></thead><tbody>{dashboard.attempts.map(a=><tr key={a._id} className="border-b"><td className="p-2">{a.student?.name||a.student?.email||'Student'}</td><td>{a.scorePercentage}%</td><td>{a.correctCount}/{a.totalCount}</td><td>{new Date(a.createdAt).toLocaleString()}</td></tr>)}</tbody></table></div></div></div>}
+  </div>;
 };

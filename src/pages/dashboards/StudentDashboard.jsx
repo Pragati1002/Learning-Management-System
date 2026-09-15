@@ -3,12 +3,14 @@ import { useLMS } from '../../context/LMSContext';
 import { BookOpen, Award, PlayCircle, Clock, Sparkles, GraduationCap, ListChecks, ClipboardCheck, Radio, ExternalLink, Calendar, PlusCircle } from 'lucide-react';
 
 export const StudentDashboard = ({ onOpenCertificate }) => {
-  const { currentUser, courses, certificates, quizzes, liveClasses, getCourseProgress, setSelectedCourseForPlayer, setActiveTab, enrollCourse } = useLMS();
+  const { currentUser, courses, certificates, quizzes, liveClasses, getCourseProgress, setSelectedCourseForPlayer, setActiveTab, startCourseEnrollment } = useLMS();
 
-  const enrolledCourses = courses.filter(c => currentUser?.enrolledCourses?.includes(c.id));
-  const discoverCourses = courses.filter(c => !currentUser?.enrolledCourses?.includes(c.id));
+  const enrolledIds = (currentUser?.enrolledCourses || []).map(id => String(id?.id || id?._id || id));
+  const paidIds = (currentUser?.paidCourseIds || []).map(String);
+  const enrolledCourses = courses.filter(c => enrolledIds.includes(String(c.id)) && (Number(c.price || 0) === 0 || paidIds.includes(String(c.id))));
+  const discoverCourses = courses.filter(c => !enrolledIds.includes(String(c.id)));
 
-  const myLiveClasses = liveClasses?.filter(lc => currentUser?.enrolledCourses?.includes(lc.courseId)) || [];
+  const myLiveClasses = liveClasses?.filter(lc => enrolledIds.includes(String(lc.courseId))) || [];
 
   const totalLessons = enrolledCourses.reduce((sum, c) => sum + (c.modules?.flatMap(m => m.lessons)?.length || 0), 0);
   const completedLessons = currentUser?.completedLessons?.length || 0;
@@ -168,7 +170,7 @@ export const StudentDashboard = ({ onOpenCertificate }) => {
                 <h4 className="font-bold text-slate-900 dark:text-white text-sm line-clamp-2">{course.title}</h4>
                 <p className="text-[11px] text-slate-500 dark:text-slate-400">{course.duration} • {course.level}</p>
                 <button
-                  onClick={() => enrollCourse(course.id)}
+                  onClick={() => startCourseEnrollment(course)}
                   className="w-full py-2 bg-slate-900 dark:bg-slate-700 hover:bg-slate-800 dark:hover:bg-slate-600 text-white font-bold text-xs rounded-xl"
                 >
                   Enroll Now

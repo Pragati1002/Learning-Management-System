@@ -3,7 +3,27 @@ import { useLMS } from '../../context/LMSContext';
 import { FileCheck2, Clock, ArrowLeft, CheckCircle2, XCircle, Trophy } from 'lucide-react';
 
 export const PracticeQuizPage = () => {
-  const { quizzes, submitQuizResult } = useLMS();
+  const { quizzes, submitQuizResult, currentUser } = useLMS();
+
+  // UI safety net: never render a quiz unless its courseId is one of the
+  // student's enrolled course IDs. The backend enforces the same rule.
+  const enrolledCourseIds = new Set((currentUser?.enrolledCourses || []).map(c => String(c?.id || c?._id || c)));
+  const firstEnrolledCourseId = (currentUser?.enrolledCourses || [])[0];
+  const visibleQuizzes = (quizzes || [])
+    .filter(q => q.courseId && enrolledCourseIds.has(String(q.courseId?.id || q.courseId?._id || q.courseId)))
+    // Demo requirement: show exactly ONE practice quiz. Prefer the quiz for
+    // the student's first enrolled course so a quiz from another enrolled
+    // course can never appear just because it sorts first alphabetically.
+    .sort((a, b) => {
+      const aCourse = String(a.courseId?.id || a.courseId?._id || a.courseId);
+      const bCourse = String(b.courseId?.id || b.courseId?._id || b.courseId);
+      const first = String(firstEnrolledCourseId || '');
+      const aPriority = aCourse === first ? 0 : 1;
+      const bPriority = bCourse === first ? 0 : 1;
+      if (aPriority !== bPriority) return aPriority - bPriority;
+      return String(a.title || '').localeCompare(String(b.title || ''));
+    })
+    .slice(0, 1);
 
   const [activeQuiz, setActiveQuiz] = useState(null);
   const [qIndex, setQIndex] = useState(0);
@@ -27,17 +47,25 @@ export const PracticeQuizPage = () => {
     setAnswers(prev => ({ ...prev, [question.id]: optIdx }));
   };
 
-  const handleNext = () => {
+  const handleNext = async () => {
     if (qIndex < activeQuiz.questions.length - 1) {
       setQIndex(prev => prev + 1);
     } else {
-      let correct = 0;
-      activeQuiz.questions.forEach(q => {
-        if (answers[q.id] === q.correctAnswer) correct++;
+      // Answers are intentionally scored on the server. The student payload does
+      // not contain correctAnswer, so never calculate the score in the browser.
+      const serverResult = await submitQuizResult(
+        activeQuiz.id,
+        0,
+        0,
+        activeQuiz.questions.length,
+        answers
+      );
+      if (!serverResult) return;
+      setResult({
+        correct: serverResult.correctCount,
+        total: serverResult.totalCount,
+        percentage: serverResult.scorePercentage
       });
-      const percentage = Math.round((correct / activeQuiz.questions.length) * 100);
-      setResult({ correct, total: activeQuiz.questions.length, percentage });
-      submitQuizResult(activeQuiz.id, percentage, correct, activeQuiz.questions.length, answers);
       setSubmitted(true);
     }
   };
@@ -51,8 +79,14 @@ export const PracticeQuizPage = () => {
           <p className="text-sm text-slate-500 mt-1">Sharpen your understanding with short topic-wise quizzes.</p>
         </div>
 
+        {visibleQuizzes.length === 0 ? (
+          <div className="bg-white p-8 rounded-2xl border border-slate-200 text-center">
+            <p className="text-sm font-semibold text-slate-700">No practice quizzes are available for your enrolled course.</p>
+            <p className="text-xs text-slate-500 mt-1">Only quizzes belonging to your enrolled course are shown here.</p>
+          </div>
+        ) : (
         <div className="grid grid-cols-1 sm:grid-cols-2 gap-5">
-          {quizzes?.map(q => (
+          {visibleQuizzes.map(q => (
             <div key={q.id} className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-3">
               <div className="flex items-start justify-between">
                 <div className="p-2.5 bg-purple-50 rounded-xl">
@@ -76,6 +110,7 @@ export const PracticeQuizPage = () => {
             </div>
           ))}
         </div>
+        )}
       </div>
     );
   }

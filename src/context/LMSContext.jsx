@@ -17,6 +17,7 @@ const normalizeUser = (user) => {
     ...user,
     id: String(user.id || user._id),
     enrolledCourses: (user.enrolledCourses || []).map(c => String(c?.id || c?._id || c)),
+    paidCourseIds: (user.paidCourseIds || []).map(c => String(c?.id || c?._id || c)),
     completedLessons: (user.completedLessons || []).map(String),
     lessonCompletions: (user.lessonCompletions || []).map(lc => ({
       ...lc,
@@ -187,6 +188,7 @@ export const LMSProvider = ({ children }) => {
   const [courseSearchQuery, setCourseSearchQuery] = useState('');
   const [darkMode, setDarkMode] = useState(() => localStorage.getItem('lms_theme_v3') === 'dark');
   const [selectedCourseForPlayer, setSelectedCourseForPlayer] = useState(null);
+  const [selectedCourseForPayment, setSelectedCourseForPayment] = useState(null);
   const [selectedLessonForMaterials, setSelectedLessonForMaterials] = useState(null);
   const [selectedMockTest, setSelectedMockTest] = useState(null);
   const [selectedInterviewTrack, setSelectedInterviewTrack] = useState(null);
@@ -228,6 +230,7 @@ export const LMSProvider = ({ children }) => {
 
     if (user.role === 'admin' || user.role === 'trainer') {
       tasks.push(request('/batches', { token: token() }).then(data => setBatches((data || []).map(normalizeBatch))));
+      tasks.push(request('/auth/students', { token: token() }).then(data => setUsers((data || []).map(normalizeUser))));
     } else {
       setBatches([]);
     }
@@ -384,19 +387,46 @@ export const LMSProvider = ({ children }) => {
     return Math.round((allLessonIds.filter(id => completed.has(id)).length / allLessonIds.length) * 100);
   };
 
-  const enrollCourse = async (courseId) => {
+  const startCourseEnrollment = (course) => {
+    if (!currentUser || !course) return false;
+    if (Number(course.price || 0) > 0) {
+      setSelectedCourseForPayment(course);
+      setActiveTab('course-payment');
+      return true;
+    }
+    return enrollCourse(course.id);
+  };
+
+  const completeCoursePayment = async (courseId) => {
     if (!currentUser) return false;
     try {
-      const data = await request(`/courses/${courseId}/enroll`, { method: 'POST', token: token() });
-      const updated = normalizeUser({ ...currentUser, enrolledCourses: data.enrolledCourses });
+      const data = await request(`/courses/${courseId}/payment/confirm`, { method: 'POST', token: token() });
+      const updated = normalizeUser({ ...currentUser, enrolledCourses: data.enrolledCourses, paidCourseIds: data.paidCourseIds });
       setCurrentUser(updated);
+      setSelectedCourseForPayment(null);
+      setActiveTab('course-content');
       const course = courses.find(c => c.id === String(courseId));
-      showToast(`Enrolled in ${course?.title || 'course'}!`);
+      showToast(`Payment confirmed. ${course?.title || 'Course'} is now unlocked!`);
       return true;
-    } catch (err) {
-      showToast(err.message, 'error');
+    } catch (err) { showToast(err.message, 'error'); return false; }
+  };
+
+  const enrollCourse = async (courseId) => {
+    if (!currentUser) return false;
+    const course = courses.find(c => c.id === String(courseId));
+    if (Number(course?.price || 0) > 0) {
+      setSelectedCourseForPayment(course);
+      setActiveTab('course-payment');
+      showToast('Payment is required before enrollment.', 'info');
       return false;
     }
+    try {
+      const data = await request(`/courses/${courseId}/enroll`, { method: 'POST', token: token() });
+      const updated = normalizeUser({ ...currentUser, enrolledCourses: data.enrolledCourses, paidCourseIds: data.paidCourseIds });
+      setCurrentUser(updated);
+      showToast(`Enrolled in ${course?.title || 'course'}!`);
+      return true;
+    } catch (err) { showToast(err.message, 'error'); return false; }
   };
 
   const toggleLessonComplete = async (lessonId, courseId) => {
@@ -499,6 +529,38 @@ export const LMSProvider = ({ children }) => {
       setQuizzes(prev => [created, ...prev]);
       showToast(`Assessment "${created.title}" created!`);
       return created;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const updateQuiz = async (quizId, data) => {
+    try {
+      const updated = normalizeQuiz(await request(`/quizzes/${quizId}`, { method: 'PUT', body: data, token: token() }));
+      setQuizzes(prev => prev.map(q => q.id === String(quizId) ? updated : q));
+      showToast(`Assessment "${updated.title}" updated!`);
+      return updated;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const assignQuiz = async (quizId, studentIds) => {
+    try {
+      const updated = normalizeQuiz(await request(`/quizzes/${quizId}/assign`, { method: 'PUT', body: { studentIds }, token: token() }));
+      setQuizzes(prev => prev.map(q => q.id === String(quizId) ? updated : q));
+      showToast('Quiz assignment updated.');
+      return updated;
+    } catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const getQuizDashboard = async (quizId) => {
+    try { return await request(`/quizzes/${quizId}/dashboard`, { token: token() }); }
+    catch (err) { showToast(err.message, 'error'); return null; }
+  };
+
+  const updateModuleAccess = async (courseId, modules) => {
+    try {
+      const updated = normalizeCourse(await request(`/courses/${courseId}/module-access`, { method: 'PUT', body: { modules }, token: token() }));
+      setCourses(prev => prev.map(c => c.id === String(courseId) ? updated : c));
+      showToast('Module access updated.');
+      return updated;
     } catch (err) { showToast(err.message, 'error'); return null; }
   };
 
@@ -738,6 +800,7 @@ export const LMSProvider = ({ children }) => {
       activeTab, setActiveTab, courseSearchQuery, setCourseSearchQuery,
       darkMode, toggleDarkMode,
       selectedCourseForPlayer, setSelectedCourseForPlayer,
+      selectedCourseForPayment, setSelectedCourseForPayment, startCourseEnrollment, completeCoursePayment,
       selectedLessonForMaterials, setSelectedLessonForMaterials,
       mockTests, selectedMockTest, setSelectedMockTest, submitMockTest, submitMockInterview,
       interviewTracks, selectedInterviewTrack, setSelectedInterviewTrack,
@@ -750,7 +813,7 @@ export const LMSProvider = ({ children }) => {
       login, signup, logout,
       addCourse, deleteCourse,
       addBatch, deleteBatch, addStudentToBatch, removeStudentFromBatch, markAttendance,
-      addQuiz, deleteQuiz, addAssignment, deleteAssignment,
+      addQuiz, updateQuiz, assignQuiz, getQuizDashboard, deleteQuiz, updateModuleAccess, addAssignment, deleteAssignment,
       addDiscussionPost, deleteDiscussionPost, replyDiscussionPost,
       enrollCourse, toggleLessonComplete, getCourseProgress, issueCertificateForCourse, submitQuizResult
     }}>

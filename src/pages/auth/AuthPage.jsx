@@ -424,8 +424,8 @@ export const AuthPage = () => {
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder={
                     isAdmin
-                      ? 'admin@lms.com'
-                      : 'student@lms.com'
+                      ? 'Enter administrator email'
+                      : 'Enter student email'
                   }
                   className="w-full pl-10 pr-4 py-2.5 border border-slate-300 rounded-xl text-xs sm:text-sm focus:ring-2 focus:ring-purple-500 focus:outline-none"
                 />

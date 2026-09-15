@@ -1,9 +1,11 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { useLMS } from '../../context/LMSContext';
-import { BookOpen, Users, Award, PlusCircle, CheckCircle2, ArrowRight, Video } from 'lucide-react';
+import { BookOpen, Users, Award, PlusCircle, Video, Search } from 'lucide-react';
 
 export const AdminDashboard = () => {
-  const { courses, batches, users, certificates, liveClasses, setActiveTab } = useLMS();
+  const { courses, batches, users, certificates, liveClasses, quizzes, setActiveTab } = useLMS();
+  const [quizSearch, setQuizSearch] = useState('');
+  const matchedQuizzes = (quizzes || []).filter(q => { const t=quizSearch.trim().toLowerCase(); return !t || [q.title,q.courseTitle,q.institution].some(v=>String(v||'').toLowerCase().includes(t)); });
 
   return (
     <div className="space-y-6">
@@ -62,6 +64,13 @@ export const AdminDashboard = () => {
           <h3 className="text-2xl font-extrabold text-slate-900 mt-2">{certificates.length} Verified</h3>
           <p className="text-xs text-slate-500 mt-1">Authentic completion tokens</p>
         </div>
+      </div>
+
+      {/* Quiz Search & Management */}
+      <div className="bg-white p-5 rounded-2xl border border-slate-200 shadow-sm space-y-4">
+        <div className="flex items-center justify-between gap-3"><div><h3 className="font-extrabold text-slate-900 text-base">Quiz Management</h3><p className="text-xs text-slate-500 mt-1">Search, edit, assign and open dashboards for quizzes.</p></div><button onClick={() => setActiveTab('assessments')} className="text-xs font-bold text-purple-700">Manage All →</button></div>
+        <div className="relative"><Search className="absolute left-3 top-3 w-4 h-4 text-slate-400"/><input value={quizSearch} onChange={e=>setQuizSearch(e.target.value)} placeholder="Search quiz by name, course or institution..." className="w-full pl-10 pr-4 py-3 rounded-xl border border-slate-300 text-sm"/></div>
+        <div className="space-y-2">{matchedQuizzes.slice(0,8).map(q=><div key={q.id} className="flex items-center justify-between p-3 rounded-xl bg-slate-50 border"><div><b className="text-sm">{q.title}</b><p className="text-[11px] text-slate-500">{q.courseTitle} • {q.assignedStudents?.length||0} assigned</p></div><button onClick={()=>setActiveTab('assessments')} className="px-3 py-1.5 rounded-lg bg-purple-50 text-purple-700 text-xs font-bold">Open</button></div>)}{!matchedQuizzes.length&&<p className="text-xs text-slate-400">No quiz matches your search.</p>}</div>
       </div>
 
       {/* Live Classes */}

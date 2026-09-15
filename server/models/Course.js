@@ -13,7 +13,8 @@ const lessonSchema = new mongoose.Schema({
 const moduleSchema = new mongoose.Schema({
   moduleId: { type: String, required: true },
   title: String,
-  lessons: [lessonSchema]
+  lessons: [lessonSchema],
+  enabled: { type: Boolean, default: true }
 }, { _id: false });
 
 const courseSchema = new mongoose.Schema({
